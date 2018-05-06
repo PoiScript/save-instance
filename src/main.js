@@ -18,7 +18,7 @@ export default {
     tabBar: {
       color: '#80848f',
       selectedColor: '#2d8cf0',
-      backgroundColor: '#f8f8f9',
+      backgroundColor: 'white',
       list: [
         {
           text: '今日',

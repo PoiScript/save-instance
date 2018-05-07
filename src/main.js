@@ -16,12 +16,12 @@ export default {
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#2d8cf0',
-      navigationBarTextStyle: 'white',
+      navigationBarTextStyle: '#ffffff',
     },
     tabBar: {
       color: '#80848f',
       selectedColor: '#2d8cf0',
-      backgroundColor: 'white',
+      "backgroundColor": "#ffffff",
       list: [
         {
           text: '今日',

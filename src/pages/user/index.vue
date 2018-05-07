@@ -8,7 +8,7 @@
     </div>
 
     <div class="timesetting">
-      <img src="../../../static/icons/remind.png"/>
+      <img src="/static/icons/remind.png"/>
       <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">拍照提醒</span>
       <picker  @change="PickerChange" :value="indexPicker" :range="arrayT">
         <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 480rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayT[indexPicker]}}</Button>
@@ -18,7 +18,7 @@
 
 
     <div class="sizesetting">
-      <img src="../../../static/icons/size.png"/>
+      <img src="/static/icons/size.png"/>
       <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">画幅</span>
       <picker  @change="SizeChange" :value="indexSize" :range="arrayS">
         <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 600rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayS[indexSize]}}</Button>
@@ -26,7 +26,7 @@
     </div>
 
     <div class="durationsetting">
-      <img src="../../../static/icons/duration.png"/>
+      <img src="/static/icons/duration.png"/>
       <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">每幅时长</span>
       <picker  @change="DurationChange" :value="indexDuration" :range="arrayD">
         <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 600rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayD[indexDuration]}}</Button>
@@ -34,15 +34,15 @@
     </div>
 
     <div class="sizesetting">
-      <img src="../../../static/icons/output.png"/>
+      <img src="/static/icons/output.png"/>
       <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">全高清输出</span>
       <Switch checked @change="switchOutput" color="#2d8cf0" style="line-height:75rpx;vertical-align:middle;margin:-127rpx auto auto 620rpx;height:90rpx; width: 150rpx;"></Switch>
     </div>
 
     <div class="timesetting">
-      <img src="../../../static/icons/contact.png"/>
+      <img src="/static/icons/contact.png"/>
       <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">联系我们</span>
-      <contact-button type="default-dark" size="50" session-from="weapp" style="line-height:75rpx;vertical-align:middle;margin: -105rpx auto auto 650rpx;">
+      <contact-button  size="50" session-from="weapp" style="line-height:75rpx;vertical-align:middle;margin: -110rpx auto auto 660rpx;">
 
       </contact-button>
 
@@ -105,6 +105,7 @@
     height:100%;
     position: fixed;
     overflow:scroll;
+    align-items: center;
   }
 
   .userinfo{
@@ -133,8 +134,9 @@
   .sizesetting{
     height: 90rpx;
     width:100%;
-    background-color: white;
+    background-color: #ffffff;
     border: 1rpx solid #f5f5f5;
+    align-items: center;
   }
   .sizesetting img{
     /*margin-bottom: 10rpx;*/
@@ -149,6 +151,7 @@
     width:100%;
     background-color: white;
     border: 1rpx solid #f5f5f5;
+    align-items: center;
   }
   .durationsetting img{
     margin-bottom: 10rpx;
@@ -164,6 +167,7 @@
     width:100%;
     background-color: white;
     border: 1rpx solid #f5f5f5;
+    align-items: center;
   }
 
 
@@ -177,5 +181,6 @@
   button::after{
     border:none;
   }
+
 
 </style>

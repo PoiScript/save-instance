@@ -11,9 +11,9 @@
       <img src="/static/icons/remind.png"/>
       <span style="font-size:34rpx;color: #696969;object-fit: cover;display: block;float: left;overflow:hidden;">拍照提醒</span>
       <picker  @change="PickerChange" :value="indexPicker" :range="arrayT">
-        <Button type="default" style="margin-left: 275rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayT[indexPicker]}}</Button>
+        <Button type="default" style="width:200rpx;margin-left:180rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayT[indexPicker]}}</Button>
       </picker>
-      <Switch checked @change="switchTime" color="#2d8cf0" style="display: block;float: left;margin-bottom: 5rpx" ></Switch>
+      <Switch checked @change="switchTime" color="#2d8cf0" style="display: block;float: left;" ></Switch>
     </div>
 
 
@@ -36,7 +36,7 @@
     <div class="sizesetting">
       <img src="/static/icons/output.png"/>
       <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">全高清输出</span>
-      <Switch checked @change="switchOutput" color="#2d8cf0" style="display: block;float: left;margin-left:360rpx;margin-bottom: 5rpx"></Switch>
+      <Switch checked @change="switchOutput" color="#2d8cf0" style="display: block;float: left;margin-left:345rpx;"></Switch>
     </div>
 
     <div class="timesetting">

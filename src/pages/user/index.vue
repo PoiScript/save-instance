@@ -9,40 +9,40 @@
 
     <div class="timesetting">
       <img src="/static/icons/remind.png"/>
-      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">拍照提醒</span>
+      <span style="font-size:34rpx;color: #696969;object-fit: cover;display: block;float: left;overflow:hidden;">拍照提醒</span>
       <picker  @change="PickerChange" :value="indexPicker" :range="arrayT">
-        <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 480rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayT[indexPicker]}}</Button>
+        <Button type="default" style="margin-left: 275rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayT[indexPicker]}}</Button>
       </picker>
-      <Switch checked @change="switchTime" color="#2d8cf0" style="line-height:75rpx;vertical-align:middle;margin:-155rpx auto auto 620rpx;height:90rpx; width: 150rpx;"></Switch>
+      <Switch checked @change="switchTime" color="#2d8cf0" style="display: block;float: left;margin-bottom: 5rpx" ></Switch>
     </div>
 
 
     <div class="sizesetting">
       <img src="/static/icons/size.png"/>
-      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">画幅</span>
+      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">画幅</span>
       <picker  @change="SizeChange" :value="indexSize" :range="arrayS">
-        <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 600rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayS[indexSize]}}</Button>
+        <Button type="default" style="margin-left: 440rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayS[indexSize]}}</Button>
       </picker>
     </div>
 
     <div class="durationsetting">
       <img src="/static/icons/duration.png"/>
-      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">每幅时长</span>
+      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">每幅时长</span>
       <picker  @change="DurationChange" :value="indexDuration" :range="arrayD">
-        <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 600rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayD[indexDuration]}}</Button>
+        <Button type="default" style="margin-left: 380rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayD[indexDuration]}}</Button>
       </picker>
     </div>
 
     <div class="sizesetting">
       <img src="/static/icons/output.png"/>
-      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">全高清输出</span>
-      <Switch checked @change="switchOutput" color="#2d8cf0" style="line-height:75rpx;vertical-align:middle;margin:-150rpx auto auto 620rpx;height:90rpx; width: 150rpx;"></Switch>
+      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">全高清输出</span>
+      <Switch checked @change="switchOutput" color="#2d8cf0" style="display: block;float: left;margin-left:360rpx;margin-bottom: 5rpx"></Switch>
     </div>
 
     <div class="timesetting">
       <img src="/static/icons/contact.png"/>
-      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">联系我们</span>
-      <contact-button  size="50" session-from="weapp" style="line-height:75rpx;vertical-align:middle;margin: -130rpx auto auto 650rpx;">
+      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">联系我们</span>
+      <contact-button  size="50" session-from="weapp" style="margin-left:410rpx;">
 
       </contact-button>
 
@@ -103,9 +103,10 @@
   .userbackground{
     background-color: #f5f5f5;
     height:100%;
+    width:750rpx;
     position: fixed;
-    overflow:scroll;
-    align-items: center;
+    overflow-x:hidden;
+
   }
 
   .userinfo{
@@ -113,7 +114,8 @@
     flex-direction: column;
     align-items: center;
     background-color:#2d8cf0;
-    height:130px;
+    height:280rpx;
+    width:750rpx
   }
 
   .userinfo-avatar{
@@ -132,6 +134,8 @@
   }
 
   .sizesetting{
+    display: flex;
+    flex-direction: row;
     height: 90rpx;
     width:100%;
     background-color: #ffffff;
@@ -139,14 +143,17 @@
     align-items: center;
   }
   .sizesetting img{
-    /*margin-bottom: 10rpx;*/
+    object-fit: cover;
+    display: block;
+    float: left;
+    overflow:hidden;
     width: 104.4rpx;
     height: 70.2rpx;
-    line-height:50px;
-    vertical-align:middle;
   }
 
   .durationsetting{
+    display: flex;
+    flex-direction: row;
     height: 90rpx;
     width:100%;
     background-color: white;
@@ -154,14 +161,18 @@
     align-items: center;
   }
   .durationsetting img{
-    margin-bottom: 10rpx;
+
+    object-fit: cover;
+    display: block;
+    float: left;
+    overflow:hidden;
     width: 104.4rpx;
     height: 70.2rpx;
-    line-height:50px;
-    vertical-align:middle;
   }
 
   .timesetting{
+    display: flex;
+    flex-direction: row;
     margin-top: 120rpx;
     height: 90rpx;
     width:100%;
@@ -172,11 +183,13 @@
 
 
   .timesetting img{
-
+    object-fit: cover;
+    display: block;
+    float: left;
+    overflow:hidden;
     width: 104.4rpx;
     height: 70.2rpx;
-    line-height:50px;
-    vertical-align:middle;
+
   }
   button::after{
     border:none;
@@ -196,6 +209,13 @@
     height: 58rpx !important;
   }
   /*swtich样式end*/
+
+  ::-webkit-scrollbar{
+    width:0;
+    height:0;
+    color:transparent;
+  }
+
 
 
 </style>

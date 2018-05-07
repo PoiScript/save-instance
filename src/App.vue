@@ -3,4 +3,8 @@
 
 
 </script>
-export default {};
+
+<style>
+
+</style>
+

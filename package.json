@@ -11,8 +11,11 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "iview": "^2.13.1",
+    "mp-weui": "^1.0.2",
     "mpvue": "^1.0.10",
-    "vuex": "^2.3.1"
+    "vuex": "^2.3.1",
+    "weui": "^1.1.2"
   },
   "devDependencies": {
     "mpvue-loader": "^1.0.13",

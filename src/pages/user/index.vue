@@ -1,5 +1,7 @@
 <template>
-  <div  class="userbackground">
+
+  <div class="userbackground">
+
     <div class="userinfo">
       <open-data class="userinfo-avatar" type="userAvatarUrl" ></open-data>
       <open-data class="userinfo-nickname" type="userNickName" lang="zh_CN"></open-data>
@@ -47,10 +49,11 @@
     </div>
 
 
-    <div class="weui-footer weui-footer_fixed-bottom">
+    <div class="weui-footer" style="margin-top: 120rpx; margin-bottom: 40rpx;">
       <div class="weui-footer__text">VERSION 1.0.0</div>
       <div class="weui-footer__text">© 2018 KAJI STUDIO</div>
     </div>
+
   </div>
 </template>
 
@@ -59,6 +62,7 @@
   export default {
 
     data() {
+
       return {
         indexPicker:0,
         arrayT: ['每日', '每周', '一个月', '三个月', '一年'],
@@ -98,9 +102,9 @@
 
   .userbackground{
     background-color: #f5f5f5;
-    width: 100%;
-    height: 100%;
+    height:100%;
     position: fixed;
+    overflow:scroll;
   }
 
   .userinfo{

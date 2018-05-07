@@ -9,6 +9,6 @@ export default {
   config: {
     navigationBarTitleText: "设置",
     backgroundColor: '#2d8cf0',
-    // enablePullDownRefresh:true,
+    disableScroll:true,
   },
 };

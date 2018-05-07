@@ -7,8 +7,8 @@ app.$mount();
 
 export default {
   config: {
-    navigationBarTitleText: "用户",
+    navigationBarTitleText: "设置",
     backgroundColor: '#2d8cf0',
-    enablePullDownRefresh:true,
+    // enablePullDownRefresh:true,
   },
 };

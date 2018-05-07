@@ -7,27 +7,49 @@
 
     <div class="timesetting">
       <img src="../../../static/icons/remind.png"/>
-      <span style="line-height:50px; vertical-align:middle;font-size:18px;color: #696969;">拍照提醒</span>
+      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">拍照提醒</span>
       <picker  @change="PickerChange" :value="indexPicker" :range="arrayT">
-        <Button type="default" style="font-size:18px;color: #696969;margin:-45px auto auto 260px;background-color: Transparent;height:45px; width: 90px;">{{arrayT[indexPicker]}}</Button>
+        <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 480rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayT[indexPicker]}}</Button>
       </picker>
-      <Switch checked @change="switchChange" color="#2d8cf0" style="line-height:50px;vertical-align:middle;margin:-80px auto auto 350px"></Switch>
+      <Switch checked @change="switchTime" color="#2d8cf0" style="line-height:75rpx;vertical-align:middle;margin:-135rpx auto auto 620rpx;height:90rpx; width: 150rpx;"></Switch>
     </div>
+
 
     <div class="sizesetting">
       <img src="../../../static/icons/size.png"/>
-      <span style="line-height:50px; vertical-align:middle;font-size:18px;color: #696969;">画幅</span>
+      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">画幅</span>
       <picker  @change="SizeChange" :value="indexSize" :range="arrayS">
-        <Button type="default" style="font-size:18px;color: #696969;margin:-45px auto auto 330px;background-color: Transparent;height:45px; width: 90px;">{{arrayS[indexSize]}}</Button>
+        <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 600rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayS[indexSize]}}</Button>
+      </picker>
+    </div>
+
+    <div class="durationsetting">
+      <img src="../../../static/icons/duration.png"/>
+      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">每幅时长</span>
+      <picker  @change="DurationChange" :value="indexDuration" :range="arrayD">
+        <Button type="default" style="font-size:34rpx;color: #696969;margin:-85rpx auto auto 600rpx;background-color: Transparent;height:90rpx; width: 150rpx;">{{arrayD[indexDuration]}}</Button>
       </picker>
     </div>
 
     <div class="sizesetting">
-      <img src="../../../static/icons/duration.png"/>
-      <span style="line-height:50px; vertical-align:middle;font-size:18px;color: #696969;">每幅时长</span>
-      <picker  @change="DurationChange" :value="indexDuration" :range="arrayD">
-        <Button type="default" style="font-size:18px;color: #696969;margin:-45px auto auto 330px;background-color: Transparent;height:45px; width: 90px;">{{arrayD[indexDuration]}}</Button>
-      </picker>
+      <img src="../../../static/icons/output.png"/>
+      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">全高清输出</span>
+      <Switch checked @change="switchOutput" color="#2d8cf0" style="line-height:75rpx;vertical-align:middle;margin:-127rpx auto auto 620rpx;height:90rpx; width: 150rpx;"></Switch>
+    </div>
+
+    <div class="timesetting">
+      <img src="../../../static/icons/contact.png"/>
+      <span style="line-height:90rpx; vertical-align:middle;font-size:34rpx;color: #696969;">联系我们</span>
+      <contact-button type="default-dark" size="50" session-from="weapp" style="line-height:75rpx;vertical-align:middle;margin: -105rpx auto auto 650rpx;">
+
+      </contact-button>
+
+    </div>
+
+
+    <div class="weui-footer weui-footer_fixed-bottom">
+      <div class="weui-footer__text">VERSION 1.0.0</div>
+      <div class="weui-footer__text">© 2018 KAJI STUDIO</div>
     </div>
   </div>
 </template>
@@ -47,8 +69,11 @@
       };
     },
     methods: {
-      switchChange(e) {
-        console.log("switch发生change事件，携带value值为："+ e.mp.detail.value);
+      switchTime(e) {
+        console.log("switch发生change time事件，携带value值为："+ e.mp.detail.value);
+      },
+      switchOutput(e) {
+        console.log("switch发生change output事件，携带value值为："+ e.mp.detail.value);
       },
       PickerChange(e) {
         this.indexPicker = e.mp.detail.value;
@@ -102,28 +127,46 @@
   }
 
   .sizesetting{
-    height: 50px;
+    height: 90rpx;
+    width:100%;
     background-color: white;
     border: 1rpx solid #f5f5f5;
   }
   .sizesetting img{
-    width: 58px;
-    height: 39px;
+    /*margin-bottom: 10rpx;*/
+    width: 104.4rpx;
+    height: 70.2rpx;
+    line-height:50px;
+    vertical-align:middle;
+  }
+
+  .durationsetting{
+    height: 90rpx;
+    width:100%;
+    background-color: white;
+    border: 1rpx solid #f5f5f5;
+  }
+  .durationsetting img{
+    margin-bottom: 10rpx;
+    width: 104.4rpx;
+    height: 70.2rpx;
     line-height:50px;
     vertical-align:middle;
   }
 
   .timesetting{
-    margin-top: 50px;
-    height: 50px;
+    margin-top: 120rpx;
+    height: 90rpx;
+    width:100%;
     background-color: white;
     border: 1rpx solid #f5f5f5;
   }
 
 
   .timesetting img{
-    width: 58px;
-    height: 39px;
+
+    width: 104.4rpx;
+    height: 70.2rpx;
     line-height:50px;
     vertical-align:middle;
   }

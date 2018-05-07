@@ -1,3 +1,6 @@
 <script>
-export default {};
+  import 'mp-weui/lib/style.css';
+
+
 </script>
+export default {};

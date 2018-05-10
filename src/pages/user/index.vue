@@ -2,54 +2,86 @@
 
   <div class="userbackground">
 
+
     <div class="userinfo">
       <open-data class="userinfo-avatar" type="userAvatarUrl" ></open-data>
       <open-data class="userinfo-nickname" type="userNickName" lang="zh_CN"></open-data>
     </div>
 
-    <div class="timesetting">
-      <img src="/static/icons/remind.png"/>
-      <span style="font-size:34rpx;color: #696969;object-fit: cover;display: block;float: left;overflow:hidden;">拍照提醒</span>
-      <picker  @change="PickerChange" :value="indexPicker" :range="arrayT">
-        <Button type="default" style="width:200rpx;margin-left:180rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayT[indexPicker]}}</Button>
-      </picker>
-      <Switch checked @change="switchTime" color="#2d8cf0" style="display: block;float: left;" ></Switch>
+    <div class="weui-panel" style="margin-top: 90rpx;">
+      <div class="weui-panel__bd">
+        <div class="weui-media-box weui-media-box_small-appmsg">
+          <div class="weui-cells weui-cells_in-small-appmsg">
+            <div class="weui-cell weui-cell_access" >
+              <div class="weui-cell__hd">
+                <img src="/static/icons/remind.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+              </div>
+              <div class="weui-cell__bd weui-cell_primary">
+                <div>拍照提醒</div>
+              </div>
+              <div class="weui-cell__ft" style="margin-right: 30rpx;">
+                <picker  @change="PickerChange" :value="indexPicker" :range="arrayT">{{arrayT[indexPicker]}}</picker>
+              </div>
+              <div class="weui-cell__ft">
+                <Switch checked @change="switchTime" color="#2d8cf0" style="display: block;float: left;" ></Switch>
+              </div>
+            </div>
+
+            <picker  @change="SizeChange" :value="indexSize" :range="arrayS" >
+            <div class="weui-cell weui-cell_access" hover-class="weui-cell_active" style="border-top: 1rpx solid #D9D9D9;">
+              <div class="weui-cell__hd">
+                <img src="/static/icons/size.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+              </div>
+              <div class="weui-cell__bd weui-cell_primary">
+                <div>画幅</div>
+              </div>
+              <div class="weui-cell__ft weui-cell__ft_in-access">{{arrayS[indexSize]}}</div>
+            </div>
+            </picker>
+
+            <picker  @change="DurationChange" :value="indexDuration" :range="arrayD" >
+            <div  class="weui-cell weui-cell_access" hover-class="weui-cell_active" style="border-top: 1rpx solid #D9D9D9;">
+              <div class="weui-cell__hd">
+                <img src="/static/icons/duration.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+              </div>
+              <div class="weui-cell__bd weui-cell_primary">
+                <div>每幅时长</div>
+              </div>
+              <div class="weui-cell__ft weui-cell__ft_in-access">{{arrayD[indexDuration]}}&nbsp;</div>
+            </div>
+            </picker>
+
+            <div style="border-top: 1rpx solid #D9D9D9;border-bottom: 1rpx solid #D9D9D9;">
+            <div class="weui-cell weui-cell_access" >
+              <div class="weui-cell__hd">
+                <img src="/static/icons/output.png" style="float:left;width: 45rpx;height: 26.3rpx;margin-right: 10rpx;"/>
+              </div>
+              <div class="weui-cell__bd weui-cell_primary">
+                <div>全高清输出</div>
+              </div>
+              <div class="weui-cell__ft">
+                <Switch checked @change="switchOutput" color="#2d8cf0" style="display: block;float: left;"></Switch>
+              </div>
+            </div>
+            </div>
+            <div style="background-color:#f5f5f5; height: 100rpx; "></div>
+            <div style="border-top: 1rpx solid #D9D9D9;">
+              <button open-type='contact'style="background-color:#ffffff;text-align:left; height: 90rpx;">
+                <img src="/static/icons/contact.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;margin-top: 20rpx;"/>
+                <span style="font-size: 34rpx;float: left">联系我们</span>
+                <img src="/static/icons/>.png" style="height: 26rpx;width: 23.4rpx;float: right;margin-top: 30rpx;margin-right: 5rpx;"/>
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
 
-    <div class="sizesetting">
-      <img src="/static/icons/size.png"/>
-      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">画幅</span>
-      <picker  @change="SizeChange" :value="indexSize" :range="arrayS">
-        <Button type="default" style="margin-left: 440rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayS[indexSize]}}</Button>
-      </picker>
-    </div>
-
-    <div class="durationsetting">
-      <img src="/static/icons/duration.png"/>
-      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">每幅时长</span>
-      <picker  @change="DurationChange" :value="indexDuration" :range="arrayD">
-        <Button type="default" style="margin-left: 380rpx;font-size:34rpx;color: #696969;background-color: Transparent;">{{arrayD[indexDuration]}}</Button>
-      </picker>
-    </div>
-
-    <div class="sizesetting">
-      <img src="/static/icons/output.png"/>
-      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">全高清输出</span>
-      <Switch checked @change="switchOutput" color="#2d8cf0" style="display: block;float: left;margin-left:345rpx;"></Switch>
-    </div>
-
-    <div class="timesetting">
-      <img src="/static/icons/contact.png"/>
-      <span style="object-fit: cover;display: block;float: left;overflow:hidden;font-size:34rpx;color: #696969;">联系我们</span>
-      <contact-button  size="50" session-from="weapp" style="margin-left:410rpx;">
-
-      </contact-button>
-
-    </div>
 
 
-    <div class="weui-footer" style="margin-top: 120rpx; margin-bottom: 40rpx;">
+    <div class="weui-footer" style="margin-top: 70rpx;">
       <div class="weui-footer__text">VERSION 1.0.0</div>
       <div class="weui-footer__text">© 2018 KAJI STUDIO</div>
     </div>
@@ -62,7 +94,6 @@
   export default {
 
     data() {
-
       return {
         indexPicker:0,
         arrayT: ['每日', '每周', '一个月', '三个月', '一年'],
@@ -70,6 +101,7 @@
         arrayS:['竖屏','宽屏','方形','圆形'],
         indexDuration:0,
         arrayD:['1 S','2 S','3 S','4 S'],
+        userInfo:{},
       };
     },
     methods: {
@@ -91,6 +123,23 @@
         this.indexDuration = e.mp.detail.value;
         console.log('选中的值为：' + this.arrayD[e.mp.detail.value]);
       },
+      created () {
+        // 调用应用实例的方法获取全局数据
+        this.getUserInfo()
+      },
+      getUserInfo () {
+        // 调用登录接口
+        wx.login({
+          success: () => {
+            wx.getUserInfo({
+              success: (res) => {
+                this.userInfo = res.userInfo
+              }
+            })
+          }
+        })
+      },
+
 
     }
   }
@@ -133,64 +182,9 @@
     color: white;
   }
 
-  .sizesetting{
-    display: flex;
-    flex-direction: row;
-    height: 90rpx;
-    width:100%;
-    background-color: #ffffff;
-    border: 1rpx solid #f5f5f5;
-    align-items: center;
-  }
-  .sizesetting img{
-    object-fit: cover;
-    display: block;
-    float: left;
-    overflow:hidden;
-    width: 104.4rpx;
-    height: 70.2rpx;
-  }
-
-  .durationsetting{
-    display: flex;
-    flex-direction: row;
-    height: 90rpx;
-    width:100%;
-    background-color: white;
-    border: 1rpx solid #f5f5f5;
-    align-items: center;
-  }
-  .durationsetting img{
-
-    object-fit: cover;
-    display: block;
-    float: left;
-    overflow:hidden;
-    width: 104.4rpx;
-    height: 70.2rpx;
-  }
-
-  .timesetting{
-    display: flex;
-    flex-direction: row;
-    margin-top: 120rpx;
-    height: 90rpx;
-    width:100%;
-    background-color: white;
-    border: 1rpx solid #f5f5f5;
-    align-items: center;
-  }
 
 
-  .timesetting img{
-    object-fit: cover;
-    display: block;
-    float: left;
-    overflow:hidden;
-    width: 104.4rpx;
-    height: 70.2rpx;
 
-  }
   button::after{
     border:none;
   }
@@ -215,7 +209,6 @@
     height:0;
     color:transparent;
   }
-
 
 
 </style>

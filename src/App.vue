@@ -7,9 +7,6 @@
 <style>
 
 
-  button::after{
-    border:none;
-  }
   .wx-switch-input{
     width:100rpx !important;
     height:60rpx !important;

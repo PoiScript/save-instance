@@ -66,7 +66,7 @@
             </div>
             <div style="background-color:#f5f5f5; height: 100rpx; "></div>
             <div style="border-top: 1rpx solid #D9D9D9;">
-              <button open-type='contact'style="background-color:#ffffff;text-align:left; height: 90rpx;">
+              <button open-type='contact' style="background-color:#ffffff;text-align:left; height: 90rpx;">
                 <img src="/static/icons/contact.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;margin-top: 20rpx;"/>
                 <span style="font-size: 34rpx;float: left">联系我们</span>
                 <img src="/static/icons/>.png" style="height: 26rpx;width: 23.4rpx;float: right;margin-top: 30rpx;margin-right: 5rpx;"/>

@@ -143,7 +143,7 @@ export default {
       console.log(e);
       let _this = this;
       wx.previewImage({
-        urls: _this.files // 需要预览的图片http链接列表
+        urls: _this.preImage // 需要预览的图片http链接列表
       })
     },
     //用户选择地址
@@ -155,7 +155,7 @@ export default {
       }else if(_this.isActive==1){
         _this.isActive=0
       }
-      if(_this.address==""){
+      if(_this.address=="当前地址"){
         if(_this.isActive==1){
           wx.chooseLocation({
             //type: 'wgs84',

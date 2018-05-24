@@ -9,8 +9,8 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "touristappid",
-	"projectname": "save-instance",
+	"appid": "wxfc20cf742c83c53b",
+	"projectname": "save-install",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -20,13 +20,24 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
 		"game": {
 			"currentL": -1,
 			"list": []
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": []
+			"list": [
+				{
+					"id": 0,
+					"name": "11",
+					"pathName": "pages/today/main",
+					"query": ""
+				}
+			]
 		}
 	}
 }

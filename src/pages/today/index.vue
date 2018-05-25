@@ -36,7 +36,7 @@
   .img{
     width:250rpx;
     height:250rpx;
-    margin-top: 220rpx;
+    margin-top: 315rpx;
     margin-left: 250rpx;
   }
   button, button::after {

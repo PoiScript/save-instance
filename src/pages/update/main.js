@@ -6,7 +6,7 @@ app.$mount();
 
 export default {
   config: {
-    navigationBarTitleText: '时光轴',
+    navigationBarTitleText: '添加',
   },
 
 };

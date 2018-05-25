@@ -82,7 +82,7 @@
               <div style="background-color:#f5f5f5; height: 100rpx; "></div>
             </button>
 
-            <button form-type="submit" hover-class="button-hover">
+            <button form-type="submit" hover-class="button-hover"  open-type="contact">
               <div  class="weui-cell weui-cell_access"  style="border-top: 1rpx solid #D9D9D9;">
                 <div class="weui-cell__hd">
                   <img src="/static/icons/contact.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>

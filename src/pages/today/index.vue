@@ -1,11 +1,12 @@
 <template>
   <div class="userbackground">
-  <image @click="navigate" src="/static/icons/pic.png" class="img"></image>
+    <image @click="navigate" src="/static/icons/pic.png" class="img"></image>
     <button @click="navigate">今日还没有上传照片哦～</button>
   </div>
 </template>
 
 <script>
+
   export default {
     data() {
       return {}
@@ -52,4 +53,6 @@
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
   }
+
+
 </style>

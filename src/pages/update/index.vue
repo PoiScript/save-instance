@@ -1,18 +1,36 @@
 <template>
-  <div class="page">
+  <div class="userbackground">
+    <div class="textBody">
+      <textarea class="text" @input="inputs" v-model="desc" focus placeholder="字幕" placeholder-style="color:gray" cursor-spacing="0"></textarea>
+      <div class="weui-textarea-counter " style="margin-right: 30rpx;">{{currentWordNumber}}</div>
+    </div>
     <div class="weui-uploader__bd">
       <div class="weui-uploader__files" id="uploaderFiles">
         <block  v-for="item in files" :key="index">
           <div class="weui-uploader__file" @click="predivImage" :id="item" style="margin-top: 10rpx">
-            <image class="weui-uploader__img" :src="item" mode="aspectFill" />
+            <image class="weui-uploader__img" :src="item" mode="aspectFill" style="margin-left:50rpx;margin-top: 30rpx;height:220rpx;width: 220rpx;"/>
           </div>
-          <image @click="removeImage" src="/static/icons/delete.png" style="position: absolute;height: 30rpx;width: 30rpx;margin-left: -30rpx;"/>
+          <image @click="removeImage" src="/static/icons/delete.png" style="position: absolute;height: 38rpx;width: 38rpx;margin-left: -38rpx;margin-top: 30rpx;"/>
         </block>
       </div>
-      <div v-if="!files.length" class="weui-uploader__input-box" style="margin-top: 10rpx">
+      <div v-if="!files.length" class="weui-uploader__input-box" style="margin-left:50rpx;margin-top: 30rpx;height:220rpx;width: 220rpx;background-color: #f5f5f5;border-color:#f5f5f5 ">
         <div class="weui-uploader__input" @click="chooseImage"></div>
       </div>
     </div>
+    <div style="margin-left: 50rpx;margin-right: 50rpx;">
+    <button  hover-class="button-hover" style="margin-top: 80rpx;">
+      <div  class="weui-cell weui-cell_access"  style="border-top: 3rpx solid #f5f5f5;border-bottom: 3rpx solid #f5f5f5;">
+        <div class="weui-cell__hd">
+          <img src="/static/icons/locate.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+        </div>
+        <div class="weui-cell__bd weui-cell_primary">
+          <div v-if="location != '' ">{{location}}</div>
+          <div v-else>所在位置</div>
+        </div>
+        <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+      </div>
+    </button></div>
+
   </div>
 </template>
 
@@ -20,7 +38,11 @@
   export default {
     data() {
       return {
-        files: []
+        max:20,
+        files: [],
+        info:"",
+        currentWordNumber:0,
+        location:"",
       }
     },
     methods: {
@@ -51,12 +73,56 @@
           current: e.currentTarget.id, // 当前显示图片的http链接
           urls: this.files // 需要预览的图片http链接列表
         })
+      },
+      inputs() {
+          this.info = this.desc.value;
+          this.currentWordNumber = parseInt(this.desc.length);
       }
     }
   }
 </script>
 
 <style>
+  .userbackground{
+    background-color: #ffffff;
+    height:100%;
+    width:750rpx;
+    position:absolute;
+    overflow-x:hidden;
+    display: block;
+  }
+
+  .text{
+    overflow-y:hidden;
+    overflow-x:hidden;
+    height: 200rpx;
+    margin-left: 42rpx;
+    width:670rpx;
+  }
+
+  .textBody{
+    display:block;
+    position: relative;
+    width: 100%;
+    margin-top: 50rpx;
+  }
+
+  button, button::after {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+    box-sizing: unset;
+    border:none;
+    border-radius: 0;
+    background-color: transparent;
+    text-align: left;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .button-hover {
+    background-color: transparent;
+
+  }
 
 </style>
 

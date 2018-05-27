@@ -1,7 +1,7 @@
 <template>
   <div class="userbackground">
     <div class="textBody">
-      <textarea class="text" @input="inputs" v-model="desc" focus placeholder="字幕" placeholder-style="color:gray" cursor-spacing="0"></textarea>
+      <textarea class="text" @input="inputs" v-model="desc" placeholder="字幕" placeholder-style="color:gray" cursor-spacing="0"></textarea>
       <div class="weui-textarea-counter " style="margin-right: 30rpx;">{{currentWordNumber}}</div>
     </div>
     <div class="weui-uploader__bd">
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div style="margin-left: 50rpx;margin-right: 50rpx;">
-    <button  hover-class="button-hover" style="margin-top: 80rpx;">
+    <button  @click="chooseAddress" hover-class="button-hover" style="margin-top: 80rpx;">
       <div  class="weui-cell weui-cell_access"  style="border-top: 3rpx solid #f5f5f5;border-bottom: 3rpx solid #f5f5f5;">
         <div class="weui-cell__hd">
           <img src="/static/icons/locate.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
@@ -30,7 +30,18 @@
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </div>
     </button></div>
-
+    <div style="margin-left: 270rpx;margin-right: 260rpx;">
+      <button  hover-class="button-hover" style="margin-top: 150rpx;">
+        <div  class="weui-cell weui-cell_access"  style="border-top: 3rpx solid #f5f5f5;border-bottom: 3rpx solid #f5f5f5;">
+          <div class="weui-cell__hd">
+            <img src="/static/icons/submit.png" style="float:left;width: 50rpx;height: 50rpx;margin-right: 10rpx;"/>
+          </div>
+          <div class="weui-cell__bd weui-cell_primary">
+            <div>发表</div>
+          </div>
+        </div>
+      </button>
+  </div>
   </div>
 </template>
 
@@ -77,6 +88,16 @@
       inputs() {
           this.info = this.desc.value;
           this.currentWordNumber = parseInt(this.desc.length);
+      },
+      chooseAddress(e){
+        let _this=this;
+        wx.chooseLocation({
+          //type: 'wgs84',
+          success: function(res) {
+            _this.location = res.address
+            console.log(_this.address)
+          },
+        })
       }
     }
   }

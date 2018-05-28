@@ -6,7 +6,7 @@
     </div>
     <div class="weui-uploader__bd">
       <div class="weui-uploader__files" id="uploaderFiles">
-        <block  v-for="item in files" :key="index">
+        <block  v-for="item in files" :key="item">
           <div class="weui-uploader__file" @click="predivImage" :id="item" style="margin-top: 10rpx">
             <image class="weui-uploader__img" :src="item" mode="aspectFill" style="margin-left:50rpx;margin-top: 30rpx;height:220rpx;width: 220rpx;"/>
           </div>

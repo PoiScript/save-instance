@@ -1,7 +1,7 @@
 
 <template>
     <div :style="background">
-        <div class="show"><img src="../../../static/picture/示例图.jpg" class="showBody showImage"></div>
+        <div class="show"><img src="../../../static/picture/shiLiTu.jpg" class="showBody showImage"></div>
         <div class="show"><p class="showBody showText">今天真是个好日子</p></div>
         <div class="show"><p class="showBody showAddress">广州市白云区广源大道中151号</p></div>
     </div>

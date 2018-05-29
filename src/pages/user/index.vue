@@ -3,110 +3,110 @@
   <div class="userbackground">
     <form report-submit="true" @submit="formSubmit">
       <button form-type="submit">
-    <div class="userinfo">
-      <open-data class="userinfo-avatar" type="userAvatarUrl" ></open-data>
-      <open-data class="userinfo-nickname" type="userNickName" lang="zh_CN"></open-data>
-    </div>
+        <div class="userinfo">
+          <open-data class="userinfo-avatar" type="userAvatarUrl" ></open-data>
+          <open-data class="userinfo-nickname" type="userNickName" lang="zh_CN"></open-data>
+        </div>
         <div style="background-color:#f5f5f5; height: 80rpx; "></div></button>
-    <div class="weui-panel" >
-      <div class="weui-panel__bd">
-        <div class="weui-media-box weui-media-box_small-appmsg">
-          <div class="weui-cells weui-cells_in-small-appmsg">
-            <div class="weui-cell weui-cell_access" >
-              <div class="weui-cell__hd">
-                <button form-type="submit" hover-class="none">
-                <img src="/static/icons/remind.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
-                </button>
-              </div>
-              <div class="weui-cell__bd weui-cell_primary">
-                <button form-type="submit" hover-class="none">
-                <div>拍照提醒</div>
-                </button>
-              </div>
+      <div class="weui-panel" >
+        <div class="weui-panel__bd">
+          <div class="weui-media-box weui-media-box_small-appmsg">
+            <div class="weui-cells weui-cells_in-small-appmsg">
+              <div class="weui-cell weui-cell_access" >
+                <div class="weui-cell__hd">
+                  <button form-type="submit" hover-class="none">
+                    <img src="/static/icons/remind.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+                  </button>
+                </div>
+                <div class="weui-cell__bd weui-cell_primary">
+                  <button form-type="submit" hover-class="none">
+                    <div>拍照提醒</div>
+                  </button>
+                </div>
                 <picker  @change="PickerChange" :value="indexPicker" :range="arrayT">
                   <button form-type="submit" hover-class="none">
                     <div class="weui-cell__ft" style="margin-right: 30rpx;">{{arrayT[indexPicker]}}</div>
                   </button>
                 </picker>
-              <div class="weui-cell__ft">
-                <Switch checked @change="switchTime" color="#2d8cf0" style="display: block;float: left;" ></Switch>
-              </div>
-            </div>
-
-            <picker  @change="SizeChange" :value="indexSize" :range="arrayS" >
-              <button form-type="submit" hover-class="button-hover">
-            <div class="weui-cell weui-cell_access"  style="border-top: 1rpx solid #D9D9D9;">
-              <div class="weui-cell__hd">
-                <img src="/static/icons/size.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
-              </div>
-              <div class="weui-cell__bd weui-cell_primary">
-                <div>画幅</div>
-              </div>
-                <div class="weui-cell__ft weui-cell__ft_in-access">{{arrayS[indexSize]}}</div>
-            </div>
-              </button>
-            </picker>
-
-            <picker  @change="DurationChange" :value="indexDuration" :range="arrayD" >
-              <button form-type="submit" hover-class="button-hover">
-            <div  class="weui-cell weui-cell_access"  style="border-top: 1rpx solid #D9D9D9;">
-              <div class="weui-cell__hd">
-                <img src="/static/icons/duration.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
-              </div>
-              <div class="weui-cell__bd weui-cell_primary">
-                <div>每幅时长</div>
-              </div>
-              <div class="weui-cell__ft weui-cell__ft_in-access">{{arrayD[indexDuration]}}&nbsp;</div>
-            </div>
-              </button>
-            </picker>
-
-            <div style="border-top: 1rpx solid #D9D9D9;border-bottom: 1rpx solid #D9D9D9;">
-            <div class="weui-cell weui-cell_access" >
-              <div class="weui-cell__hd">
-                <button form-type="submit" hover-class="none">
-                <img src="/static/icons/output.png" style="float:left;width: 45rpx;height: 26.3rpx;margin-right: 10rpx;"/>
-                </button>
-              </div>
-              <div class="weui-cell__bd weui-cell_primary">
-                <button form-type="submit" hover-class="none">
-                <div>全高清输出</div>
-                </button>
-              </div>
-              <div class="weui-cell__ft">
-                <Switch checked @change="switchOutput" color="#2d8cf0" style="display: block;float: left;"></Switch>
-              </div>
-            </div>
-            </div>
-            <button form-type="submit" hover-class="none">
-              <div style="background-color:#f5f5f5; height: 100rpx; "></div>
-            </button>
-
-            <button form-type="submit" hover-class="button-hover"  open-type="contact">
-              <div  class="weui-cell weui-cell_access"  style="border-top: 1rpx solid #D9D9D9;">
-                <div class="weui-cell__hd">
-                  <img src="/static/icons/contact.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+                <div class="weui-cell__ft">
+                  <Switch checked @change="switchTime" color="#2d8cf0" style="display: block;float: left;" ></Switch>
                 </div>
-                <div class="weui-cell__bd weui-cell_primary">
-                  <div>联系我们</div>
-                </div>
-                <div class="weui-cell__ft weui-cell__ft_in-access"></div>
               </div>
-            </button>
 
+              <picker  @change="SizeChange" :value="indexSize" :range="arrayS" >
+                <button form-type="submit" hover-class="button-hover">
+                  <div class="weui-cell weui-cell_access"  style="border-top: 1rpx solid #D9D9D9;">
+                    <div class="weui-cell__hd">
+                      <img src="/static/icons/size.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+                    </div>
+                    <div class="weui-cell__bd weui-cell_primary">
+                      <div>画幅</div>
+                    </div>
+                    <div class="weui-cell__ft weui-cell__ft_in-access">{{arrayS[indexSize]}}</div>
+                  </div>
+                </button>
+              </picker>
+
+              <picker  @change="DurationChange" :value="indexDuration" :range="arrayD" >
+                <button form-type="submit" hover-class="button-hover">
+                  <div  class="weui-cell weui-cell_access"  style="border-top: 1rpx solid #D9D9D9;">
+                    <div class="weui-cell__hd">
+                      <img src="/static/icons/duration.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+                    </div>
+                    <div class="weui-cell__bd weui-cell_primary">
+                      <div>每幅时长</div>
+                    </div>
+                    <div class="weui-cell__ft weui-cell__ft_in-access">{{arrayD[indexDuration]}}&nbsp;</div>
+                  </div>
+                </button>
+              </picker>
+
+              <div style="border-top: 1rpx solid #D9D9D9;border-bottom: 1rpx solid #D9D9D9;">
+                <div class="weui-cell weui-cell_access" >
+                  <div class="weui-cell__hd">
+                    <button form-type="submit" hover-class="none">
+                      <img src="/static/icons/output.png" style="float:left;width: 45rpx;height: 26.3rpx;margin-right: 10rpx;"/>
+                    </button>
+                  </div>
+                  <div class="weui-cell__bd weui-cell_primary">
+                    <button form-type="submit" hover-class="none">
+                      <div>全高清输出</div>
+                    </button>
+                  </div>
+                  <div class="weui-cell__ft">
+                    <Switch checked @change="switchOutput" color="#2d8cf0" style="display: block;float: left;"></Switch>
+                  </div>
+                </div>
+              </div>
+              <button form-type="submit" hover-class="none">
+                <div style="background-color:#f5f5f5; height: 100rpx; "></div>
+              </button>
+
+              <button form-type="submit" hover-class="button-hover"  open-type="contact">
+                <div  class="weui-cell weui-cell_access"  style="border-top: 1rpx solid #D9D9D9;">
+                  <div class="weui-cell__hd">
+                    <img src="/static/icons/contact.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
+                  </div>
+                  <div class="weui-cell__bd weui-cell_primary">
+                    <div>联系我们</div>
+                  </div>
+                  <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+                </div>
+              </button>
+
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
 
 
       <button form-type="submit" hover-class="none">
-    <div class="weui-footer" style="margin-top: 70rpx;">
-      <div class="weui-footer__text">VERSION 1.0.0</div>
-      <div class="weui-footer__text">© 2018 KAJI STUDIO</div>
-    </div>
-    </button>
+        <div class="weui-footer" style="margin-top: 70rpx;">
+          <div class="weui-footer__text">VERSION 1.0.0</div>
+          <div class="weui-footer__text">© 2018 KAJI STUDIO</div>
+        </div>
+      </button>
     </form>
   </div>
 </template>

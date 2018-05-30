@@ -133,7 +133,7 @@ export default {
     navigate() {
       wx.navigateTo({
         url: '/pages/update/main',
-        success: function() {
+        success: () => {
           console.log('success');
         },
       });

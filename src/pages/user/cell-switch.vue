@@ -46,7 +46,7 @@ export default {
 }
 
 .cell {
-  border-bottom: 1px solid #f5f5f5;
+  border-top: 1px solid #d9d9d9;
 }
 
 .cell-img {

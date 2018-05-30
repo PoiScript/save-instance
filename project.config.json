@@ -10,7 +10,7 @@
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
 	"appid": "wxfc20cf742c83c53b",
-	"projectname": "save-install",
+	"projectname": "save-instance",
 	"condition": {
 		"search": {
 			"current": -1,

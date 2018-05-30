@@ -15,7 +15,7 @@
     "iview": "^2.14.0",
     "mp-weui": "^1.0.3",
     "mpvue": "^1.0.12",
-    "mpvue-ripple": "0.0.1",
+    "mpvue-ripple": "^0.1.0",
     "vue-ripple": "^1.0.2",
     "vue-star": "0.0.4",
     "vue-touch-ripple": "^3.0.0",

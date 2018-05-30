@@ -149,6 +149,7 @@
     width:750rpx;
     position: fixed;
     overflow-x:hidden;
+    overflow-y:hidden;
 
   }
   .btndiv{

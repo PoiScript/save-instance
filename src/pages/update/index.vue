@@ -1,5 +1,6 @@
 <template>
   <div class="userbackground">
+    <form report-submit="true" @submit="formSubmit">
     <div class="textBody">
       <textarea class="text" @input="inputs" v-model="desc" placeholder="字幕" placeholder-style="color:gray" cursor-spacing="0"></textarea>
       <div class="weui-textarea-counter " style="margin-right: 30rpx;">{{currentWordNumber}}</div>
@@ -18,7 +19,7 @@
       </div>
     </div>
     <div style="margin-left: 50rpx;margin-right: 50rpx;">
-    <button  @click="chooseAddress" hover-class="button-hover" style="margin-top: 80rpx;">
+    <button  @click="chooseAddress" hover-class="button-hover" form-type="submit" style="margin-top: 80rpx;">
       <div  class="weui-cell weui-cell_access"  style="border-top: 3rpx solid #f5f5f5;border-bottom: 3rpx solid #f5f5f5;">
         <div class="weui-cell__hd">
           <img src="/static/icons/locate.png" style="float:left;width: 45rpx;height: 45rpx;margin-right: 10rpx;"/>
@@ -29,9 +30,10 @@
         </div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </div>
-    </button></div>
+    </button>
+    </div>
     <div style="margin-left: 270rpx;margin-right: 260rpx;">
-      <button  hover-class="button-hover" style="margin-top: 150rpx;">
+      <button  form-type="submit" hover-class="button-hover" style="margin-top: 150rpx;">
         <div  class="weui-cell weui-cell_access"  style="border-top: 3rpx solid #f5f5f5;border-bottom: 3rpx solid #f5f5f5;">
           <div class="weui-cell__hd">
             <img src="/static/icons/submit.png" style="float:left;width: 50rpx;height: 50rpx;margin-right: 10rpx;"/>
@@ -41,7 +43,8 @@
           </div>
         </div>
       </button>
-  </div>
+    </div>
+    </form>
   </div>
 </template>
 

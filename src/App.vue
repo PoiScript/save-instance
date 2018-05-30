@@ -16,7 +16,7 @@ export default {
             if (res.code) {
               wx.request({
                 url: config.api_url + 'jscode2session',
-                data: { code: res.code  },
+                data: { code: res.code },
                 success: res => {
                   if (res.data && res.data.openId) {
                     wx.setStorageSync('openId', res.data.openId);

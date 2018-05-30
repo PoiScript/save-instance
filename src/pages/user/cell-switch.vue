@@ -1,0 +1,61 @@
+<template>
+  <div class="cell weui-cell weui-cell_access">
+    <div class="weui-cell__hd">
+      <button form-type="submit" hover-class="none">
+        <img class="cell-img" v-bind:src="img"/>
+      </button>
+    </div>
+    <div class="weui-cell__bd weui-cell_primary">
+      <button form-type="submit" hover-class="none">
+        <div>{{title}}</div>
+      </button>
+    </div>
+    <div class="weui-cell__ft">
+      <Switch class="switch" :checked="checked" @change="change" color="#2d8cf0"></Switch>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ['img', 'title', 'onSwitchChange', 'checked'],
+  methods: {
+    change(e) {
+      this.onSwitchChange(e);
+    },
+  },
+};
+</script>
+
+<style>
+.wx-switch-input {
+  width: 50px !important;
+  height: 30px !important;
+}
+
+.wx-switch-input::before {
+  width: 49px !important;
+  height: 29px !important;
+}
+
+.wx-switch-input::after {
+  width: 30px !important;
+  height: 29px !important;
+}
+
+.cell {
+  border-top: 1px solid #d9d9d9;
+}
+
+.cell-img {
+  float: left;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+}
+
+.switch {
+  display: block;
+  float: left;
+}
+</style>

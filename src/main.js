@@ -1,11 +1,8 @@
 import Vue from 'vue';
 import App from './App';
 
-
-
 Vue.config.productionTip = false;
 App.mpType = 'app';
-
 
 const app = new Vue(App);
 app.$mount();
@@ -21,7 +18,7 @@ export default {
     tabBar: {
       color: '#80848f',
       selectedColor: '#2d8cf0',
-      "backgroundColor": "#ffffff",
+      backgroundColor: '#ffffff',
       list: [
         {
           text: '今日',

@@ -26,7 +26,7 @@
     </form>
   </div>
 </div>
-  
+
 </template>
 
 <script>
@@ -214,4 +214,18 @@
       color: #000000;
   }
 
+button,
+button::after {
+  margin-top: 30rpx;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
+  box-sizing: unset;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  text-align: center;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
 </style>

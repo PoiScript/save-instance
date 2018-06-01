@@ -1,6 +1,5 @@
 <template>
   <div class="userbackground">
-    <form report-submit="true" @submit="formSubmit">
     <div class="textBody">
       <textarea class="text" :value="descr" @input="updateDescr" placeholder="字幕"
                 placeholder-style="color:gray"

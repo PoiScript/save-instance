@@ -1,19 +1,29 @@
 <template>
-  <li class="item" style="background-image: url('https://picsum.photos/200/300')">
+  <li class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.image + ')' }">
     <span class="dot"></span>
-    <div class="time">FEB, 2<sup>nd</sup></div>
-    <div class="hilight">
-      <div class="title">comment #02</div>
-      <div class="info">the best animation , the best toturials you would ever see . what about canvas ?? do you like it
-        ..
-      </div>
-      <div class="name">- dr. ahmed -</div>
+    <div class="time">
+      <p>{{date}}</p>
+      <p>{{time}}</p>
+    </div>
+    <div class="shadow">
+      {{photo.description}}
     </div>
   </li>
 </template>
 
 <script>
-export default {};
+import format from 'date-fns/format';
+
+export default {
+  props: ['photo'],
+
+  data() {
+    return {
+      date: format(this.photo.created_at, 'M 月 D 日'),
+      time: format(this.photo.created_at, 'HH : mm'),
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -48,25 +58,16 @@ export default {};
   top: -10px;
 }
 
-.hilight {
+.shadow {
   background-color: rgba(0, 0, 0, 0.65);
   position: absolute;
   color: #fff;
   bottom: 0;
   right: 0;
+  left: 0;
   z-index: 1;
   padding: 10px;
   border-radius: 0 0 10px 10px;
-}
-
-.title {
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-
-.name {
-  font-style: italic;
-  text-align: right;
 }
 
 .time {
@@ -76,5 +77,6 @@ export default {};
   font-size: 80%;
   font-weight: bold;
   top: -16px;
+  text-align: end;
 }
 </style>

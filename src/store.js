@@ -32,7 +32,14 @@ const store = new Vuex.Store({
           'content-type': 'application/json',
         },
         success: res => {
-          commit('photosFetched', res.data);
+          commit(
+            'photosFetched',
+            // prefix all photo with the api url
+            res.data.map(photo => {
+              photo.image = config.api_url + photo.image;
+              return photo;
+            }),
+          );
         },
       });
     },

@@ -1,17 +1,24 @@
 <template>
   <div class="box">
     <ul>
-      <item v-for="i in [1, 2, 3]" :key="i"></item>
+      <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
     </ul>
   </div>
 </template>
 
 <script>
 import item from './item';
+import store from '../../store';
 
 export default {
   components: {
     item,
+  },
+
+  computed: {
+    photos() {
+      return store.state.photos;
+    },
   },
 };
 </script>

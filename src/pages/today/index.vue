@@ -2,7 +2,7 @@
   <div>
     <div class="show" v-if="hasPhotoToday">
       <div class="show">
-        <div class="show"><img :src="api_url + photo.image" class="showBody showImage"></div>
+        <div class="show"><img :src="photo.image" class="showBody showImage"></div>
         <div class="show"><p class="showBody showText">{{photo.description}}</p></div>
         <div class="show"><p class="showBody showAddress">{{photo.location}}</p></div>
       </div>
@@ -33,7 +33,6 @@
 <script>
 import ripple from 'mpvue-ripple';
 
-import config from '../../config.js';
 import store from '../../store.js';
 
 export default {
@@ -49,12 +48,6 @@ export default {
     photo() {
       return store.getters.firstPhoto;
     },
-  },
-
-  data() {
-    return {
-      api_url: config.api_url,
-    };
   },
 
   methods: {

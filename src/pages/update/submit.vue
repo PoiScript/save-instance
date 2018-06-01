@@ -14,8 +14,9 @@
 </template>
 
 <script>
-import config from '../../config';
 import rootStore from '../../store';
+import { upload, showWarning } from '../../util';
+
 import store from './store';
 
 export default {
@@ -34,12 +35,7 @@ export default {
     },
   },
   methods: {
-    upload() {
-      wx.showToast({
-        icon: 'loading',
-        title: '正在上传',
-      });
-
+    createFormData() {
       let formData = { openId: this.openId };
       if (this.descr) {
         formData = { ...formData, description: this.descr };
@@ -47,35 +43,21 @@ export default {
       if (this.address) {
         formData = { ...formData, location: this.address };
       }
+      return formData;
+    },
 
-      wx.uploadFile({
-        url: config.api_url + 'upload',
-        filePath: this.image,
-        name: 'photo',
-        header: { 'content-type': 'multipart/form-data' },
-        formData,
-        success: res => {
-          if (res.statusCode !== 200) {
-            wx.showModal({
-              title: '提示',
-              content: '上传失败',
-              showCancel: false,
-            });
-          }
-          // TODO: navigate to timeline
-        },
-        fail: e => {
-          console.log(e);
-          wx.showModal({
-            title: '提示',
-            content: '上传失败',
-            showCancel: false,
-          });
-        },
-        complete: () => {
-          wx.hideToast(); //隐藏Toast
-        },
+    upload() {
+      wx.showToast({
+        icon: 'loading',
+        title: '正在上传',
       });
+
+      upload('upload', this.image, this.createFormData())
+        .then(() => {
+          // TODO: navigate to timeline
+        })
+        .catch(() => showWarning('上传失败'))
+        .finally(() => wx.hideToast());
     },
   },
 };

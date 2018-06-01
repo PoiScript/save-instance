@@ -2,37 +2,32 @@
 import 'mp-weui/lib/style.css';
 import config from './config';
 import store from './store';
+import { getStorage, login, showWarning, request, setStorage } from './util';
 
 export default {
   onLaunch() {
-    wx.getStorage({
-      key: 'openId',
-      success: res => {
-        store.commit('setOpenId', res.data);
-        store.dispatch('fetchPhotos');
-      },
-      fail: () => {
-        wx.login({
-          success: res => {
-            if (res.code) {
-              wx.request({
-                url: config.api_url + 'jscode2session',
-                data: { code: res.code },
-                success: res => {
-                  if (res.data && res.data.openId) {
-                    wx.setStorageSync('openId', res.data.openId);
-                    store.commit('setOpenId', res.data.openId);
-                    store.dispatch('fetchPhotos');
-                  }
-                },
-              });
-            } else {
-              console.log('登录失败！' + res.errMsg);
-            }
-          },
-        });
-      },
-    });
+    getStorage('openId')
+      .catch(() =>
+        login()
+          .then(code => request('jscode2session', 'GET', { code }))
+          .then(({ openId }) => openId)
+          .then(id => setStorage('openId', id)),
+      )
+      .then(id => {
+        store.commit('setOpenId', id);
+        return request('timeline/' + id, 'GET', {});
+      })
+      .then(data =>
+        store.commit(
+          'photosFetched',
+          // prefix all photo with the api url
+          data.map(photo => {
+            photo.image = config.api_url + photo.image;
+            return photo;
+          }),
+        ),
+      )
+      .catch(() => showWarning('登录失败! 无法获取时间轴'));
   },
 };
 </script>

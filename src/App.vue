@@ -4,11 +4,12 @@ import config from './config';
 import store from './store';
 
 export default {
-  onLaunch: () => {
+  onLaunch() {
     wx.getStorage({
       key: 'openId',
       success: res => {
         store.commit('setOpenId', res.data);
+        store.dispatch('fetchPhotos');
       },
       fail: () => {
         wx.login({
@@ -21,6 +22,7 @@ export default {
                   if (res.data && res.data.openId) {
                     wx.setStorageSync('openId', res.data.openId);
                     store.commit('setOpenId', res.data.openId);
+                    store.dispatch('fetchPhotos');
                   }
                 },
               });

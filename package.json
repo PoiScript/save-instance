@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "date-fns": "^1.29.0",
     "mp-weui": "^1.0.3",
     "mpvue": "^1.0.12",
     "mpvue-ripple": "^0.1.0",

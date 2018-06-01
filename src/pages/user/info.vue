@@ -13,20 +13,23 @@ export default {};
 
 <style scoped>
 .user-info {
-  color: white;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: #2d8cf0;
-  padding-bottom: 20px;
   width: 100%;
+  color: white;
+  padding-bottom: 20px;
 }
 
 .avatar {
-  width: 128px;
-  height: 128px;
-  padding-bottom: 20px;
+  width: 75px;
+  height: 75px;
+  margin: 15px;
   border-radius: 50%;
+  object-fit: cover;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
+  float: left;
+  overflow: hidden;
 }
 </style>

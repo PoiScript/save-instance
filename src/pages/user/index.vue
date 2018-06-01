@@ -1,39 +1,43 @@
 <template>
-  <form class="user-background" report-submit="true" @submit="formSubmit">
-    <user-info></user-info>
-    <div class="weui-panel">
-      <div class="weui-panel__bd">
-        <div class="weui-media-box weui-media-box_small-appmsg">
-          <div class="cell-padding weui-cells weui-cells_in-small-appmsg">
-            <cell-switch title="拍照提醒"
-                         img="/static/icons/remind.png"
-                         :checked="true"
-                         :on-switch-change="switchTime"></cell-switch>
-            <cell-picker title="提醒周期"
-                         img="/static/icons/remind.png"
-                         :value="indexPicker" :range="arrayT"
-                         :on-switch-change="PickerChange"></cell-picker>
-            <cell-picker title="画幅"
-                         img="/static/icons/size.png"
-                         :value="indexSize" :range="arrayS"
-                         :on-picker-change="SizeChange"></cell-picker>
-            <cell-picker title="每幅时长"
-                         img="/static/icons/duration.png"
-                         :value="indexDuration" :range="arrayD"
-                         :on-picker-change="DurationChange"></cell-picker>
-            <cell-switch title="全高清输出"
-                         img="/static/icons/output.png"
-                         :checked="true"
-                         :on-switch-change="switchOutput"></cell-switch>
-            <div class="cell-padding weui-cells weui-cells_in-small-appmsg">
-              <cell-support></cell-support>
+  <div class="user-background">
+    <form report-submit="true" @submit="formSubmit">
+      <user-info></user-info>
+      <div class="cell-padding"></div>
+      <div class="weui-panel">
+        <div class="weui-panel__bd">
+          <div class="weui-media-box weui-media-box_small-appmsg">
+            <div class="weui-cells weui-cells_in-small-appmsg">
+              <cell-switch title="拍照提醒"
+                           img="/static/icons/remind.png"
+                           :checked="true"
+                           :on-switch-change="switchTime"></cell-switch>
+              <cell-picker title="提醒周期"
+                           img="/static/icons/period.png"
+                           :value="indexPicker" :range="arrayT"
+                           :on-switch-change="PickerChange"></cell-picker>
+              <cell-picker title="画幅"
+                           img="/static/icons/size.png"
+                           :value="indexSize" :range="arrayS"
+                           :on-picker-change="SizeChange"></cell-picker>
+              <cell-picker title="每幅时长"
+                           img="/static/icons/duration.png"
+                           :value="indexDuration" :range="arrayD"
+                           :on-picker-change="DurationChange"></cell-picker>
+              <cell-switch title="全高清输出"
+                           img="/static/icons/output.png"
+                           :checked="true"
+                           :on-switch-change="switchOutput"></cell-switch>
+              <div class="cell-padding"></div>
+              <div class="weui-cells weui-cells_in-small-appmsg">
+                <cell-support></cell-support>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <user-footer></user-footer>
-  </form>
+      <user-footer></user-footer>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -53,6 +57,7 @@ export default {
     'user-footer': footer,
     'user-info': userInfo,
   },
+
   data() {
     return {
       confirm: false,
@@ -121,10 +126,15 @@ button::after {
 
 .user-background {
   background-color: #f5f5f5;
+  height: 100%;
+  width: 375px;
+  position: fixed;
+  overflow-x: hidden;
 }
 
 .cell-padding {
-  margin-top: 35px;
+  background-color: #f5f5f5;
+  height: 50px;
 }
 
 ::-webkit-scrollbar {

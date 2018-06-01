@@ -7,5 +7,6 @@ app.$mount();
 export default {
   config: {
     navigationBarTitleText: '时光轴',
+    backgroundColor: '#2d8cf0',
   },
 };

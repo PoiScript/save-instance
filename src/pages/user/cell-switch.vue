@@ -1,17 +1,19 @@
 <template>
-  <div class="cell weui-cell weui-cell_access">
-    <div class="weui-cell__hd">
-      <button form-type="submit" hover-class="none">
-        <img class="cell-img" v-bind:src="img"/>
-      </button>
-    </div>
-    <div class="weui-cell__bd weui-cell_primary">
-      <button form-type="submit" hover-class="none">
-        <div>{{title}}</div>
-      </button>
-    </div>
-    <div class="weui-cell__ft">
-      <Switch class="switch" :checked="checked" @change="change" color="#2d8cf0"></Switch>
+  <div class="cell">
+    <div class="weui-cell weui-cell_access">
+      <div class="weui-cell__hd">
+        <button form-type="submit" hover-class="none">
+          <img class="cell-img" v-bind:src="img"/>
+        </button>
+      </div>
+      <div class="weui-cell__bd weui-cell_primary">
+        <button form-type="submit" hover-class="none">
+          <div>{{title}}</div>
+        </button>
+      </div>
+      <div class="weui-cell__ft">
+        <Switch class="switch" :checked="checked" @change="change" color="#2d8cf0"></Switch>
+      </div>
     </div>
   </div>
 </template>
@@ -44,7 +46,7 @@ export default {
 }
 
 .cell {
-  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .cell-img {

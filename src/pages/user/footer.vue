@@ -15,5 +15,6 @@ export default {};
 .footer {
   margin-top: 35px;
   margin-bottom: 35px;
+  background-color: #f5f5f5;
 }
 </style>

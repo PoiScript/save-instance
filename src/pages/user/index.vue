@@ -57,6 +57,7 @@ export default {
     'user-footer': footer,
     'user-info': userInfo,
   },
+
   data() {
     return {
       confirm: false,
@@ -127,12 +128,13 @@ button::after {
   background-color: #f5f5f5;
   height: 100%;
   width: 375px;
-  line-height: 1.5;
-  text-align: start;
+  position: fixed;
+  overflow-x: hidden;
 }
 
-.user-background {
+.cell-padding {
   background-color: #f5f5f5;
+  height: 35px;
 }
 
 ::-webkit-scrollbar {

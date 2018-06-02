@@ -9,24 +9,25 @@
             <div class="weui-cells weui-cells_in-small-appmsg">
               <cell-switch title="拍照提醒"
                            img="/static/icons/remind.png"
-                           :checked="true"
-                           :on-switch-change="switchTime"></cell-switch>
-              <cell-picker title="提醒周期"
+                           :checked="daily_notify"
+                           :onSwitchChange="switchDailyNotify"></cell-switch>
+              <cell-picker v-if="daily_notify"
+                           title="提醒周期"
                            img="/static/icons/period.png"
-                           :value="indexPicker" :range="arrayT"
-                           :on-switch-change="PickerChange"></cell-picker>
+                           :value="notify_time" :range="notifyTimes"
+                           :onPickerChange="changeNotifyTime"></cell-picker>
               <cell-picker title="画幅"
                            img="/static/icons/size.png"
-                           :value="indexSize" :range="arrayS"
-                           :on-picker-change="SizeChange"></cell-picker>
+                           :value="photo_shape" :range="photoShapes"
+                           :onPickerChange="changePhotoShape"></cell-picker>
               <cell-picker title="每幅时长"
                            img="/static/icons/duration.png"
-                           :value="indexDuration" :range="arrayD"
-                           :on-picker-change="DurationChange"></cell-picker>
+                           :value="duration" :range="durations"
+                           :onPickerChange="changeDuration"></cell-picker>
               <cell-switch title="全高清输出"
                            img="/static/icons/output.png"
-                           :checked="true"
-                           :on-switch-change="switchOutput"></cell-switch>
+                           :checked="hd_output"
+                           :onSwitchChange="switchHDOutput"></cell-switch>
               <div class="cell-padding"></div>
               <div class="weui-cells weui-cells_in-small-appmsg">
                 <cell-support></cell-support>
@@ -41,8 +42,8 @@
 </template>
 
 <script>
-import config from '../../config';
-import store from '../../store';
+import rootStore from '../../store';
+import { request, showWarning } from '../../util';
 import cellPicker from './cell-picker';
 import cellSupport from './cell-support';
 import cellSwitch from './cell-switch';
@@ -58,53 +59,106 @@ export default {
     'user-info': userInfo,
   },
 
+  computed: {
+    openId() {
+      return rootStore.state.openId;
+    },
+    settings() {
+      return {
+        daily_notify: this.daily_notify,
+        notify_time: this.notify_time,
+        duration: this.duration,
+        photo_shape: this.photo_shape,
+        hd_output: this.hd_output,
+      };
+    },
+  },
+
   data() {
     return {
-      confirm: false,
-      showDialog: false,
-      indexPicker: 0,
-      arrayT: ['每日', '每周', '一个月', '三个月', '一年'],
-      indexSize: 0,
-      arrayS: ['竖屏', '宽屏', '方形', '圆形'],
-      indexDuration: 0,
-      arrayD: ['1 S', '2 S', '3 S', '4 S'],
-      userInfo: {},
+      notifyTimes: [
+        '8:00',
+        '10:00',
+        '12:00',
+        '14:00',
+        '16:00',
+        '18:00',
+        '20:00',
+        '22:00',
+        '24:00',
+      ],
+      durations: ['1 S', '2 S', '3 S', '4 S'],
+      photoShapes: ['竖屏', '宽屏', '方形', '圆形'],
+      daily_notify: true,
+      notify_time: 0,
+      duration: 0,
+      photo_shape: 0,
+      hd_output: true,
     };
   },
+
+  onLoad() {
+    wx.showToast({
+      icon: 'loading',
+      title: '获取用户配置...',
+    });
+
+    this.getSettings().finally(() => wx.hideToast());
+  },
+
   methods: {
-    switchTime(e) {
-      console.log(
-        'switch发生change time事件，携带value值为：' + e.mp.detail.value,
-      );
+    switchDailyNotify(value) {
+      this.updateSettings({ daily_notify: value });
     },
-    switchOutput(e) {
-      console.log(
-        'switch发生change output事件，携带value值为：' + e.mp.detail.value,
-      );
+
+    switchHDOutput(value) {
+      this.updateSettings({ hd_output: value });
     },
-    PickerChange(e) {
-      this.indexPicker = e.mp.detail.value;
-      console.log('选中的值为：' + this.arrayT[e.mp.detail.value]);
+
+    changeNotifyTime(value) {
+      this.updateSettings({ notify_time: parseInt(value) });
     },
-    SizeChange(e) {
-      this.indexSize = e.mp.detail.value;
-      console.log('选中的值为：' + this.arrayS[e.mp.detail.value]);
+
+    changePhotoShape(value) {
+      this.updateSettings({ photo_shape: parseInt(value) });
     },
-    DurationChange(e) {
-      this.indexDuration = e.mp.detail.value;
-      console.log('选中的值为：' + this.arrayD[e.mp.detail.value]);
+
+    changeDuration(value) {
+      this.updateSettings({ duration: parseInt(value) });
     },
 
     formSubmit(e) {
       const formId = e.mp.detail.formId;
-      if (store.state.openId && !formId.includes('the formId is a mock one')) {
-        wx.request({
-          method: 'POST',
-          header: { 'content-type': 'application/json' },
-          url: config.api_url + 'formId',
-          data: { openId: store.state.openId, formId },
-        });
+      if (this.openId && !formId.includes('the formId is a mock one')) {
+        request('formId', 'POST', { openId: this.openId, formId });
       }
+    },
+
+    updateSettings(settings) {
+      wx.showToast({
+        icon: 'loading',
+        title: '更新用户配置...',
+      });
+
+      request('settings/' + this.openId, 'POST', {
+        ...this.settings,
+        ...settings,
+      })
+        .catch(() => showWarning('用户配置更新失败!'))
+        .then(() => this.getSettings())
+        .finally(() => wx.hideToast());
+    },
+
+    getSettings() {
+      return request('settings/' + this.openId, 'GET', null)
+        .then(settings => {
+          this.daily_notify = settings.daily_notify;
+          this.notify_time = settings.notify_time;
+          this.duration = settings.duration;
+          this.photo_shape = settings.photo_shape;
+          this.hd_output = settings.hd_output;
+        })
+        .catch(() => showWarning('获取用户配置失败!'));
     },
   },
 };

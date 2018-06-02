@@ -23,7 +23,7 @@ export default {
   props: ['img', 'title', 'onSwitchChange', 'checked'],
   methods: {
     change(e) {
-      this.onSwitchChange(e);
+      this.onSwitchChange(e.mp.detail.value);
     },
   },
 };

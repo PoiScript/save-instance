@@ -19,7 +19,7 @@ export default {
   props: ['img', 'title', 'onPickerChange', 'value', 'range'],
   methods: {
     change(e) {
-      this.onPickerChange(e);
+      this.onPickerChange(e.mp.detail.value);
     },
   },
 };

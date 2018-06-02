@@ -1,83 +1,78 @@
-
 <template>
-    <div :style="background">
-        <div class="show"><img src="../../../static/picture/shiLiTu.jpg" class="showBody showImage"></div>
-        <div class="show"><p class="showBody showText">今天真是个好日子</p></div>
-        <div class="show"><p class="showBody showAddress">广州市白云区广源大道中151号</p></div>
-    </div>
+  <div class="page">
+    <swiper :indicator-dots="indicatorDots"
+            :autoplay="autoplay"
+            :interval="interval"
+            :duration="duration"
+            :circular="circular"
+            @change="swiperChange"
+            @animationfinish="animationfinish"
+            class="swiper-img">
+      <div v-for="item in imgUrls" :key="index">
+        <swiper-item>
+          <image :src="item" class="slide-image"></image>
+          <div v-if="item==imgUrls[2]" class="btn" @click="navigate">点击开始咔记 ></div>
+        </swiper-item>
+      </div>
+    </swiper>
+  </div>
 </template>
+
 <script>
 export default {
-    data () {
-        return {
-            time:'',
-            image:'',
-            text:'',
-            address:'',
-            isStorage:0,//当isStorage为0时，即缓存不存在，否则缓存存在，从缓存中读取数据
-            background:'',//想把上传的图片作为背景 
-        }
+  data() {
+    return {
+      indicatorDots: true, //是否显示面板指示点
+      duration: 900, //滑动动画时长
+      circular: false, //是否采用衔接滑动
+      imgUrls: [
+        'http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg',
+        'http://img06.tooopen.com/images/20160818/tooopen_sy_175866434296.jpg',
+        'http://img06.tooopen.com/images/20160818/tooopen_sy_175833047715.jpg',
+      ],
+    };
+  },
+  methods: {
+    swiperChange(e) {
+      console.log('第' + e.mp.detail.current + '张轮播图发生了滑动');
     },
-    onLoad:function(){
-    // 页面初始化
-        wx.getStorage({
-            key: 'key',
-            success: function(res) {
-                this.isStorage=1
-                console.log(res.data)
-            },
-            fail:function(res){
-                this.isStorage=0
-                console.log('fail')
-            }
-        })
-        if(this.isStorage===0){
-            wx.request({
-                url: '../show/getdata', //仅为示例，并非真实的接口地址
-                data: {
-                    image: '' ,
-                    text: '',
-                    address:''
-                },
-                header: {
-                    'content-type': 'application/json' // 默认值
-                },
-                success: function(res) {
-                    console.log('success')
-                    console.log(res.data)
-                }
-            })
-        }
+    animationfinish(e) {
+      console.log('第' + e.mp.detail.current + '张轮播图滑动结束');
     },
-}
+    navigate() {
+      wx.switchTab({
+        url: '/pages/today/main',
+        success: () => {
+          console.log('success');
+        },
+      });
+    },
+  },
+};
 </script>
 <style scoped>
-.show{
-    margin: 0 auto;
-    padding: 0;
-    border: 0;
-    width: 100%;
+.page {
+  height: 100%;
+  width: 375px;
+  position: fixed;
+  overflow-x: hidden;
 }
-.showBody{
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top:5%;
-    width: 80%;
+.slide-image {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
-.showImage{
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top:5%;
-    width: 80%;
+.swiper-img {
+  height: 100%;
+  width: 100%;
 }
-.showText{
-    text-align: center;
-    font-size: 28rpx;
-    color: #000000;
-}
-.showAddress{
-    text-align: center;
-    font-size: 28rpx;
-    color: #000000;
+.btn {
+  position: absolute;
+  left: 240px;
+  top: 10px;
+  background-color: transparent;
+  color: white;
+  font-size: 18px;
+  border: none;
 }
 </style>

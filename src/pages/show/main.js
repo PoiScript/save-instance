@@ -6,7 +6,7 @@ app.$mount();
 
 export default {
   config: {
-    navigationBarTitleText: '今日已拍',
+    navigationBarTitleText: '介绍',
   },
 
 };

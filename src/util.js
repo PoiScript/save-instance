@@ -1,8 +1,9 @@
 import config from './config';
 
 /** promisify wx.request api */
-export const request = (path, method, data) =>
-  new Promise((resolve, reject) => {
+export const request = (path, method, data) => {
+  wx.showNavigationBarLoading();
+  return new Promise((resolve, reject) => {
     wx.request({
       method,
       data,
@@ -20,12 +21,17 @@ export const request = (path, method, data) =>
       fail: err => {
         reject('Network Failed: ' + err);
       },
+      complete: () => {
+        wx.hideNavigationBarLoading();
+      },
     });
   });
+};
 
 /** promisify wx.uploadFile api */
-export const upload = (path, filePath, formData) =>
-  new Promise((resolve, reject) => {
+export const upload = (path, filePath, formData) => {
+  wx.showNavigationBarLoading();
+  return new Promise((resolve, reject) => {
     wx.uploadFile({
       formData,
       filePath,
@@ -42,12 +48,17 @@ export const upload = (path, filePath, formData) =>
       fail: err => {
         reject('Network Failed: ' + err);
       },
+      complete: () => {
+        wx.hideNavigationBarLoading();
+      },
     });
   });
+};
 
 /** promisify wx.login api */
-export const login = () =>
-  new Promise((resolve, reject) => {
+export const login = () => {
+  wx.showNavigationBarLoading();
+  return new Promise((resolve, reject) => {
     wx.login({
       success: res => {
         if (res.code) {
@@ -59,12 +70,17 @@ export const login = () =>
       fail: () => {
         reject('Login Failed');
       },
+      complete: () => {
+        wx.hideNavigationBarLoading();
+      },
     });
   });
+};
 
 /** promisify wx.getStorage api */
-export const getStorage = key =>
-  new Promise((resolve, reject) => {
+export const getStorage = key => {
+  wx.showNavigationBarLoading();
+  return new Promise((resolve, reject) => {
     wx.getStorage({
       key,
       success: res => {
@@ -73,12 +89,17 @@ export const getStorage = key =>
       fail: () => {
         reject('Get Storage Error');
       },
+      complete: () => {
+        wx.hideNavigationBarLoading();
+      },
     });
   });
+};
 
 /** promisify wx.setStorage api */
-export const setStorage = (key, data) =>
-  new Promise((resolve, reject) => {
+export const setStorage = (key, data) => {
+  wx.showNavigationBarLoading();
+  return new Promise((resolve, reject) => {
     wx.setStorage({
       key,
       data,
@@ -88,8 +109,12 @@ export const setStorage = (key, data) =>
       fail: () => {
         reject('Set Storage Error');
       },
+      complete: () => {
+        wx.hideNavigationBarLoading();
+      },
     });
   });
+};
 
 export const showWarning = content =>
   wx.showModal({

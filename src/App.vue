@@ -1,8 +1,7 @@
 <script>
 import 'mp-weui/lib/style.css';
-import config from './config';
 import store from './store';
-import { getStorage, login, showWarning, request, setStorage } from './util';
+import { getStorage, login, request, setStorage } from './util';
 
 export default {
   onLaunch() {
@@ -13,21 +12,8 @@ export default {
           .then(({ openId }) => openId)
           .then(id => setStorage('openId', id)),
       )
-      .then(id => {
-        store.commit('setOpenId', id);
-        return request('timeline/' + id, 'GET', {});
-      })
-      .then(data =>
-        store.commit(
-          'photosFetched',
-          // prefix all photo with the api url
-          data.map(photo => {
-            photo.image = config.api_url + photo.image;
-            return photo;
-          }),
-        ),
-      )
-      .catch(() => showWarning('登录失败! 无法获取时间轴'));
+      .then(id => store.commit('setOpenId', id))
+      .then(() => store.dispatch('fetchPhotos'));
   },
 };
 </script>

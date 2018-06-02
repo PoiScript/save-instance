@@ -76,7 +76,7 @@ export default {
   color: #fff;
   font-size: 80%;
   font-weight: bold;
-  top: -16px;
-  text-align: end;
+  top: -28px;
+  text-align: center;
 }
 </style>

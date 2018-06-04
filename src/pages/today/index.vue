@@ -1,10 +1,6 @@
 <template>
   <form report-submit="true" class="container">
-    <div v-if="hasPhotoToday" class="polaroid-images">
-      <div class="a">
-        <img :src="photo.image"/>
-      </div>
-    </div>
+    <today-photo v-if="hasPhotoToday"></today-photo>
     <ripple type="circle" v-else>
       <div @click="navigateToUpload">
         <img src="/static/icons/pic.png" class="img"/>
@@ -17,12 +13,14 @@
 <script>
 import ripple from 'mpvue-ripple';
 
+import TodayPhoto from './today-photo';
 import store from '../../store.js';
 import { navigate } from '../../util';
 
 export default {
   components: {
     ripple,
+    TodayPhoto,
   },
 
   computed: {
@@ -73,12 +71,5 @@ button::after {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.a {
-  background: white;
-  margin: 0 15px 30px;
-  padding: 10px 10px 25px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 </style>

@@ -8,7 +8,7 @@
     <ripple type="circle" v-else>
       <div @click="navigateToUpload">
         <img src="/static/icons/pic.png" class="img"/>
-        <button>点击上传今日记忆～</button>
+        <button>点击发表今日记忆～</button>
       </div>
     </ripple>
   </form>

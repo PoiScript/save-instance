@@ -9,7 +9,7 @@ app.$mount();
 
 export default {
   config: {
-    pages: ['^pages/show/main'],
+    pages: ['^pages/today/main'],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#2d8cf0',

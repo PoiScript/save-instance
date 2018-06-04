@@ -15,7 +15,7 @@
 
 <script>
 import rootStore from '../../store';
-import { upload, showWarning } from '../../util';
+import { upload, showWarning, switchTab } from '../../util';
 
 import store from './store';
 
@@ -53,10 +53,9 @@ export default {
       });
 
       upload('upload', this.image, this.createFormData())
-        .then(() => {
-          // TODO: navigate to timeline
-        })
         .catch(() => showWarning('上传失败'))
+        .then(() => switchTab('/pages/timeline/main'))
+        .then(() => store.dispatch('fetchPhotos'))
         .finally(() => wx.hideToast());
     },
   },

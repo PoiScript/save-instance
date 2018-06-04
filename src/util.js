@@ -116,6 +116,32 @@ export const setStorage = (key, data) => {
   });
 };
 
+export const navigate = url =>
+  new Promise((resolve, reject) => {
+    wx.navigateTo({
+      url,
+      success: () => {
+        resolve();
+      },
+      fail: err => {
+        reject('Navigate Error' + JSON.stringify(err));
+      },
+    });
+  });
+
+export const switchTab = url =>
+  new Promise((resolve, reject) => {
+    wx.switchTab({
+      url,
+      success: () => {
+        resolve();
+      },
+      fail: err => {
+        reject('Switch Tab Error' + JSON.stringify(err));
+      },
+    });
+  });
+
 export const showWarning = content =>
   wx.showModal({
     content,

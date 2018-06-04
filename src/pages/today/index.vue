@@ -12,6 +12,7 @@
 
 <script>
 import ripple from 'mpvue-ripple';
+import { mapGetters } from 'vuex';
 
 import TodayPhoto from './today-photo';
 import store from '../../store.js';
@@ -23,15 +24,9 @@ export default {
     TodayPhoto,
   },
 
-  computed: {
-    hasPhotoToday() {
-      return store.getters.hasPhotoToday;
-    },
+  store,
 
-    photo() {
-      return store.getters.firstPhoto;
-    },
-  },
+  computed: mapGetters(['hasPhotoToday']),
 
   methods: {
     navigateToUpload() {

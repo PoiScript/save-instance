@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import item from './item';
 import store from '../../store';
 
@@ -15,11 +17,9 @@ export default {
     item,
   },
 
-  computed: {
-    photos() {
-      return store.state.photos;
-    },
-  },
+  store,
+
+  computed: mapState(['photos']),
 
   onPullDownRefresh() {
     store.dispatch('fetchPhotos').then(() => wx.stopPullDownRefresh());

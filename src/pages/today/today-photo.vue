@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="photo">
-      <img :src="photo.image"/>
+      <img :src="firstPhoto.image"/>
     </div>
-    <mp-cell-group :title="format(photo.created_at)">
+    <mp-cell-group :title="format(firstPhoto.created_at)">
       <mp-cell
         icon-src="/static/icons/period.png"
-        :content="photo.description"
+        :content="firstPhoto.description"
       />
       <mp-cell
         icon-src="/static/icons/locate.png"
-        :content="photo.location"
+        :content="firstPhoto.location"
       />
     </mp-cell-group>
   </div>
@@ -20,6 +20,7 @@
 import format from 'date-fns/format';
 import MpCell from 'mp-weui/packages/cell';
 import MpCellGroup from 'mp-weui/packages/cell-group';
+import { mapGetters } from 'vuex';
 
 import store from '../../store.js';
 
@@ -31,11 +32,9 @@ export default {
     MpCellGroup,
   },
 
-  computed: {
-    photo() {
-      return store.getters.firstPhoto;
-    },
-  },
+  store,
+
+  computed: mapGetters(['firstPhoto']),
 
   methods: {
     format(date) {

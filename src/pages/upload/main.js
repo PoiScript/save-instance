@@ -8,5 +8,4 @@ export default {
   config: {
     navigationBarTitleText: '添加',
   },
-
 };

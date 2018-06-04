@@ -15,14 +15,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import store from './store';
 
 export default {
-  computed: {
-    image() {
-      return store.state.image;
-    },
-  },
+  store,
+
+  computed: mapState(['image']),
+
   methods: {
     choose() {
       wx.chooseImage({

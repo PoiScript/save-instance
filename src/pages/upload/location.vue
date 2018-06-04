@@ -17,14 +17,15 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import store from './store';
 
 export default {
-  computed: {
-    address() {
-      return store.state.address;
-    },
-  },
+  store,
+
+  computed: mapState(['address']),
+
   methods: {
     chooseAddress() {
       wx.chooseLocation({

@@ -37,7 +37,7 @@ export default {
 
   methods: {
     navigateToUpload() {
-      navigate('/pages/update/main');
+      navigate('/pages/upload/main');
     },
   },
 };

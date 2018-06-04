@@ -5,7 +5,7 @@
       <p>{{date}}</p>
       <p>{{time}}</p>
     </div>
-    <div class="shadow">
+    <div class="shadow" v-if="photo.description">
       {{photo.description}}
     </div>
   </li>

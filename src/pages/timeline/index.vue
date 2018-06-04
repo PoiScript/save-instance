@@ -20,6 +20,10 @@ export default {
       return store.state.photos;
     },
   },
+
+  onPullDownRefresh() {
+    store.dispatch('fetchPhotos').then(() => wx.stopPullDownRefresh());
+  },
 };
 </script>
 

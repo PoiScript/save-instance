@@ -3,17 +3,20 @@
     <ul>
       <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
     </ul>
+    <fab></fab>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
+import fab from './fab';
 import item from './item';
 import store from '../../store';
 
 export default {
   components: {
+    fab,
     item,
   },
 

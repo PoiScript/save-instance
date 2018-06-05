@@ -33,7 +33,7 @@ export default {
           selectedIconPath: 'static/icons/view_day_selected.png',
         },
         {
-          text: '设置',
+          text: '我的',
           pagePath: 'pages/user/main',
           iconPath: 'static/icons/person.png',
           selectedIconPath: 'static/icons/person_selected.png',

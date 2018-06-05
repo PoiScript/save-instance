@@ -2,7 +2,12 @@
   <div class="user-background">
     <form report-submit="true" @submit="formSubmit">
       <user-info></user-info>
-      <panel>
+      <panel title="视频">
+        <cell-button img="/static/icons/contact.png"
+                     text="视频列表"
+                     :onClick="navigateToVideo"></cell-button>
+      </panel>
+      <panel title="设置">
         <cell-switch title="拍照提醒"
                      img="/static/icons/remind.png"
                      :checked="daily_notify"
@@ -24,8 +29,11 @@
                      :checked="hd_output"
                      :onSwitchChange="switchHDOutput"></cell-switch>
       </panel>
-      <panel>
-        <cell-support></cell-support>
+      <panel title="其他">
+        <button form-type="submit" hover-class="button-hover" open-type="contact">
+          <cell-button img="/static/icons/contact.png"
+                       text="联系我们"></cell-button>
+        </button>
       </panel>
     </form>
     <footer>
@@ -40,9 +48,9 @@ import MpFooter from 'mp-weui/packages/footer';
 import { mapState } from 'vuex';
 
 import store from '../../store';
-import { request, showWarning } from '../../util';
+import { request, showWarning, navigate } from '../../util';
+import cellButton from './cell-button';
 import cellPicker from './cell-picker';
-import cellSupport from './cell-support';
 import cellSwitch from './cell-switch';
 import userInfo from './info';
 import panel from './panel';
@@ -50,8 +58,8 @@ import panel from './panel';
 export default {
   components: {
     MpFooter,
+    cellButton,
     cellPicker,
-    cellSupport,
     cellSwitch,
     userInfo,
     panel,
@@ -157,6 +165,10 @@ export default {
           this.hd_output = settings.hd_output;
         })
         .catch(() => showWarning('获取用户配置失败!'));
+    },
+
+    navigateToVideo() {
+      navigate('/pages/video/main');
     },
   },
 };

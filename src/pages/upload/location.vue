@@ -20,6 +20,7 @@
 import { mapState } from 'vuex';
 
 import store from './store';
+import { chooseLocation } from '../../util';
 
 export default {
   store,
@@ -28,11 +29,7 @@ export default {
 
   methods: {
     chooseAddress() {
-      wx.chooseLocation({
-        success: res => {
-          store.commit('setAddress', res.address);
-        },
-      });
+      chooseLocation().then(res => store.commit('setAddress', res.address));
     },
   },
 };

@@ -14,22 +14,18 @@
 </template>
 
 <script>
-import rootStore from '../../store';
-import { upload, showWarning, switchTab } from '../../util';
+import { mapState } from 'vuex';
 
 import store from './store';
+import rootStore from '../../store';
+import { switchTab, upload } from '../../util';
 
 export default {
+  store,
+
   computed: {
-    descr() {
-      return store.state.descr;
-    },
-    address() {
-      return store.state.address;
-    },
-    image() {
-      return store.state.image;
-    },
+    ...mapState(['descr', 'address', 'image']),
+
     openId() {
       return rootStore.state.openId;
     },
@@ -47,16 +43,9 @@ export default {
     },
 
     upload() {
-      wx.showToast({
-        icon: 'loading',
-        title: '正在上传',
-      });
-
       upload('upload', this.image, this.createFormData())
-        .catch(() => showWarning('上传失败'))
         .then(() => switchTab('/pages/timeline/main'))
-        .then(() => store.dispatch('fetchPhotos'))
-        .finally(() => wx.hideToast());
+        .then(() => rootStore.dispatch('fetchPhotos'));
     },
   },
 };

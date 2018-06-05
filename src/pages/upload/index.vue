@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 import location from './location';
 import photo from './photo';
 import submit from './submit';
@@ -25,13 +27,11 @@ export default {
     submit,
   },
 
+  store,
+
   computed: {
-    descr() {
-      return store.state.descr;
-    },
-    wordCount() {
-      return store.getters.wordCount;
-    },
+    ...mapState(['descr']),
+    ...mapGetters(['wordCount']),
   },
 
   methods: {

@@ -2,7 +2,7 @@
   <form report-submit="true" class="container">
     <today-photo v-if="hasPhotoToday"></today-photo>
     <ripple type="circle" v-else>
-      <div @click="navigateToUpload">
+      <div class="photo-anchor" @click="navigateToUpload">
         <img src="/static/icons/pic.png" class="img"/>
         <button>点击发表今日记忆～</button>
       </div>
@@ -66,5 +66,9 @@ button::after {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.photo-anchor {
+  text-align: center;
 }
 </style>

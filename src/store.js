@@ -19,9 +19,18 @@ const store = new Vuex.Store({
     photosFetched(state, photos) {
       state.photos = photos;
     },
+    // mutation for updating today photo
+    updatePhotoLocation(state, location) {
+      state.photos[0].location = location;
+    },
+    updatePhotoDescription(state, description) {
+      state.photos[0].description = description;
+    },
+    updatePhoto(state, image) {
+      state.photos[0].image = image;
+    },
   },
   getters: {
-    firstPhoto: state => (state.photos.length > 0 ? state.photos[0] : null),
     hasPhotoToday: state =>
       state.photos.length > 0 ? isToday(state.photos[0].created_at) : false,
   },

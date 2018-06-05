@@ -15,7 +15,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: 'cellSupport',
+};
 </script>
 
 <style scoped>

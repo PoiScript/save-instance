@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  name: 'cellSwitch',
   props: ['img', 'title', 'onSwitchChange', 'checked'],
   methods: {
     change(e) {

@@ -16,6 +16,7 @@
 
 <script>
 export default {
+  name: 'cellPicker',
   props: ['img', 'title', 'onPickerChange', 'value', 'range'],
   methods: {
     change(e) {

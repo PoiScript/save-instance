@@ -2,67 +2,65 @@
   <div class="user-background">
     <form report-submit="true" @submit="formSubmit">
       <user-info></user-info>
-      <div class="cell-padding"></div>
-      <div class="weui-panel">
-        <div class="weui-panel__bd">
-          <div class="weui-media-box weui-media-box_small-appmsg">
-            <div class="weui-cells weui-cells_in-small-appmsg">
-              <cell-switch title="拍照提醒"
-                           img="/static/icons/remind.png"
-                           :checked="daily_notify"
-                           :onSwitchChange="switchDailyNotify"></cell-switch>
-              <cell-picker v-if="daily_notify"
-                           title="提醒周期"
-                           img="/static/icons/period.png"
-                           :value="notify_time" :range="notifyTimes"
-                           :onPickerChange="changeNotifyTime"></cell-picker>
-              <cell-picker title="画幅"
-                           img="/static/icons/size.png"
-                           :value="photo_shape" :range="photoShapes"
-                           :onPickerChange="changePhotoShape"></cell-picker>
-              <cell-picker title="每幅时长"
-                           img="/static/icons/duration.png"
-                           :value="duration" :range="durations"
-                           :onPickerChange="changeDuration"></cell-picker>
-              <cell-switch title="全高清输出"
-                           img="/static/icons/output.png"
-                           :checked="hd_output"
-                           :onSwitchChange="switchHDOutput"></cell-switch>
-              <div class="cell-padding"></div>
-              <div class="weui-cells weui-cells_in-small-appmsg">
-                <cell-support></cell-support>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <user-footer></user-footer>
+      <panel>
+        <cell-switch title="拍照提醒"
+                     img="/static/icons/remind.png"
+                     :checked="daily_notify"
+                     :onSwitchChange="switchDailyNotify"></cell-switch>
+        <cell-picker title="提醒周期"
+                     img="/static/icons/period.png"
+                     :value="notify_time" :range="notifyTimes"
+                     :onPickerChange="changeNotifyTime"></cell-picker>
+        <cell-picker title="画幅"
+                     img="/static/icons/size.png"
+                     :value="photo_shape" :range="photoShapes"
+                     :onPickerChange="changePhotoShape"></cell-picker>
+        <cell-picker title="每幅时长"
+                     img="/static/icons/duration.png"
+                     :value="duration" :range="durations"
+                     :onPickerChange="changeDuration"></cell-picker>
+        <cell-switch title="全高清输出"
+                     img="/static/icons/output.png"
+                     :checked="hd_output"
+                     :onSwitchChange="switchHDOutput"></cell-switch>
+      </panel>
+      <panel>
+        <cell-support></cell-support>
+      </panel>
     </form>
+    <footer>
+      <mp-footer text="VERSION 1.0.0"></mp-footer>
+      <mp-footer text="KAJI STUDIO © 2018"></mp-footer>
+    </footer>
   </div>
 </template>
 
 <script>
-import rootStore from '../../store';
+import MpFooter from 'mp-weui/packages/footer';
+import { mapState } from 'vuex';
+
+import store from '../../store';
 import { request, showWarning } from '../../util';
 import cellPicker from './cell-picker';
 import cellSupport from './cell-support';
 import cellSwitch from './cell-switch';
-import footer from './footer';
 import userInfo from './info';
+import panel from './panel';
 
 export default {
   components: {
-    'cell-picker': cellPicker,
-    'cell-support': cellSupport,
-    'cell-switch': cellSwitch,
-    'user-footer': footer,
-    'user-info': userInfo,
+    MpFooter,
+    cellPicker,
+    cellSupport,
+    cellSwitch,
+    userInfo,
+    panel,
   },
 
+  store,
+
   computed: {
-    openId() {
-      return rootStore.state.openId;
-    },
+    ...mapState(['openId']),
     settings() {
       return {
         daily_notify: this.daily_notify,
@@ -181,19 +179,15 @@ button::after {
 .user-background {
   background-color: #f5f5f5;
   height: 100%;
-  width: 375px;
-  position: fixed;
-  overflow-x: hidden;
-}
-
-.cell-padding {
-  background-color: #f5f5f5;
-  height: 35px;
 }
 
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
   color: transparent;
+}
+
+footer {
+  margin: 35px 0;
 }
 </style>

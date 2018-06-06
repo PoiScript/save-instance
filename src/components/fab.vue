@@ -1,20 +1,13 @@
 <template>
-  <div class="fab" @click="navigateToSelector">
-    <img class="fab-img" src="/static/icons/movie.png" >
+  <div class="fab" @click="onClick">
+    <img class="fab-img" :src="iconImg" >
   </div>
 </template>
 
 <script>
-import { navigate } from '../../util';
-
 export default {
   name: 'fab',
-
-  methods: {
-    navigateToSelector() {
-      navigate('/pages/selector/main');
-    },
-  },
+  props: ['onClick', 'iconImg'],
 };
 </script>
 

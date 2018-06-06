@@ -3,16 +3,17 @@
     <ul>
       <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
     </ul>
-    <fab></fab>
+    <fab icon-img="/static/icons/movie.png" :onClick="navigateToSelector"></fab>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
-import fab from './fab';
 import item from './item';
+import fab from '../../components/fab';
 import store from '../../store';
+import { navigate } from '../../util';
 
 export default {
   components: {
@@ -26,6 +27,12 @@ export default {
 
   onPullDownRefresh() {
     store.dispatch('fetchPhotos', true).then(() => wx.stopPullDownRefresh());
+  },
+
+  methods: {
+    navigateToSelector() {
+      navigate('/pages/selector/main');
+    },
   },
 };
 </script>

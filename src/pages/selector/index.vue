@@ -12,16 +12,16 @@
       <span v-if="selectedKey.length < 5">还需要选择 {{ 5 - selectedKey.length}} 张照片</span>
       <span v-else>已选择 {{ selectedKey.length }} 张照片</span>
       <span class="spacer"></span>
-      <span v-if="selectedKey.length >= 5" @click="generate" class="generate-btn">生成视频</span>
+      <span v-if="selectedKey.length >= 5" @click="onSubmit" class="generate-btn">生成视频</span>
     </footer>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import store from '../../store';
-import { request } from '../../util';
+import { request, warning, confirm, redirect } from '../../util';
 
 export default {
   store,
@@ -45,6 +45,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['fetchVideos']),
+
     onSelect(key) {
       if (this.selectedKey.includes(key)) {
         this.selectedKey = this.selectedKey.filter(k => k !== key);
@@ -53,14 +55,37 @@ export default {
       }
     },
 
-    generate() {
+    onSubmit() {
       if (this.selectedKey.length >= 5) {
-        request('video', 'POST', {
-          openId: this.openId,
-          keys: this.selectedKey,
+        confirm('是否生成视频?').then(check => {
+          if (check) this.generate();
         });
+      } else {
+        warning(`还需要选择${5 - this.selectedKey.length}张照片!`);
       }
-      console.log(this.selectedKey);
+    },
+
+    generate() {
+      wx.showToast({
+        icon: 'loading',
+        title: '正在生成...',
+      });
+
+      request('video', 'POST', {
+        openId: this.openId,
+        keys: this.selectedKey,
+      })
+        .then(() => this.fetchVideos(true))
+        .then(() => {
+          this.selectedKey = [];
+          wx.hideToast();
+        })
+        .then(() => confirm('视频生成完毕, 是否跳转到视频列表查看'))
+        .then(check => {
+          if (check) {
+            redirect('/pages/video-list/main');
+          }
+        });
     },
   },
 };

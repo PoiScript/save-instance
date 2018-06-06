@@ -28,11 +28,14 @@ export default {
 
 <style scoped>
 .item {
-  height: 300px;
+  /* 375px - 180px */
+  height: 215px;
   position: relative;
   border-radius: 10px;
   margin: 0 0 30px 60px;
   width: calc(100% - 90px);
+  background-size: cover;
+  background-position: center center;
 }
 
 .dot {
@@ -68,6 +71,9 @@ export default {
   z-index: 1;
   padding: 10px;
   border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .time {

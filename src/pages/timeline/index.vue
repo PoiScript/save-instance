@@ -25,7 +25,7 @@ export default {
   computed: mapState(['photos']),
 
   onPullDownRefresh() {
-    store.dispatch('fetchPhotos').then(() => wx.stopPullDownRefresh());
+    store.dispatch('fetchPhotos', true).then(() => wx.stopPullDownRefresh());
   },
 };
 </script>

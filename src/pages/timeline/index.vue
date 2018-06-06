@@ -30,7 +30,12 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+page {
+  width: 100%;
+  background-color: #2d8cf0;
+}
+
 .box {
   margin: 0;
   padding: 0 0 25px 60px;

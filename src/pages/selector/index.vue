@@ -8,6 +8,12 @@
         <image class="img" :src="photo.image" mode="aspectFill"></image>
       </div>
     </div>
+    <footer v-if="selectedKey.length > 0" :class="{ warn: selectedKey.length < 5 }">
+      <span v-if="selectedKey.length < 5">还需要选择 {{ 5 - selectedKey.length}} 张照片</span>
+      <span v-else>已选择 {{ selectedKey.length }} 张照片</span>
+      <span class="spacer"></span>
+      <span v-if="selectedKey.length >= 5" @click="generate" class="generate-btn">生成视频</span>
+    </footer>
   </div>
 </template>
 
@@ -15,6 +21,7 @@
 import { mapState } from 'vuex';
 
 import store from '../../store';
+import { request } from '../../util';
 
 export default {
   store,
@@ -26,7 +33,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['photos']),
+    ...mapState(['photos', 'openId']),
 
     selected() {
       const result = {};
@@ -44,6 +51,16 @@ export default {
       } else {
         this.selectedKey.push(key);
       }
+    },
+
+    generate() {
+      if (this.selectedKey.length >= 5) {
+        request('video', 'POST', {
+          openId: this.openId,
+          keys: this.selectedKey,
+        });
+      }
+      console.log(this.selectedKey);
     },
   },
 };
@@ -80,5 +97,28 @@ export default {
   display: block;
   height: 125px;
   max-width: 100%;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: #fff;
+  background: #2d8cf0;
+  padding: 10px;
+  display: flex;
+}
+
+footer.warn {
+  background: #ff9900;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.generate-btn {
+  font-weight: 700;
 }
 </style>

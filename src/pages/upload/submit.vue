@@ -45,7 +45,7 @@ export default {
     upload() {
       upload('upload', this.image, this.createFormData())
         .then(() => switchTab('/pages/timeline/main'))
-        .then(() => rootStore.dispatch('fetchPhotos'));
+        .then(() => rootStore.dispatch('fetchPhotos', true));
     },
   },
 };

@@ -65,7 +65,7 @@ export default {
           if (res.confirm) {
             upload('update/photo', path, {
               photo_key: this.photos[0].photo_key,
-            }).then(() => this.fetchPhotos());
+            }).then(() => this.fetchPhotos(true));
           }
         });
       });
@@ -83,7 +83,7 @@ export default {
             location: res.address,
           });
         })
-        .then(() => this.fetchPhotos())
+        .then(() => this.fetchPhotos(true))
         .finally(() => wx.hideToast());
     },
   },

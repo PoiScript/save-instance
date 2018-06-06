@@ -172,6 +172,32 @@ export const switchTab = url =>
     });
   });
 
+export const confirm = content =>
+  new Promise((resolve, reject) => {
+    wx.showModal({
+      content,
+      title: '请确认',
+      showCancel: true,
+      success: res => {
+        if (res.confirm) {
+          resolve(true);
+        } else if (res.cancel) {
+          resolve(false);
+        }
+      },
+      fail: err => {
+        reject('Show Modal Error' + JSON.stringify(err));
+      },
+    });
+  });
+
+export const warning = content =>
+  wx.showModal({
+    content,
+    title: '提示',
+    showCancel: false,
+  });
+
 export const showWarning = (content, showCancel = false) =>
   new Promise((resolve, reject) => {
     wx.showModal({
@@ -210,6 +236,19 @@ export const chooseImage = () =>
       },
       fail: err => {
         reject('Choose Image Error' + JSON.stringify(err));
+      },
+    });
+  });
+
+export const redirect = url =>
+  new Promise((resolve, reject) => {
+    wx.redirectTo({
+      url,
+      success: () => {
+        resolve();
+      },
+      fail: err => {
+        reject('Redirect Error' + JSON.stringify(err));
       },
     });
   });

@@ -168,7 +168,7 @@ export default {
     },
 
     navigateToVideo() {
-      navigate('/pages/video/main');
+      navigate('/pages/video-list/main');
     },
   },
 };

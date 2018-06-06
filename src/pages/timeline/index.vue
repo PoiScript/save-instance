@@ -3,7 +3,9 @@
     <ul>
       <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
     </ul>
-    <fab icon-img="/static/icons/movie.png" :onClick="navigateToSelector"></fab>
+    <div class="timeline--fab-container">
+      <fab icon-img="/static/icons/movie.png" :onClick="navigateToSelector"></fab>
+    </div>
   </div>
 </template>
 
@@ -66,5 +68,11 @@ page {
   position: absolute;
   top: 0;
   left: 30px;
+}
+
+.timeline--fab-container {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
 }
 </style>

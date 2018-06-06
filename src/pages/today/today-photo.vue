@@ -1,17 +1,20 @@
 <template>
   <div>
-    <div class="photo-container" @click="chooseImage">
-      <image class="photo" :src="photos[0].image" mode="aspectFill"></image>
+    <div class="photo-container">
+      <image class="photo" :src="photos[0].image" mode="aspectFill" @click="previewImage"></image>
+      <div class="today--fab-container">
+        <fab :onClick="chooseImage" icon-img="/static/icons/edit_white.png"></fab>
+      </div>
     </div>
     <mp-cell-group :title="format(photos[0].created_at)">
       <mp-cell
         icon-src="/static/icons/period.png"
-        :content="photos[0].description"
+        :content="photos[0].description ? photos[0].description : '点击设置简介'"
       />
       <mp-cell
         @click="chooseLocation"
         icon-src="/static/icons/locate.png"
-        :content="photos[0].location"
+        :content="photos[0].location ? photos[0].location : '点击设置地址'"
       />
     </mp-cell-group>
   </div>
@@ -23,6 +26,7 @@ import MpCell from 'mp-weui/packages/cell';
 import MpCellGroup from 'mp-weui/packages/cell-group';
 import { mapActions, mapMutations, mapState } from 'vuex';
 
+import fab from '../../components/fab';
 import store from '../../store.js';
 import {
   chooseImage,
@@ -31,11 +35,14 @@ import {
   showWarning,
   upload,
 } from '../../util';
+import InputDialog from './input-dialog';
 
 export default {
   name: 'TodayPhoto',
 
   components: {
+    fab,
+    InputDialog,
     MpCell,
     MpCellGroup,
   },
@@ -71,6 +78,13 @@ export default {
       });
     },
 
+    previewImage() {
+      wx.previewImage({
+        current: this.photos[0].image,
+        urls: [this.photos[0].image],
+      });
+    },
+
     chooseLocation() {
       chooseLocation()
         .then(res => {
@@ -92,6 +106,7 @@ export default {
 
 <style scoped>
 .photo-container {
+  position: relative;
   background: white;
   margin: 0 0 30px;
   padding: 10px 10px 25px;
@@ -100,6 +115,11 @@ export default {
 
 .photo {
   display: block;
-  width: 100%;
+}
+
+.today--fab-container {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
 }
 </style>

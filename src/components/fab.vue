@@ -20,9 +20,6 @@ export default {
   font-size: 50px;
   text-align: center;
   line-height: 45px;
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
   z-index: 100;
 }
 

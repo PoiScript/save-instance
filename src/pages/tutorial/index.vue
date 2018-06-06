@@ -21,9 +21,10 @@ export default {
   data() {
     return {
       imgUrls: [
-        '/static/picture/introduce1.png',
-        '/static/picture/introduce2.png',
-        '/static/picture/introduce3.png',
+        '/static/picture/introduce1.jpg',
+        '/static/picture/introduce2.jpg',
+        '/static/picture/introduce3.jpg',
+        '/static/picture/introduce4.jpg',
       ],
     };
   },

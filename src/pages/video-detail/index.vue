@@ -4,24 +4,27 @@
            :poster="video.thumbnail"
            controls></video>
     <div class="action-row">
-      <div class="action">
+      <button class="action">
         <img class="action-img" src="/static/icons/edit.png"/>
-        <p class="action-text">重命名</p>
-      </div>
-      <div class="action">
+        重命名
+      </button>
+      <button class="action" @click="downloadClick">
         <img class="action-img" src="/static/icons/download.png"/>
-        <p class="action-text">下载</p>
-      </div>
-      <div class="action">
+        下载
+      </button>
+      <button class="action" open-type="share">
         <img class="action-img" src="/static/icons/share.png"/>
-        <p class="action-text">分享</p>
-      </div>
+        分享
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import Toast from 'mp-weui/packages/toast';
+
 import store from '../../store';
+import { downloadFile, saveFile } from '../../util';
 
 export default {
   data() {
@@ -44,7 +47,44 @@ export default {
     this.key = options.key;
   },
 
-  methods: {},
+  onShareAppMessage() {
+    return {
+      title: '咔记分享',
+      path: '/pages/video-detail/main?key=' + this.video.video_key,
+      imageUrl: this.video.thumbnail,
+      success: () => {
+        wx.showModal({
+          content: '分享发送成功!',
+          title: '提示',
+          showCancel: false,
+        });
+      },
+      fail: res => {
+        console.err('share failed' + JSON.stringify(res));
+        wx.showModal({
+          content: '分享发送失败!',
+          title: '错误',
+          showCancel: false,
+        });
+      },
+    };
+  },
+
+  methods: {
+    downloadClick() {
+      downloadFile(this.video.video)
+        .then(path => saveFile(path))
+        .then(path => Toast(`视频下载至: ${path}`))
+        .catch(err => {
+          wx.showModal({
+            content: '视频下载失败!',
+            title: '错误',
+            showCancel: false,
+          });
+          console.log(err);
+        });
+    },
+  },
 };
 </script>
 
@@ -86,7 +126,17 @@ page {
 }
 
 .action-img {
+  margin: 0 auto;
+  display: block;
   width: 30px;
   height: 30px;
+}
+
+button,
+button::after {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
 }
 </style>

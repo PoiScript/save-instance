@@ -252,3 +252,43 @@ export const redirect = url =>
       },
     });
   });
+
+export const downloadFile = url => {
+  wx.showNavigationBarLoading();
+  wx.showToast({
+    icon: 'loading',
+    title: '正在下载...',
+  });
+  return new Promise((resolve, reject) => {
+    wx.downloadFile({
+      url,
+      success: res => {
+        if (res.statusCode === 200) {
+          resolve(res.tempFilePath);
+        } else {
+          reject('Download File Failed.');
+        }
+      },
+      fail: res => {
+        reject('Download File Failed: ' + JSON.stringify(res));
+      },
+      complete: () => {
+        wx.hideToast();
+        wx.hideNavigationBarLoading();
+      },
+    });
+  });
+};
+
+export const saveFile = path =>
+  new Promise((resolve, reject) => {
+    wx.saveFile({
+      tempFilePath: path,
+      success: res => {
+        resolve(res.savedFilePath);
+      },
+      fail: res => {
+        reject('Save File Failed: ' + JSON.stringify(res));
+      },
+    });
+  });

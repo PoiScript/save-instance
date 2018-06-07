@@ -3,9 +3,9 @@
     <ul>
       <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
     </ul>
-    <div class="timeline--fab-container">
-      <fab icon-img="/static/icons/movie.png" :onClick="navigateToSelector"></fab>
-    </div>
+    <a href="/pages/selector/main" class="timeline--fab-container">
+      <fab icon-img="/static/icons/movie.png"></fab>
+    </a>
   </div>
 </template>
 
@@ -15,7 +15,6 @@ import { mapState } from 'vuex';
 import item from './item';
 import fab from '../../components/fab';
 import store from '../../store';
-import { navigate } from '../../util';
 
 export default {
   components: {
@@ -29,12 +28,6 @@ export default {
 
   onPullDownRefresh() {
     store.dispatch('fetchPhotos', true).then(() => wx.stopPullDownRefresh());
-  },
-
-  methods: {
-    navigateToSelector() {
-      navigate('/pages/selector/main');
-    },
   },
 };
 </script>

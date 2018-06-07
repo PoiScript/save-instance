@@ -1,14 +1,14 @@
 <template>
   <form report-submit="true" class="container">
     <today-photo v-if="hasPhotoToday"></today-photo>
-    <div @click="navigateToUpload" v-else>
+    <a href="/pages/upload/main" v-else>
       <ripple type="circle">
         <div class="photo-anchor">
           <img src="/static/icons/pic.png" class="img"/>
           <button>点击发表今日记忆～</button>
         </div>
       </ripple>
-    </div>
+    </a>
   </form>
 </template>
 
@@ -18,7 +18,6 @@ import { mapGetters } from 'vuex';
 
 import TodayPhoto from './today-photo';
 import store from '../../store.js';
-import { navigate } from '../../util';
 
 export default {
   components: {
@@ -29,12 +28,6 @@ export default {
   store,
 
   computed: mapGetters(['hasPhotoToday']),
-
-  methods: {
-    navigateToUpload() {
-      navigate('/pages/upload/main');
-    },
-  },
 };
 </script>
 

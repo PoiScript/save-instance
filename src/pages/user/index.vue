@@ -4,8 +4,7 @@
       <user-info></user-info>
       <panel title="视频">
         <a href="/pages/video-list/main">
-          <cell-button img="/static/icons/video.png"
-                       text="视频列表"></cell-button>
+          <cell-button img="/static/icons/video.png" text="视频列表"></cell-button>
         </a>
       </panel>
       <panel title="设置">
@@ -25,13 +24,11 @@
       <panel title="其他">
         <a href="/pages/tutorial/main">
           <button form-type="submit">
-            <cell-button img="/static/icons/contact.png"
-                         text="查看教程"></cell-button>
+            <cell-button img="/static/icons/contact.png" text="查看教程"></cell-button>
           </button>
         </a>
         <button form-type="submit" hover-class="button-hover" open-type="contact">
-          <cell-button img="/static/icons/contact.png"
-                       text="联系我们"></cell-button>
+          <cell-button img="/static/icons/contact.png" text="联系我们"></cell-button>
         </button>
       </panel>
     </form>
@@ -92,7 +89,7 @@ export default {
         '22:00',
         '24:00',
       ],
-      durations: ['1 S', '2 S', '3 S', '4 S'],
+      durations: ['1s', '2s', '3s', '4s'],
       daily_notify: true,
       notify_time: 0,
       duration: 0,

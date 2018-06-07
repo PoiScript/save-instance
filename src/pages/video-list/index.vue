@@ -1,6 +1,8 @@
 <template>
   <form report-submit="true" class="container">
-    <div class="video" v-for="video in videos" :key="video.video_key" @click="navigateToDetail(video.video_key)">
+    <a class="video" v-for="video in videos"
+       :key="video.video_key"
+       :href="'/pages/video-detail/main?key=' + video.video_key">
       <image class="thumbnail" :src="video.thumbnail" mode="aspectFill">
         <div class="duration">{{ video.duration }} s</div>
       </image>
@@ -8,7 +10,7 @@
         <p class="video-title">{{ video.name || '未命名视频' }}</p>
         <p class="video-date">{{ video.created_at }}</p>
       </div>
-    </div>
+    </a>
   </form>
 </template>
 
@@ -16,7 +18,6 @@
 import { mapState } from 'vuex';
 
 import store from '../../store';
-import { navigate } from '../../util';
 
 export default {
   store,
@@ -30,12 +31,6 @@ export default {
     });
 
     store.dispatch('fetchVideos', false).then(() => wx.hideToast());
-  },
-
-  methods: {
-    navigateToDetail(key) {
-      navigate('/pages/video-detail/main?key=' + key);
-    },
   },
 };
 </script>

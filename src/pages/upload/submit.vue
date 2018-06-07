@@ -43,9 +43,17 @@ export default {
     },
 
     upload() {
-      upload('upload', this.image, this.createFormData())
-        .then(() => switchTab('/pages/timeline/main'))
-        .then(() => rootStore.dispatch('fetchPhotos', true));
+      if (this.image) {
+        upload('upload', this.image, this.createFormData())
+          .then(() => switchTab('/pages/timeline/main'))
+          .then(() => rootStore.dispatch('fetchPhotos', true));
+      } else {
+        wx.showToast({
+          title: '请选择需要上传的图片',
+          icon: 'none',
+          duration: 1000,
+        });
+      }
     },
   },
 };

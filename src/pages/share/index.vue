@@ -24,8 +24,8 @@ export default {
     request('video/share/' + this.$root.$mp.query.key)
       .then(video => {
         this.video = video;
-        this.video.video = config.api_url + this.video.video;
-        this.video.thumbnail = this.video.video.replace(/\.mp4$/, '.jpg');
+        this.video.thumbnail = config.api_url + this.video.video.replace(/\.mp4$/, '.jpg');
+        this.video.video = config.api_url + 'video/' + this.video.video;
       })
       .finally(() => wx.hideToast());
   },

@@ -59,15 +59,15 @@ const store = new Vuex.Store({
     },
     fetchVideos: ({ state, commit }, force = false) => {
       if (state.videos.length === 0 || force) {
-        request('video/' + state.openId, 'GET', null)
+        request('video/list/' + state.openId, 'GET', null)
           .then(data =>
             commit(
               'videosFetched',
               // prefix all video with the api url
               data.map(video => {
                 video.created_at = format(video.created_at, 'M月D日 HH:mm');
-                video.video = config.api_url + video.video;
-                video.thumbnail = video.video.replace(/\.mp4$/, '.jpg');
+                video.thumbnail = config.api_url + video.video.replace(/\.mp4$/, '.jpg');
+                video.video = config.api_url + 'video/' + video.video;
                 return video;
               }),
             ),

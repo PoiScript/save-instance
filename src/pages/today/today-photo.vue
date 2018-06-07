@@ -1,22 +1,24 @@
 <template>
-  <div>
-    <div class="photo-container">
-      <image class="photo" :src="photos[0].image" mode="aspectFill" @click="previewImage"></image>
-      <div class="today--fab-container">
+  <div class="photo-container">
+    <div class="photo">
+      <img class="photo-content" :src="photos[0].image" mode="aspectFill" @click="previewImage"/>
+      <div class="fab-container">
         <fab :onClick="chooseImage" icon-img="/static/icons/edit_white.png"></fab>
       </div>
     </div>
-    <mp-cell-group :title="format(photos[0].created_at)">
-      <mp-cell
-        icon-src="/static/icons/period.png"
-        :content="photos[0].description ? photos[0].description : '点击设置简介'"
-      />
-      <mp-cell
-        @click="chooseLocation"
-        icon-src="/static/icons/locate.png"
-        :content="photos[0].location ? photos[0].location : '点击设置地址'"
-      />
-    </mp-cell-group>
+    <div class="cell">
+      <mp-cell-group :title="format(photos[0].created_at)">
+        <mp-cell
+          icon-src="/static/icons/period.png"
+          :content="photos[0].description ? photos[0].description : '点击设置简介'"
+        />
+        <mp-cell
+          @click="chooseLocation"
+          icon-src="/static/icons/locate.png"
+          :content="photos[0].location ? photos[0].location : '点击设置地址'"
+        />
+      </mp-cell-group>
+    </div>
   </div>
 </template>
 
@@ -35,14 +37,12 @@ import {
   showWarning,
   upload,
 } from '../../util';
-import InputDialog from './input-dialog';
 
 export default {
   name: 'TodayPhoto',
 
   components: {
     fab,
-    InputDialog,
     MpCell,
     MpCellGroup,
   },
@@ -105,21 +105,29 @@ export default {
 </script>
 
 <style scoped>
-.photo-container {
+.photo {
   position: relative;
   background: white;
-  margin: 0 0 30px;
-  padding: 10px 10px 25px;
+}
+
+.photo-container {
+  background: white;
+  margin: 0;
+  padding: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.photo {
+.photo-content {
   display: block;
 }
 
-.today--fab-container {
+.fab-container {
   position: absolute;
-  right: 5px;
-  bottom: 5px;
+  right: 10px;
+  bottom: -22.5px;
+}
+
+.cell {
+  width: 320px;
 }
 </style>

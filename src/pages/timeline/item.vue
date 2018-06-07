@@ -1,5 +1,5 @@
 <template>
-  <li class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.image + ')' }">
+  <li @click="preview" class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.image + ')' }">
     <span class="dot"></span>
     <div class="time">
       <p>{{date}}</p>
@@ -22,6 +22,15 @@ export default {
       date: format(this.photo.created_at, 'M 月 D 日'),
       time: format(this.photo.created_at, 'HH : mm'),
     };
+  },
+
+  methods: {
+    preview() {
+      wx.previewImage({
+        current: this.photo.image,
+        urls: [this.photo.image],
+      });
+    },
   },
 };
 </script>
@@ -82,7 +91,7 @@ export default {
   color: #fff;
   font-size: 80%;
   font-weight: bold;
-  top: -28px;
+  top: -15px;
   text-align: center;
 }
 </style>

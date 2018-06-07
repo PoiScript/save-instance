@@ -17,18 +17,10 @@
                      img="/static/icons/period.png"
                      :value="notify_time" :range="notifyTimes"
                      :onPickerChange="changeNotifyTime"></cell-picker>
-        <cell-picker title="画幅"
-                     img="/static/icons/size.png"
-                     :value="photo_shape" :range="photoShapes"
-                     :onPickerChange="changePhotoShape"></cell-picker>
         <cell-picker title="每幅时长"
                      img="/static/icons/duration.png"
                      :value="duration" :range="durations"
                      :onPickerChange="changeDuration"></cell-picker>
-        <cell-switch title="全高清输出"
-                     img="/static/icons/output.png"
-                     :checked="hd_output"
-                     :onSwitchChange="switchHDOutput"></cell-switch>
       </panel>
       <panel title="其他">
         <a href="/pages/tutorial/main">
@@ -101,12 +93,9 @@ export default {
         '24:00',
       ],
       durations: ['1 S', '2 S', '3 S', '4 S'],
-      photoShapes: ['竖屏', '宽屏', '方形', '圆形'],
       daily_notify: true,
       notify_time: 0,
       duration: 0,
-      photo_shape: 0,
-      hd_output: true,
     };
   },
 
@@ -124,16 +113,8 @@ export default {
       this.updateSettings({ daily_notify: value });
     },
 
-    switchHDOutput(value) {
-      this.updateSettings({ hd_output: value });
-    },
-
     changeNotifyTime(value) {
       this.updateSettings({ notify_time: parseInt(value) });
-    },
-
-    changePhotoShape(value) {
-      this.updateSettings({ photo_shape: parseInt(value) });
     },
 
     changeDuration(value) {
@@ -168,8 +149,6 @@ export default {
           this.daily_notify = settings.daily_notify;
           this.notify_time = settings.notify_time;
           this.duration = settings.duration;
-          this.photo_shape = settings.photo_shape;
-          this.hd_output = settings.hd_output;
         })
         .catch(() => showWarning('获取用户配置失败!'));
     },

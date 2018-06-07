@@ -1,12 +1,14 @@
 <template>
   <form report-submit="true" class="container">
     <today-photo v-if="hasPhotoToday"></today-photo>
-    <ripple type="circle" v-else>
-      <div class="photo-anchor" @click="navigateToUpload">
-        <img src="/static/icons/pic.png" class="img"/>
-        <button>点击发表今日记忆～</button>
-      </div>
-    </ripple>
+    <div @click="navigateToUpload" v-else>
+      <ripple type="circle">
+        <div class="photo-anchor">
+          <img src="/static/icons/pic.png" class="img"/>
+          <button>点击发表今日记忆～</button>
+        </div>
+      </ripple>
+    </div>
   </form>
 </template>
 

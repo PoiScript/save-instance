@@ -3,9 +3,10 @@
     <form report-submit="true" @submit="formSubmit">
       <user-info></user-info>
       <panel title="视频">
-        <cell-button img="/static/icons/video.png"
-                     text="视频列表"
-                     :onClick="navigateToVideo"></cell-button>
+        <a href="/pages/video-list/main">
+          <cell-button img="/static/icons/video.png"
+                       text="视频列表"></cell-button>
+        </a>
       </panel>
       <panel title="设置">
         <cell-switch title="拍照提醒"
@@ -30,6 +31,12 @@
                      :onSwitchChange="switchHDOutput"></cell-switch>
       </panel>
       <panel title="其他">
+        <a href="/pages/tutorial/main">
+          <button form-type="submit">
+            <cell-button img="/static/icons/contact.png"
+                         text="查看教程"></cell-button>
+          </button>
+        </a>
         <button form-type="submit" hover-class="button-hover" open-type="contact">
           <cell-button img="/static/icons/contact.png"
                        text="联系我们"></cell-button>
@@ -48,7 +55,7 @@ import MpFooter from 'mp-weui/packages/footer';
 import { mapState } from 'vuex';
 
 import store from '../../store';
-import { request, showWarning, navigate } from '../../util';
+import { request, showWarning } from '../../util';
 import cellButton from './cell-button';
 import cellPicker from './cell-picker';
 import cellSwitch from './cell-switch';
@@ -165,10 +172,6 @@ export default {
           this.hd_output = settings.hd_output;
         })
         .catch(() => showWarning('获取用户配置失败!'));
-    },
-
-    navigateToVideo() {
-      navigate('/pages/video-list/main');
     },
   },
 };

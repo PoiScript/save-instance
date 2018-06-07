@@ -1,5 +1,5 @@
 <template>
-  <div class="cell" @click="onClick">
+  <div class="cell">
     <div class="weui-cell weui-cell_access">
       <div class="weui-cell__hd">
         <img class="cell-img" :src="img"/>
@@ -15,7 +15,7 @@
 <script>
 export default {
   name: 'cellButton',
-  props: ['img', 'onClick', 'text'],
+  props: ['img', 'text'],
 };
 </script>
 

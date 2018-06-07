@@ -3,7 +3,7 @@
     <form report-submit="true" @submit="formSubmit">
       <user-info></user-info>
       <panel title="视频">
-        <cell-button img="/static/icons/contact.png"
+        <cell-button img="/static/icons/video.png"
                      text="视频列表"
                      :onClick="navigateToVideo"></cell-button>
       </panel>

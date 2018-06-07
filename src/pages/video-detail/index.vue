@@ -22,6 +22,7 @@
 
 <script>
 import Toast from 'mp-weui/packages/toast';
+import { mapActions } from 'vuex';
 
 import store from '../../store';
 import { downloadFile, saveFile } from '../../util';
@@ -43,14 +44,14 @@ export default {
 
   store,
 
-  onLoad(options) {
-    this.key = options.key;
+  onLoad() {
+    this.fetchVideos(false);
   },
 
   onShareAppMessage() {
     return {
       title: '咔记分享',
-      path: '/pages/video-detail/main?key=' + this.video.video_key,
+      path: `/pages/share/main?key=${this.video.video_key}&share=1`,
       imageUrl: this.video.thumbnail,
       success: () => {
         wx.showModal({
@@ -71,6 +72,8 @@ export default {
   },
 
   methods: {
+    ...mapActions(['fetchVideos']),
+
     downloadClick() {
       downloadFile(this.video.video)
         .then(path => saveFile(path))

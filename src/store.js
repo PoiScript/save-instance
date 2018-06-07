@@ -13,26 +13,29 @@ const store = new Vuex.Store({
     openId: null,
     photos: [],
     videos: [],
+    settings: {
+      daily_notify: true,
+      notify_time: 0,
+      duration: 0,
+    },
   },
   mutations: {
     setOpenId(state, openId) {
       state.openId = openId;
+    },
+    updateTodayPhoto(state, { location, description, image }) {
+      state.photos[0].location = location;
+      state.photos[0].description = description;
+      state.photos[0].image = config.api_url + image;
+    },
+    settingsUpdated(state, settings) {
+      state.settings = settings;
     },
     photosFetched(state, photos) {
       state.photos = photos;
     },
     videosFetched(state, videos) {
       state.videos = videos;
-    },
-    // mutation for updating today photo
-    updatePhotoLocation(state, location) {
-      state.photos[0].location = location;
-    },
-    updatePhotoDescription(state, description) {
-      state.photos[0].description = description;
-    },
-    updatePhoto(state, image) {
-      state.photos[0].image = image;
     },
   },
   getters: {
@@ -66,7 +69,8 @@ const store = new Vuex.Store({
               // prefix all video with the api url
               data.map(video => {
                 video.created_at = format(video.created_at, 'M月D日 HH:mm');
-                video.thumbnail = config.api_url + video.video.replace(/\.mp4$/, '.jpg');
+                video.thumbnail =
+                  config.api_url + video.video.replace(/\.mp4$/, '.jpg');
                 video.video = config.api_url + 'video/' + video.video;
                 return video;
               }),
@@ -77,6 +81,31 @@ const store = new Vuex.Store({
             showWarning('登录失败! 无法获取视频列表');
           });
       }
+    },
+    updateSettings: ({ state, commit }, settings) => {
+      wx.showToast({
+        icon: 'loading',
+        title: '更新用户配置...',
+      });
+
+      request('settings/' + state.openId, 'POST', {
+        ...state.settings,
+        ...settings,
+      })
+        .catch(() => showWarning('用户配置更新失败!'))
+        .then(settings => commit('settingsUpdated', settings))
+        .then(() => wx.hideToast());
+    },
+    getSettings: ({ state, commit }) => {
+      wx.showToast({
+        icon: 'loading',
+        title: '获取用户配置...',
+      });
+
+      request('settings/' + state.openId, 'GET', null)
+        .catch(() => showWarning('获取用户配置失败!'))
+        .then(settings => commit('settingsUpdated', settings))
+        .then(() => wx.hideToast());
     },
   },
 });

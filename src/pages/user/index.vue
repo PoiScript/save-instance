@@ -10,21 +10,24 @@
       <panel title="设置">
         <cell-switch title="拍照提醒"
                      img="/static/icons/remind.png"
-                     :checked="daily_notify"
+                     :checked="settings.daily_notify"
                      :onSwitchChange="switchDailyNotify"></cell-switch>
-        <cell-picker title="提醒周期"
+        <div v-if="settings.daily_notify" >
+
+        <cell-picker title="提醒时间"
                      img="/static/icons/period.png"
-                     :value="notify_time" :range="notifyTimes"
+                     :value="settings.notify_time" :range="notifyTimes"
                      :onPickerChange="changeNotifyTime"></cell-picker>
+        </div>
         <cell-picker title="每幅时长"
                      img="/static/icons/duration.png"
-                     :value="duration" :range="durations"
+                     :value="settings.duration" :range="durations"
                      :onPickerChange="changeDuration"></cell-picker>
       </panel>
       <panel title="其他">
         <a href="/pages/tutorial/main">
           <button form-type="submit">
-            <cell-button img="/static/icons/contact.png" text="查看教程"></cell-button>
+            <cell-button img="/static/icons/tutorial.png" text="查看教程"></cell-button>
           </button>
         </a>
         <button form-type="submit" hover-class="button-hover" open-type="contact">
@@ -41,7 +44,7 @@
 
 <script>
 import MpFooter from 'mp-weui/packages/footer';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 import store from '../../store';
 import { request, showWarning } from '../../util';
@@ -63,18 +66,7 @@ export default {
 
   store,
 
-  computed: {
-    ...mapState(['openId']),
-    settings() {
-      return {
-        daily_notify: this.daily_notify,
-        notify_time: this.notify_time,
-        duration: this.duration,
-        photo_shape: this.photo_shape,
-        hd_output: this.hd_output,
-      };
-    },
-  },
+  computed: mapState(['openId', 'settings']),
 
   data() {
     return {
@@ -90,22 +82,16 @@ export default {
         '24:00',
       ],
       durations: ['1s', '2s', '3s', '4s'],
-      daily_notify: true,
-      notify_time: 0,
-      duration: 0,
     };
   },
 
   onLoad() {
-    wx.showToast({
-      icon: 'loading',
-      title: '获取用户配置...',
-    });
-
-    this.getSettings().finally(() => wx.hideToast());
+    this.getSettings();
   },
 
   methods: {
+    ...mapActions(['getSettings', 'updateSettings']),
+
     switchDailyNotify(value) {
       this.updateSettings({ daily_notify: value });
     },
@@ -125,30 +111,30 @@ export default {
       }
     },
 
-    updateSettings(settings) {
-      wx.showToast({
-        icon: 'loading',
-        title: '更新用户配置...',
-      });
-
-      request('settings/' + this.openId, 'POST', {
-        ...this.settings,
-        ...settings,
-      })
-        .catch(() => showWarning('用户配置更新失败!'))
-        .then(() => this.getSettings())
-        .finally(() => wx.hideToast());
-    },
-
-    getSettings() {
-      return request('settings/' + this.openId, 'GET', null)
-        .then(settings => {
-          this.daily_notify = settings.daily_notify;
-          this.notify_time = settings.notify_time;
-          this.duration = settings.duration;
-        })
-        .catch(() => showWarning('获取用户配置失败!'));
-    },
+    // updateSettings(settings) {
+    //   wx.showToast({
+    //     icon: 'loading',
+    //     title: '更新用户配置...',
+    //   });
+    //
+    //   request('settings/' + this.openId, 'POST', {
+    //     ...this.settings,
+    //     ...settings,
+    //   })
+    //     .catch(() => showWarning('用户配置更新失败!'))
+    //     .then(() => this.getSettings())
+    //     .finally(() => wx.hideToast());
+    // },
+    //
+    // getSettings() {
+    //   return request('settings/' + this.openId, 'GET', null)
+    //     .then(settings => {
+    //       this.daily_notify = settings.daily_notify;
+    //       this.notify_time = settings.notify_time;
+    //       this.duration = settings.duration;
+    //     })
+    //     .catch(() => showWarning('获取用户配置失败!'));
+    // },
   },
 };
 </script>

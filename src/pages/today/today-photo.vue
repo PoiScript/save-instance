@@ -9,7 +9,7 @@
     <div class="cell">
       <mp-cell-group :title="format(photos[0].created_at)">
         <mp-cell
-          icon-src="/static/icons/period.png"
+          icon-src="/static/icons/description.png"
           :content="photos[0].description ? photos[0].description : '点击设置简介'"
         />
         <mp-cell
@@ -26,7 +26,7 @@
 import format from 'date-fns/format';
 import MpCell from 'mp-weui/packages/cell';
 import MpCellGroup from 'mp-weui/packages/cell-group';
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 import fab from '../../components/fab';
 import store from '../../store.js';
@@ -52,13 +52,7 @@ export default {
   computed: mapState(['photos']),
 
   methods: {
-    ...mapMutations([
-      'updatePhotoLocation',
-      'updatePhotoDescription',
-      'updatePhoto',
-    ]),
-
-    ...mapActions(['fetchPhotos']),
+    ...mapMutations(['updateTodayPhoto']),
 
     format(date) {
       return format(date, 'M 月 D 日 HH : mm');
@@ -70,7 +64,9 @@ export default {
           if (res.confirm) {
             upload('update/photo', path, {
               photo_key: this.photos[0].photo_key,
-            }).then(() => this.fetchPhotos(true));
+            }).then(newPhoto => {
+              this.updateTodayPhoto(JSON.parse(newPhoto));
+            });
           }
         });
       });
@@ -95,7 +91,7 @@ export default {
             location: res.address,
           });
         })
-        .then(() => this.fetchPhotos(true))
+        .then(newPhoto => this.updateTodayPhoto(newPhoto))
         .finally(() => wx.hideToast());
     },
   },

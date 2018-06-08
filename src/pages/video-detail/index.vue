@@ -61,7 +61,7 @@ export default {
         });
       },
       fail: res => {
-        console.err('share failed' + JSON.stringify(res));
+        console.log('share failed' + JSON.stringify(res));
         wx.showModal({
           content: '分享发送失败!',
           title: '错误',

@@ -7,5 +7,6 @@ app.$mount();
 export default {
   config: {
     navigationBarTitleText: '今日',
+    backgroundColor: '#f5f5f5',
   },
 };

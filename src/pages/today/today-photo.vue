@@ -1,23 +1,43 @@
 <template>
   <div class="photo-container">
     <div class="photo">
-      <img class="photo-content" :src="photos[0].image" mode="aspectFill" @click="previewImage"/>
+      <img class="photo-content" :src="photo.image" mode="aspectFill" @click="previewImage"/>
       <div class="fab-container">
         <fab :onClick="chooseImage" icon-img="/static/icons/edit_white.png"></fab>
       </div>
     </div>
     <div class="cell">
-      <mp-cell-group :title="format(photos[0].created_at)">
-        <mp-cell
-          icon-src="/static/icons/description.png"
-          :content="photos[0].description ? photos[0].description : '点击设置简介'"
-        />
-        <mp-cell
-          @click="chooseLocation"
-          icon-src="/static/icons/locate.png"
-          :content="photos[0].location ? photos[0].location : '点击设置地址'"
-        />
-      </mp-cell-group>
+      <div class="weui-cells__title">{{date}}</div>
+      <div class="weui-cells weui-cells_after-title">
+        <div class="weui-cell weui-cell_access">
+          <div class="weui-cell_hd">
+            <img class="weui-cell_icon" src="/static/icons/locate.png"/>
+          </div>
+          <div class="weui-cell__bd">地址</div>
+          <div class="weui-cell_hd" @click="chooseLocation">
+            <img class="weui-cell_icon edit-button" src="/static/icons/edit.png"/>
+          </div>
+        </div>
+        <div class="cell-detail">{{photo.location || '点击设置地址'}}</div>
+        <div class="weui-cell weui-cell_access">
+          <div class="weui-cell_hd">
+            <img class="weui-cell_icon" src="/static/icons/description.png"/>
+          </div>
+          <div class="weui-cell__bd">简介</div>
+          <div v-if="!editingDescription" class="weui-cell_hd" @click="editDescription">
+            <img class="weui-cell_icon edit-button" src="/static/icons/edit.png"/>
+          </div>
+        </div>
+        <textarea class="cell-detail description-textarea"
+                  title="photo description"
+                  :focus="editingDescription"
+                  :disabled="!editingDescription"
+                  :value="photo.description"
+                  placeholder="未设置简介"
+                  wrap="hard"
+                  @blur="submitDescription($event.target.value)"
+        ></textarea>
+      </div>
     </div>
   </div>
 </template>
@@ -26,7 +46,7 @@
 import format from 'date-fns/format';
 import MpCell from 'mp-weui/packages/cell';
 import MpCellGroup from 'mp-weui/packages/cell-group';
-import { mapMutations, mapState } from 'vuex';
+import { mapMutations } from 'vuex';
 
 import fab from '../../components/fab';
 import store from '../../store.js';
@@ -49,21 +69,31 @@ export default {
 
   store,
 
-  computed: mapState(['photos']),
+  data() {
+    return {
+      editingDescription: false,
+      inputDescription: '',
+    };
+  },
+
+  computed: {
+    photo() {
+      return store.state.photos[0];
+    },
+    date() {
+      return format(this.photo.created_at, 'M 月 D 日 HH : mm');
+    },
+  },
 
   methods: {
     ...mapMutations(['updateTodayPhoto']),
-
-    format(date) {
-      return format(date, 'M 月 D 日 HH : mm');
-    },
 
     chooseImage() {
       chooseImage().then(path => {
         showWarning('是否上传该图片?', true).then(res => {
           if (res.confirm) {
             upload('update/photo', path, {
-              photo_key: this.photos[0].photo_key,
+              photo_key: this.photo.photo_key,
             }).then(newPhoto => {
               this.updateTodayPhoto(JSON.parse(newPhoto));
             });
@@ -72,10 +102,35 @@ export default {
       });
     },
 
+    editDescription() {
+      this.editingDescription = true;
+    },
+
+    submitDescription(value) {
+      this.editingDescription = false;
+
+      if (this.photo.description === value) return;
+
+      showWarning('是否更新简介?', true).then(res => {
+        if (res.confirm) {
+          wx.showToast({
+            icon: 'loading',
+            title: '正在更新...',
+          });
+          request('update/description', 'POST', {
+            photo_key: this.photo.photo_key,
+            description: value,
+          })
+            .then(newPhoto => this.updateTodayPhoto(newPhoto))
+            .finally(() => wx.hideToast());
+        }
+      });
+    },
+
     previewImage() {
       wx.previewImage({
-        current: this.photos[0].image,
-        urls: [this.photos[0].image],
+        current: this.photo.image,
+        urls: [this.photo.image],
       });
     },
 
@@ -84,10 +139,10 @@ export default {
         .then(res => {
           wx.showToast({
             icon: 'loading',
-            title: '正在上传...',
+            title: '正在更新...',
           });
           return request('update/location', 'POST', {
-            photo_key: this.photos[0].photo_key,
+            photo_key: this.photo.photo_key,
             location: res.address,
           });
         })
@@ -125,5 +180,21 @@ export default {
 
 .cell {
   width: 320px;
+}
+
+.edit-button {
+  margin: 0;
+}
+
+.description-textarea {
+  line-height: 1em;
+  height: 3em;
+  width: 100%;
+}
+
+.cell-detail {
+  padding: 0 15px 10px 15px;
+  font-size: 0.9em;
+  color: #555555;
 }
 </style>

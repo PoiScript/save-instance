@@ -32,6 +32,10 @@ export default {
 
     store.dispatch('fetchVideos', false).then(() => wx.hideToast());
   },
+
+  onPullDownRefresh() {
+    store.dispatch('fetchVideos', true).then(() => wx.stopPullDownRefresh());
+  },
 };
 </script>
 

@@ -7,5 +7,7 @@ app.$mount();
 export default {
   config: {
     navigationBarTitleText: '视频列表',
+    backgroundColor: '#f5f5f5',
+    enablePullDownRefresh: true,
   },
 };

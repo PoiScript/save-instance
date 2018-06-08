@@ -1,11 +1,14 @@
 <template>
-  <div class="box">
-    <ul>
-      <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
-    </ul>
-    <a href="/pages/selector/main" class="timeline--fab-container" hover-class="none">
-      <fab icon-img="/static/icons/movie.png"></fab>
-    </a>
+  <div class="container">
+    <div v-if="photos.length > 0" class="timeline">
+      <div class="item-container">
+        <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
+      </div>
+      <a href="/pages/selector/main" class="timeline--fab-container" hover-class="none">
+        <fab icon-img="/static/icons/movie.png"></fab>
+      </a>
+    </div>
+    <big-image v-else src="/static/picture/timeline_empty.jpg" text="时光轴空空如也" text-color="#fff"></big-image>
   </div>
 </template>
 
@@ -14,10 +17,12 @@ import { mapState } from 'vuex';
 
 import item from './item';
 import fab from '../../components/fab';
+import bigImage from '../../components/big-image';
 import store from '../../store';
 
 export default {
   components: {
+    bigImage,
     fab,
     item,
   },
@@ -35,16 +40,21 @@ export default {
 <style>
 page {
   width: 100%;
+  height: 100%;
   background-color: #2d8cf0;
 }
 
-.box {
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.timeline {
   margin: 0;
   padding: 0 0 25px 60px;
-  background-color: #2d8cf0;
 }
 
-.box ul {
+.item-container {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -52,7 +62,7 @@ page {
   top: 25px;
 }
 
-.box ul:before {
+.item-container:before {
   content: '';
   display: block;
   width: 0;

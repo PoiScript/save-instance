@@ -137,6 +137,10 @@ button::after {
   height: 100%;
 }
 
+.weui-panel--padding {
+  margin-top: 35px;
+}
+
 ::-webkit-scrollbar {
   width: 0;
   height: 0;

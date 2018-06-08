@@ -79,9 +79,8 @@ export default {
   left: 0;
   padding: 10px;
   border-radius: 0 0 10px 10px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  overflow: scroll;
+  max-height: 2em;
 }
 
 .time {

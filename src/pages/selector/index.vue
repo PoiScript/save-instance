@@ -5,7 +5,7 @@
         class="thumbnail"
         :class="{ selected: selected[photo.photo_key] }"
         @click="onSelect(photo.photo_key)">
-        <image class="img" :src="photo.image" mode="aspectFill"></image>
+        <image class="img" :src="photo.image_url" mode="aspectFill"></image>
       </div>
     </div>
     <footer v-if="selectedKey.length > 0" :class="{ warn: selectedKey.length < 5 }">

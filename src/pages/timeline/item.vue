@@ -1,5 +1,5 @@
 <template>
-  <li @click="preview" class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.image + ')' }">
+  <li @click="preview" class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.image_url + ')' }">
     <span class="dot"></span>
     <div class="time">
       <p>{{date}}</p>

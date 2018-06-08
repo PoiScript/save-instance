@@ -23,10 +23,10 @@ const store = new Vuex.Store({
     setOpenId(state, openId) {
       state.openId = openId;
     },
-    updateTodayPhoto(state, { location, description, image }) {
+    updateTodayPhoto(state, { location, description, image_url }) {
       state.photos[0].location = location;
       state.photos[0].description = description;
-      state.photos[0].image = config.api_url + image;
+      state.photos[0].image_url = image_url;
     },
     settingsUpdated(state, settings) {
       state.settings = settings;
@@ -53,16 +53,7 @@ const store = new Vuex.Store({
     fetchPhotos: ({ state, commit }, force = false) => {
       if (state.photos.length === 0 || force) {
         request('timeline/' + state.openId, 'GET', null)
-          .then(data =>
-            commit(
-              'photosFetched',
-              // prefix all photo with the api url
-              data.map(photo => {
-                photo.image = config.api_url + photo.image;
-                return photo;
-              }),
-            ),
-          )
+          .then(data => commit('photosFetched', data))
           .catch(() => showWarning('登录失败! 无法获取时间轴'));
       }
     },
@@ -75,9 +66,6 @@ const store = new Vuex.Store({
               // prefix all video with the api url
               data.map(video => {
                 video.created_at = format(video.created_at, 'M月D日 HH:mm');
-                video.thumbnail =
-                  config.api_url + video.video.replace(/\.mp4$/, '.jpg');
-                video.video = config.api_url + 'video/' + video.video;
                 return video;
               }),
             ),

@@ -1,7 +1,7 @@
 <template>
   <div class="photo-container">
     <div class="photo">
-      <img class="photo-content" :src="photo.image" mode="aspectFill" @click="previewImage"/>
+      <img class="photo-content" :src="photo.image_url" mode="aspectFill" @click="previewImage"/>
       <div class="fab-container">
         <fab :onClick="chooseImage" icon-img="/static/icons/edit_white.png"></fab>
       </div>

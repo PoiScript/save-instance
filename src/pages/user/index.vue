@@ -7,23 +7,27 @@
           <cell-button img="/static/icons/video.png" text="视频列表"></cell-button>
         </a>
       </panel>
-      <panel title="设置">
-        <cell-switch title="拍照提醒"
-                     img="/static/icons/remind.png"
-                     :checked="settings.daily_notify"
-                     :onSwitchChange="switchDailyNotify"></cell-switch>
-        <div v-if="settings.daily_notify" >
-
-        <cell-picker title="提醒时间"
-                     img="/static/icons/period.png"
-                     :value="settings.notify_time" :range="notifyTimes"
-                     :onPickerChange="changeNotifyTime"></cell-picker>
+      <div class="weui-panel weui-panel--padding">
+        <div class="weui-panel__bd">
+          <div class="weui-panel__hd">设置</div>
+          <div class="weui-media-box weui-media-box_small-appmsg">
+            <div class="weui-cells weui-cells_in-small-appmsg">
+              <cell-switch title="拍照提醒"
+                           img="/static/icons/remind.png"
+                           :checked="settings.daily_notify"
+                           :onSwitchChange="switchDailyNotify"></cell-switch>
+              <cell-picker title="提醒时间" v-if="settings.daily_notify"
+                           img="/static/icons/period.png"
+                           :value="settings.notify_time" :range="notifyTimes"
+                           :onPickerChange="changeNotifyTime"></cell-picker>
+              <cell-picker title="每幅时长"
+                           img="/static/icons/duration.png"
+                           :value="settings.duration" :range="durations"
+                           :onPickerChange="changeDuration"></cell-picker>
+            </div>
+          </div>
         </div>
-        <cell-picker title="每幅时长"
-                     img="/static/icons/duration.png"
-                     :value="settings.duration" :range="durations"
-                     :onPickerChange="changeDuration"></cell-picker>
-      </panel>
+      </div>
       <panel title="其他">
         <a href="/pages/tutorial/main" hover-class="none">
           <button form-type="submit">

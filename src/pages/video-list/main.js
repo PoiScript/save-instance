@@ -9,5 +9,6 @@ export default {
     navigationBarTitleText: '视频列表',
     backgroundColor: '#f5f5f5',
     enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark',
   },
 };

@@ -1,33 +1,59 @@
 <template>
   <div class="container" v-if="video">
-    <video class="video" :src="video.video"
-           :poster="video.thumbnail"
-           controls></video>
-    <div class="action-row">
-      <button class="action">
-        <img class="action-img" src="/static/icons/edit.png"/>
-        重命名
+    <video class="video" :src="video.video" :poster="video.thumbnail" controls="false"></video>
+    <div class="weui-cells cell">
+      <div class="weui-cell weui-cell_access">
+        <div class="weui-cell_hd">
+          <img class="weui-cell_icon" src="/static/icons/description.png"/>
+        </div>
+        <div class="weui-cell__bd">视频名称</div>
+        <div class="weui-cell_hd" @click="chooseLocation">
+          <img class="weui-cell_icon edit-button" src="/static/icons/edit.png"/>
+        </div>
+      </div>
+      <div class="cell-detail">{{video.name || '未命名视频'}}</div>
+      <div class="weui-cell weui-cell_access">
+        <div class="weui-cell_hd">
+          <img class="weui-cell_icon" src="/static/icons/period.png"/>
+        </div>
+        <div class="weui-cell__bd">生成时间</div>
+        <div class="weui-cell__ft">{{video.created_at}}</div>
+      </div>
+      <button class="weui-cell weui-cell_access" open-type="share">
+        <div class="weui-cell_hd">
+          <img class="weui-cell_icon" src="/static/icons/share.jpg"/>
+        </div>
+        <div class="weui-cell__bd">分享视频</div>
+        <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </button>
-      <button class="action" @click="downloadClick">
-        <img class="action-img" src="/static/icons/download.png"/>
-        下载
-      </button>
-      <button class="action" open-type="share">
-        <img class="action-img" src="/static/icons/share.png"/>
-        分享
-      </button>
+      <div class="weui-cell weui-cell_access" @click="downloadClick">
+        <div class="weui-cell_hd">
+          <img class="weui-cell_icon" src="/static/icons/download.jpg"/>
+        </div>
+        <div class="weui-cell__bd">下载视频</div>
+        <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Toast from 'mp-weui/packages/toast';
+import MpCell from 'mp-weui/packages/cell';
+import MpCellGroup from 'mp-weui/packages/cell-group';
 import { mapActions } from 'vuex';
 
+import fab from '../../components/fab';
 import store from '../../store';
 import { downloadFile, saveVideoToPhotosAlbum } from '../../util';
 
 export default {
+  components: {
+    fab,
+    MpCell,
+    MpCellGroup,
+  },
+
   data() {
     return {
       key: 0,
@@ -51,20 +77,12 @@ export default {
   onShareAppMessage() {
     return {
       title: '咔记分享',
-      path: `/pages/share/main?key=${this.video.video_key}&share=1`,
+      path: `/pages/today/main?share=${this.video.video_key}`,
       imageUrl: this.video.thumbnail,
       success: () => {
         wx.showModal({
           content: '分享发送成功!',
           title: '提示',
-          showCancel: false,
-        });
-      },
-      fail: res => {
-        console.log('share failed' + JSON.stringify(res));
-        wx.showModal({
-          content: '分享发送失败!',
-          title: '错误',
           showCancel: false,
         });
       },
@@ -110,34 +128,24 @@ page {
   width: 100%;
 }
 
-.action-row {
-  padding-top: 15px;
-  margin: 0;
-  box-sizing: border-box;
-  display: flex;
-  flex: 0 1 auto;
-  flex-direction: row;
+.cell {
   width: 100%;
-}
-
-.action {
-  box-sizing: border-box;
-  max-width: 33.33333333%;
-  flex: 0 0 33.33333333%;
+  padding: 0;
   margin: 0;
-  text-align: center;
 }
 
-.action-img {
-  margin: 0 auto;
-  display: block;
-  width: 30px;
-  height: 30px;
+.cell-detail {
+  padding: 0 15px 10px 15px;
+  font-size: 0.9em;
+  color: #555555;
 }
 
 button,
 button::after {
-  padding: 0;
+  padding: 10px 15px;
+  text-align: start;
+  line-height: inherit;
+  font-size: inherit;
   border: none;
   border-radius: 0;
   background-color: transparent;

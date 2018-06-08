@@ -129,8 +129,8 @@ export default {
 
     previewImage() {
       wx.previewImage({
-        current: this.photo.image,
-        urls: [this.photo.image],
+        current: this.photo.image_url,
+        urls: [this.photo.image_url],
       });
     },
 

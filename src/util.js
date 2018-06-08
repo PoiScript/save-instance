@@ -280,15 +280,15 @@ export const downloadFile = url => {
   });
 };
 
-export const saveFile = path =>
+export const saveVideoToPhotosAlbum = path =>
   new Promise((resolve, reject) => {
-    wx.saveFile({
-      tempFilePath: path,
-      success: res => {
-        resolve(res.savedFilePath);
+    wx.saveVideoToPhotosAlbum({
+      filePath: path,
+      success: () => {
+        resolve();
       },
       fail: res => {
-        reject('Save File Failed: ' + JSON.stringify(res));
+        reject('Save Video Failed: ' + JSON.stringify(res));
       },
     });
   });

@@ -25,7 +25,7 @@ import Toast from 'mp-weui/packages/toast';
 import { mapActions } from 'vuex';
 
 import store from '../../store';
-import { downloadFile, saveFile } from '../../util';
+import { downloadFile, saveVideoToPhotosAlbum } from '../../util';
 
 export default {
   data() {
@@ -76,7 +76,7 @@ export default {
 
     downloadClick() {
       downloadFile(this.video.video)
-        .then(path => saveFile(path))
+        .then(path => saveVideoToPhotosAlbum(path))
         .then(path => Toast(`视频下载至: ${path}`))
         .catch(err => {
           wx.showModal({

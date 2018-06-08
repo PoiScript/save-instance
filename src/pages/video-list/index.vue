@@ -2,7 +2,8 @@
   <form report-submit="true" class="container">
     <a class="video" v-for="video in videos"
        :key="video.video_key"
-       :href="'/pages/video-detail/main?key=' + video.video_key">
+       :href="'/pages/video-detail/main?key=' + video.video_key"
+       hover-class="none">
       <image class="thumbnail" :src="video.thumbnail" mode="aspectFill">
         <div class="duration">{{ video.duration }} s</div>
       </image>

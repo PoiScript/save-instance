@@ -3,7 +3,7 @@
     <form report-submit="true" @submit="formSubmit">
       <user-info></user-info>
       <panel title="视频">
-        <a href="/pages/video-list/main">
+        <a href="/pages/video-list/main" hover-class="none">
           <cell-button img="/static/icons/video.png" text="视频列表"></cell-button>
         </a>
       </panel>
@@ -25,7 +25,7 @@
                      :onPickerChange="changeDuration"></cell-picker>
       </panel>
       <panel title="其他">
-        <a href="/pages/tutorial/main">
+        <a href="/pages/tutorial/main" hover-class="none">
           <button form-type="submit">
             <cell-button img="/static/icons/tutorial.png" text="查看教程"></cell-button>
           </button>
@@ -44,10 +44,10 @@
 
 <script>
 import MpFooter from 'mp-weui/packages/footer';
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import store from '../../store';
-import { request, showWarning } from '../../util';
+import { request } from '../../util';
 import cellButton from './cell-button';
 import cellPicker from './cell-picker';
 import cellSwitch from './cell-switch';
@@ -110,31 +110,6 @@ export default {
         request('formId', 'POST', { openId: this.openId, formId });
       }
     },
-
-    // updateSettings(settings) {
-    //   wx.showToast({
-    //     icon: 'loading',
-    //     title: '更新用户配置...',
-    //   });
-    //
-    //   request('settings/' + this.openId, 'POST', {
-    //     ...this.settings,
-    //     ...settings,
-    //   })
-    //     .catch(() => showWarning('用户配置更新失败!'))
-    //     .then(() => this.getSettings())
-    //     .finally(() => wx.hideToast());
-    // },
-    //
-    // getSettings() {
-    //   return request('settings/' + this.openId, 'GET', null)
-    //     .then(settings => {
-    //       this.daily_notify = settings.daily_notify;
-    //       this.notify_time = settings.notify_time;
-    //       this.duration = settings.duration;
-    //     })
-    //     .catch(() => showWarning('获取用户配置失败!'));
-    // },
   },
 };
 </script>

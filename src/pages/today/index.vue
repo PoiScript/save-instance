@@ -1,7 +1,7 @@
 <template>
   <form report-submit="true" class="container">
     <today-photo v-if="hasPhotoToday"></today-photo>
-    <a href="/pages/upload/main" v-else>
+    <a href="/pages/upload/main" v-else hover-class="none">
       <ripple type="circle">
         <div class="photo-anchor">
           <img src="/static/icons/pic.png" class="img shake-chunk"/>

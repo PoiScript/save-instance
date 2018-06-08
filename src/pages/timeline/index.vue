@@ -3,7 +3,7 @@
     <ul>
       <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
     </ul>
-    <a href="/pages/selector/main" class="timeline--fab-container">
+    <a href="/pages/selector/main" class="timeline--fab-container" hover-class="none">
       <fab icon-img="/static/icons/movie.png"></fab>
     </a>
   </div>

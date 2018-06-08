@@ -37,6 +37,12 @@ const store = new Vuex.Store({
     videosFetched(state, videos) {
       state.videos = videos;
     },
+    updateVideoName(state, { video_key, name }) {
+      const i = state.videos.findIndex(v => v.video_key === video_key);
+      if (i !== -1) {
+        state.videos[i].name = name;
+      }
+    },
   },
   getters: {
     hasPhotoToday: state =>

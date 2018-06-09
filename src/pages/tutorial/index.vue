@@ -11,7 +11,9 @@
         <div class="container">
           <img class="logo-img shake-chunk" src="/static/picture/logo_img.jpg" mode="widthFix"/>
           <img class="logo-text" src="/static/picture/logo_text.jpg" mode="widthFix"/>
-          <button @click="navigate" class="btn" type="button"><span>立即开始</span></button>
+          <navigator open-type="navigateBack" class="btn">
+            <span>立即开始</span>
+          </navigator>
         </div>
       </swiper-item>
     </swiper>
@@ -32,10 +34,9 @@ export default {
       ],
     };
   },
-  methods: {
-    navigate() {
-      setStorage('finishedTutorial', true).then(() => wx.navigateBack());
-    },
+
+  onShow() {
+    setStorage('finishedTutorial', true);
   },
 };
 </script>

@@ -69,22 +69,21 @@ export default {
 
   data() {
     return {
+      video: null,
       editingName: false,
     };
-  },
-
-  computed: {
-    video() {
-      return this.$store.getters.getVideoByKey(
-        parseInt(this.$root.$mp.query.key),
-      );
-    },
   },
 
   store,
 
   onLoad() {
     this.fetchVideos(false);
+  },
+
+  onShow() {
+    this.video = this.$store.getters.getVideoByKey(
+      parseInt(this.$root.$mp.query.key),
+    );
   },
 
   onShareAppMessage() {

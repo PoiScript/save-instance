@@ -25,12 +25,11 @@ export default {
   computed: mapState(['videos']),
 
   onLoad() {
-    wx.showToast({
-      icon: 'loading',
+    wx.showLoading({
       title: '获取视频列表...',
     });
 
-    store.dispatch('fetchVideos', false).then(() => wx.hideToast());
+    store.dispatch('fetchVideos', false).then(() => wx.hideLoading());
   },
 
   onPullDownRefresh() {

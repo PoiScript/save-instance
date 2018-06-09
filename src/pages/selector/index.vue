@@ -66,8 +66,7 @@ export default {
     },
 
     generate() {
-      wx.showToast({
-        icon: 'loading',
+      wx.showLoading({
         title: '正在生成...',
       });
 
@@ -78,9 +77,9 @@ export default {
         .then(() => this.fetchVideos(true))
         .then(() => {
           this.selectedKey = [];
-          wx.hideToast();
+          wx.hideLoading();
+          return confirm('视频生成完毕, 是否跳转到视频列表查看');
         })
-        .then(() => confirm('视频生成完毕, 是否跳转到视频列表查看'))
         .then(check => {
           if (check) {
             redirect('/pages/video-list/main');

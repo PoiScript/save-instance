@@ -89,7 +89,7 @@ export default {
   onShareAppMessage() {
     return {
       title: '咔记分享',
-      path: `/pages/today/main?share=${this.video.video_key}`,
+      path: `/pages/share/main?share=${this.video.video_key}`,
       imageUrl: this.video.thumbnail,
       success: () => {
         wx.showModal({
@@ -130,15 +130,14 @@ export default {
 
       showWarning('是否更新简介?', true).then(res => {
         if (res.confirm) {
-          wx.showToast({
-            icon: 'loading',
+          wx.showLoading({
             title: '正在更新...',
           });
           request('video/' + this.video.video_key, 'POST', {
             name: value,
           })
             .then(newVideo => this.updateVideoName(newVideo))
-            .finally(() => wx.hideToast());
+            .finally(() => wx.hideLoading());
         }
       });
     },

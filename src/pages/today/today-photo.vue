@@ -113,8 +113,7 @@ export default {
 
       showWarning('是否更新简介?', true).then(res => {
         if (res.confirm) {
-          wx.showToast({
-            icon: 'loading',
+          wx.showLoading({
             title: '正在更新...',
           });
           request('update/description', 'POST', {
@@ -122,7 +121,7 @@ export default {
             description: value,
           })
             .then(newPhoto => this.updateTodayPhoto(newPhoto))
-            .finally(() => wx.hideToast());
+            .finally(() => wx.hideLoading());
         }
       });
     },
@@ -137,8 +136,7 @@ export default {
     chooseLocation() {
       chooseLocation()
         .then(res => {
-          wx.showToast({
-            icon: 'loading',
+          wx.showLoading({
             title: '正在更新...',
           });
           return request('update/location', 'POST', {
@@ -147,7 +145,7 @@ export default {
           });
         })
         .then(newPhoto => this.updateTodayPhoto(newPhoto))
-        .finally(() => wx.hideToast());
+        .finally(() => wx.hideLoading());
     },
   },
 };

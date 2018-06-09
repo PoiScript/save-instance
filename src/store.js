@@ -63,7 +63,6 @@ const store = new Vuex.Store({
           .then(data =>
             commit(
               'videosFetched',
-              // prefix all video with the api url
               data.map(video => {
                 video.created_at = format(video.created_at, 'M月D日 HH:mm');
                 return video;
@@ -77,8 +76,7 @@ const store = new Vuex.Store({
       }
     },
     updateSettings: ({ state, commit }, settings) => {
-      wx.showToast({
-        icon: 'loading',
+      wx.showLoading({
         title: '更新用户配置...',
       });
 
@@ -88,18 +86,17 @@ const store = new Vuex.Store({
       })
         .catch(() => showWarning('用户配置更新失败!'))
         .then(settings => commit('settingsUpdated', settings))
-        .then(() => wx.hideToast());
+        .then(() => wx.hideLoading());
     },
     getSettings: ({ state, commit }) => {
-      wx.showToast({
-        icon: 'loading',
+      wx.showLoading({
         title: '获取用户配置...',
       });
 
       request('settings/' + state.openId, 'GET', null)
         .catch(() => showWarning('获取用户配置失败!'))
         .then(settings => commit('settingsUpdated', settings))
-        .then(() => wx.hideToast());
+        .then(() => wx.hideLoading());
     },
   },
 });

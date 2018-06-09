@@ -31,8 +31,7 @@ export const request = (path, method, data) => {
 /** promisify wx.uploadFile api */
 export const upload = (path, filePath, formData) => {
   wx.showNavigationBarLoading();
-  wx.showToast({
-    icon: 'loading',
+  wx.showLoading({
     title: '正在上传...',
   });
   return new Promise((resolve, reject) => {
@@ -63,7 +62,7 @@ export const upload = (path, filePath, formData) => {
         reject('Network Failed: ' + err);
       },
       complete: () => {
-        wx.hideToast();
+        wx.hideLoading();
         wx.hideNavigationBarLoading();
       },
     });
@@ -73,8 +72,7 @@ export const upload = (path, filePath, formData) => {
 /** promisify wx.login api */
 export const login = () => {
   wx.showNavigationBarLoading();
-  wx.showToast({
-    icon: 'loading',
+  wx.showLoading({
     title: '正在登录...',
   });
   return new Promise((resolve, reject) => {
@@ -100,7 +98,7 @@ export const login = () => {
         reject('Login Failed');
       },
       complete: () => {
-        wx.hideToast();
+        wx.hideLoading();
         wx.hideNavigationBarLoading();
       },
     });
@@ -255,8 +253,7 @@ export const redirect = url =>
 
 export const downloadFile = url => {
   wx.showNavigationBarLoading();
-  wx.showToast({
-    icon: 'loading',
+  wx.showLoading({
     title: '正在下载...',
   });
   return new Promise((resolve, reject) => {
@@ -273,7 +270,7 @@ export const downloadFile = url => {
         reject('Download File Failed: ' + JSON.stringify(res));
       },
       complete: () => {
-        wx.hideToast();
+        wx.hideLoading();
         wx.hideNavigationBarLoading();
       },
     });

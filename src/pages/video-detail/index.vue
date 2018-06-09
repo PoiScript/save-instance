@@ -29,14 +29,14 @@
       </div>
       <button class="weui-cell weui-cell_access" open-type="share">
         <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/share.jpg"/>
+          <img class="weui-cell_icon" src="/static/icons/share.png"/>
         </div>
         <div class="weui-cell__bd">分享视频</div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </button>
       <div class="weui-cell weui-cell_access" @click="downloadClick">
         <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/download.jpg"/>
+          <img class="weui-cell_icon" src="/static/icons/download.png"/>
         </div>
         <div class="weui-cell__bd">下载视频</div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>

@@ -3,7 +3,7 @@
     <today-photo v-if="hasPhotoToday"></today-photo>
     <a href="/pages/upload/main" v-else hover-class="none">
       <ripple type="circle">
-        <big-image text="点击发表今日记忆～" src="/static/icons/pic.png" :img-shake="true"></big-image>
+        <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
       </ripple>
     </a>
   </form>

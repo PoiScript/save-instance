@@ -41,7 +41,7 @@ export default {
 page {
   width: 100%;
   height: 100%;
-  background-color: #2d8cf0;
+  background: linear-gradient(to right, #2d8cf0, #5ac4f8);
 }
 
 .container {

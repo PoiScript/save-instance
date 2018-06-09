@@ -51,10 +51,10 @@ import { mapMutations } from 'vuex';
 import fab from '../../components/fab';
 import store from '../../store.js';
 import {
+  confirm,
   chooseImage,
   chooseLocation,
   request,
-  showWarning,
   upload,
 } from '../../util';
 
@@ -90,8 +90,8 @@ export default {
 
     chooseImage() {
       chooseImage().then(path => {
-        showWarning('是否上传该图片?', true).then(res => {
-          if (res.confirm) {
+        confirm('是否上传该图片?').then(check => {
+          if (check) {
             upload('update/photo', path, {
               photo_key: this.photo.photo_key,
             }).then(newPhoto => {
@@ -111,11 +111,10 @@ export default {
 
       if (this.photo.description === value) return;
 
-      showWarning('是否更新简介?', true).then(res => {
-        if (res.confirm) {
-          wx.showLoading({
-            title: '正在更新...',
-          });
+      confirm('是否更新简介?').then(check => {
+        if (check) {
+          wx.showLoading({ title: '正在更新...' });
+
           request('update/description', 'POST', {
             photo_key: this.photo.photo_key,
             description: value,
@@ -136,9 +135,8 @@ export default {
     chooseLocation() {
       chooseLocation()
         .then(res => {
-          wx.showLoading({
-            title: '正在更新...',
-          });
+          wx.showLoading({ title: '正在更新...' });
+
           return request('update/location', 'POST', {
             photo_key: this.photo.photo_key,
             location: res.address,

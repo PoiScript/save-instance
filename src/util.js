@@ -170,11 +170,18 @@ export const switchTab = url =>
     });
   });
 
-export const confirm = content =>
+export const toast = (content, icon = 'none') =>
+  wx.showToast({
+    duration: 1500,
+    title: content,
+    icon,
+  });
+
+export const confirm = (content, title = '请确认') =>
   new Promise((resolve, reject) => {
     wx.showModal({
       content,
-      title: '请确认',
+      title,
       showCancel: true,
       success: res => {
         if (res.confirm) {
@@ -192,23 +199,8 @@ export const confirm = content =>
 export const warning = content =>
   wx.showModal({
     content,
-    title: '提示',
+    title: '错误',
     showCancel: false,
-  });
-
-export const showWarning = (content, showCancel = false) =>
-  new Promise((resolve, reject) => {
-    wx.showModal({
-      content,
-      title: '提示',
-      showCancel,
-      success: res => {
-        resolve(res);
-      },
-      fail: err => {
-        reject('Show Modal Error' + JSON.stringify(err));
-      },
-    });
   });
 
 export const chooseLocation = () =>
@@ -263,10 +255,12 @@ export const downloadFile = url => {
         if (res.statusCode === 200) {
           resolve(res.tempFilePath);
         } else {
+          warning('视频下载失败!');
           reject('Download File Failed.');
         }
       },
       fail: res => {
+        warning('视频下载失败!');
         reject('Download File Failed: ' + JSON.stringify(res));
       },
       complete: () => {
@@ -282,6 +276,7 @@ export const saveVideoToPhotosAlbum = path =>
     wx.saveVideoToPhotosAlbum({
       filePath: path,
       success: () => {
+        toast('视频下载成功', 'success');
         resolve();
       },
       fail: res => {

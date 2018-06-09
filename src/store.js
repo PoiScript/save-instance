@@ -3,8 +3,7 @@ import isToday from 'date-fns/is_today';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import config from './config';
-import { request, showWarning } from './util';
+import { request, warning } from './util';
 
 Vue.use(Vuex);
 
@@ -54,7 +53,7 @@ const store = new Vuex.Store({
       if (state.photos.length === 0 || force) {
         request('timeline/' + state.openId, 'GET', null)
           .then(data => commit('photosFetched', data))
-          .catch(() => showWarning('登录失败! 无法获取时间轴'));
+          .catch(() => warning('获取时间轴失败!'));
       }
     },
     fetchVideos: ({ state, commit }, force = false) => {
@@ -71,30 +70,26 @@ const store = new Vuex.Store({
           )
           .catch(err => {
             console.log(err);
-            showWarning('登录失败! 无法获取视频列表');
+            warning('获取视频列表失败!');
           });
       }
     },
     updateSettings: ({ state, commit }, settings) => {
-      wx.showLoading({
-        title: '更新用户配置...',
-      });
+      wx.showLoading({ title: '更新用户配置...' });
 
       request('settings/' + state.openId, 'POST', {
         ...state.settings,
         ...settings,
       })
-        .catch(() => showWarning('用户配置更新失败!'))
+        .catch(() => warning('用户配置更新失败!'))
         .then(settings => commit('settingsUpdated', settings))
         .then(() => wx.hideLoading());
     },
     getSettings: ({ state, commit }) => {
-      wx.showLoading({
-        title: '获取用户配置...',
-      });
+      wx.showLoading({ title: '获取用户配置...' });
 
       request('settings/' + state.openId, 'GET', null)
-        .catch(() => showWarning('获取用户配置失败!'))
+        .catch(() => warning('获取用户配置失败!'))
         .then(settings => commit('settingsUpdated', settings))
         .then(() => wx.hideLoading());
     },

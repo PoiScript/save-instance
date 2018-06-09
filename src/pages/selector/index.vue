@@ -18,10 +18,10 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import store from '../../store';
-import { request, warning, confirm, redirect } from '../../util';
+import { confirm, redirect, request, toast } from '../../util';
 
 export default {
   store,
@@ -61,14 +61,12 @@ export default {
           if (check) this.generate();
         });
       } else {
-        warning(`还需要选择${5 - this.selectedKey.length}张照片!`);
+        toast(`还需要选择${5 - this.selectedKey.length}张照片!`);
       }
     },
 
     generate() {
-      wx.showLoading({
-        title: '正在生成...',
-      });
+      wx.showLoading({ title: '正在生成...' });
 
       request('video', 'POST', {
         openId: this.openId,
@@ -78,7 +76,7 @@ export default {
         .then(() => {
           this.selectedKey = [];
           wx.hideLoading();
-          return confirm('视频生成完毕, 是否跳转到视频列表查看');
+          return confirm('是否跳转到视频列表查看', '视频生成完毕');
         })
         .then(check => {
           if (check) {

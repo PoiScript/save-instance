@@ -18,7 +18,7 @@ import { mapState } from 'vuex';
 
 import store from './store';
 import rootStore from '../../store';
-import { switchTab, upload } from '../../util';
+import { switchTab, upload, toast } from '../../util';
 
 export default {
   store,
@@ -46,13 +46,10 @@ export default {
       if (this.image) {
         upload('upload', this.image, this.createFormData())
           .then(() => switchTab('/pages/timeline/main'))
+          .then(() => toast('图片上传成功', 'success'))
           .then(() => rootStore.dispatch('fetchPhotos', true));
       } else {
-        wx.showToast({
-          title: '请选择需要上传的图片',
-          icon: 'none',
-          duration: 1000,
-        });
+        toast('请选择需要上传的图片');
       }
     },
   },

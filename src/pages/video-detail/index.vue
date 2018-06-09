@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import Toast from 'mp-weui/packages/toast';
 import MpCell from 'mp-weui/packages/cell';
 import MpCellGroup from 'mp-weui/packages/cell-group';
 import { mapActions, mapMutations } from 'vuex';
@@ -54,9 +53,10 @@ import { mapActions, mapMutations } from 'vuex';
 import fab from '../../components/fab';
 import store from '../../store';
 import {
+  confirm,
   downloadFile,
   saveVideoToPhotosAlbum,
-  showWarning,
+  toast,
   request,
 } from '../../util';
 
@@ -92,11 +92,7 @@ export default {
       path: `/pages/share/main?share=${this.video.video_key}`,
       imageUrl: this.video.thumbnail,
       success: () => {
-        wx.showModal({
-          content: '分享发送成功!',
-          title: '提示',
-          showCancel: false,
-        });
+        toast('分享发送成功!', 'success');
       },
     };
   },
@@ -108,15 +104,7 @@ export default {
     downloadClick() {
       downloadFile(this.video.video)
         .then(path => saveVideoToPhotosAlbum(path))
-        .then(path => Toast(`视频下载至: ${path}`))
-        .catch(err => {
-          wx.showModal({
-            content: '视频下载失败!',
-            title: '错误',
-            showCancel: false,
-          });
-          console.log(err);
-        });
+        .catch(err => console.log(err));
     },
 
     editName() {
@@ -128,11 +116,10 @@ export default {
 
       if (this.video.name === value) return;
 
-      showWarning('是否更新简介?', true).then(res => {
-        if (res.confirm) {
-          wx.showLoading({
-            title: '正在更新...',
-          });
+      confirm('是否更新简介?').then(check => {
+        if (check) {
+          wx.showLoading({ title: '正在更新...' });
+
           request('video/' + this.video.video_key, 'POST', {
             name: value,
           })

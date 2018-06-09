@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { setStorage, switchTab } from '../../util';
+import { setStorage } from '../../util';
 
 export default {
   data() {

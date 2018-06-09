@@ -8,11 +8,11 @@
         <image class="img" :src="photo.image_url" mode="aspectFill"></image>
       </div>
     </div>
-    <footer v-if="selectedKey.length > 0" :class="{ warn: selectedKey.length < 5 }">
-      <span v-if="selectedKey.length < 5">还需要选择 {{ 5 - selectedKey.length}} 张照片</span>
+    <footer v-if="selectedKey.length > 0" :class="{ warn: selectedKey.length < 3 }">
+      <span v-if="selectedKey.length < 3">还需要选择 {{ 3 - selectedKey.length}} 张照片</span>
       <span v-else>已选择 {{ selectedKey.length }} 张照片</span>
       <span class="spacer"></span>
-      <span v-if="selectedKey.length >= 5" @click="onSubmit" class="generate-btn">生成视频</span>
+      <span v-if="selectedKey.length >= 3" @click="onSubmit" class="generate-btn">生成视频</span>
     </footer>
   </div>
 </template>
@@ -56,12 +56,12 @@ export default {
     },
 
     onSubmit() {
-      if (this.selectedKey.length >= 5) {
+      if (this.selectedKey.length >= 3) {
         confirm('是否生成视频?').then(check => {
           if (check) this.generate();
         });
       } else {
-        toast(`还需要选择${5 - this.selectedKey.length}张照片!`);
+        toast(`还需要选择${3 - this.selectedKey.length}张照片!`);
       }
     },
 

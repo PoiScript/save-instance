@@ -1,7 +1,7 @@
 <template>
   <div class="photo-container">
     <div class="photo">
-      <img class="photo-content" :src="photo.image_url" mode="aspectFill" @click="previewImage"/>
+      <img class="photo-content" :src="photo.photo_url" mode="aspectFill" @click="previewImage"/>
       <div class="fab-container">
         <fab :onClick="chooseImage" icon-img="/static/icons/edit_white.png"></fab>
       </div>
@@ -51,11 +51,11 @@ import { mapMutations } from 'vuex';
 import fab from '../../components/fab';
 import store from '../../store.js';
 import {
-  confirm,
+  _request,
   chooseImage,
   chooseLocation,
-  request,
-  upload,
+  confirm,
+  _upload,
 } from '../../util';
 
 export default {
@@ -88,62 +88,69 @@ export default {
   methods: {
     ...mapMutations(['updateTodayPhoto']),
 
-    chooseImage() {
-      chooseImage().then(path => {
-        confirm('是否上传该图片?').then(check => {
-          if (check) {
-            upload('update/photo', path, {
-              photo_key: this.photo.photo_key,
-            }).then(newPhoto => {
-              this.updateTodayPhoto(JSON.parse(newPhoto));
-            });
-          }
-        });
-      });
+    async chooseImage() {
+      const path = await chooseImage();
+
+      if (await confirm('是否上传该图片?')) {
+        const newPhoto = await _upload(
+          `timeline/${this.photo.id}/photo`,
+          path,
+          null,
+        );
+        this.updateTodayPhoto(JSON.parse(newPhoto));
+      }
     },
 
     editDescription() {
       this.editingDescription = true;
     },
 
-    submitDescription(value) {
+    async submitDescription(value) {
       this.editingDescription = false;
 
       if (this.photo.description === value) return;
 
-      confirm('是否更新简介?').then(check => {
-        if (check) {
-          wx.showLoading({ title: '正在更新...' });
+      if (await confirm('是否更新简介?')) {
+        wx.showLoading({ title: '正在更新...' });
 
-          request('update/description', 'POST', {
-            photo_key: this.photo.photo_key,
-            description: value,
-          })
-            .then(newPhoto => this.updateTodayPhoto(newPhoto))
-            .finally(() => wx.hideLoading());
+        try {
+          const newPhoto = await _request(
+            `timeline/${this.photo.id}/meta`,
+            'PUT',
+            {
+              location: this.photo.location,
+              description: value,
+            },
+          );
+
+          this.updateTodayPhoto(newPhoto);
+        } catch (e) {
+          // TODO: error handling
         }
-      });
+
+        wx.hideLoading();
+      }
     },
 
     previewImage() {
       wx.previewImage({
-        current: this.photo.image_url,
-        urls: [this.photo.image_url],
+        current: this.photo.photo_url,
+        urls: [this.photo.photo_url],
       });
     },
 
-    chooseLocation() {
-      chooseLocation()
-        .then(res => {
-          wx.showLoading({ title: '正在更新...' });
+    async chooseLocation() {
+      const { address } = await chooseLocation();
 
-          return request('update/location', 'POST', {
-            photo_key: this.photo.photo_key,
-            location: res.address,
-          });
-        })
-        .then(newPhoto => this.updateTodayPhoto(newPhoto))
-        .finally(() => wx.hideLoading());
+      wx.showLoading({ title: '正在更新...' });
+
+      const newPhoto = await _request(`timeline/${this.photo.id}/meta`, 'PUT', {
+        location: address,
+        description: this.photo.description,
+      });
+      this.updateTodayPhoto(newPhoto);
+
+      wx.hideLoading();
     },
   },
 };
@@ -164,6 +171,7 @@ export default {
 }
 
 .photo-content {
+  width: 100%;
   display: block;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -185,7 +193,7 @@ export default {
 .description-textarea {
   line-height: 1em;
   height: 3em;
-  width: 100%;
+  width: calc(100% - 30px);
 }
 
 .cell-detail {

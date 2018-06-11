@@ -1,18 +1,18 @@
 <template>
   <div class="selector">
-    <div class="item" v-for="photo in photos" :key="photo.photo_key">
+    <div class="item" v-for="photo in photos" :key="photo.id">
       <div
         class="thumbnail"
-        :class="{ selected: selected[photo.photo_key] }"
-        @click="onSelect(photo.photo_key)">
-        <image class="img" :src="photo.image_url" mode="aspectFill"></image>
+        :class="{ selected: selected[photo.id] }"
+        @click="onSelect(photo.id)">
+        <img class="img" :src="photo.photo_url" mode="aspectFill">
       </div>
     </div>
-    <footer v-if="selectedKey.length > 0" :class="{ warn: selectedKey.length < 3 }">
-      <span v-if="selectedKey.length < 3">还需要选择 {{ 3 - selectedKey.length}} 张照片</span>
-      <span v-else>已选择 {{ selectedKey.length }} 张照片</span>
+    <footer v-if="selectedIds.length > 0" :class="{ warn: selectedIds.length < 3 }">
+      <span v-if="selectedIds.length < 3">还需要选择 {{ 3 - selectedIds.length}} 张照片</span>
+      <span v-else>已选择 {{ selectedIds.length }} 张照片</span>
       <span class="spacer"></span>
-      <span v-if="selectedKey.length >= 3" @click="onSubmit" class="generate-btn">生成视频</span>
+      <span v-if="selectedIds.length >= 3" @click="onSubmit" class="generate-btn">生成视频</span>
     </footer>
   </div>
 </template>
@@ -21,24 +21,24 @@
 import { mapActions, mapState } from 'vuex';
 
 import store from '../../store';
-import { confirm, redirect, request, toast } from '../../util';
+import { confirm, redirect, request, toast, _request } from '../../util';
 
 export default {
   store,
 
   data() {
     return {
-      selectedKey: [],
+      selectedIds: [],
     };
   },
 
   computed: {
-    ...mapState(['photos', 'openId']),
+    ...mapState(['photos']),
 
     selected() {
       const result = {};
-      for (const key of this.selectedKey) {
-        result[key] = true;
+      for (const id of this.selectedIds) {
+        result[id] = true;
       }
       return result;
     },
@@ -47,42 +47,40 @@ export default {
   methods: {
     ...mapActions(['fetchVideos']),
 
-    onSelect(key) {
-      if (this.selectedKey.includes(key)) {
-        this.selectedKey = this.selectedKey.filter(k => k !== key);
+    onSelect(id) {
+      if (this.selectedIds.includes(id)) {
+        this.selectedIds = this.selectedIds.filter(i => i !== id);
       } else {
-        this.selectedKey.push(key);
+        this.selectedIds.push(id);
       }
     },
 
-    onSubmit() {
-      if (this.selectedKey.length >= 3) {
-        confirm('是否生成视频?').then(check => {
-          if (check) this.generate();
-        });
+    async onSubmit() {
+      if (this.selectedIds.length >= 3) {
+        if (await confirm('是否生成视频?')) {
+          this.generate();
+        }
       } else {
-        toast(`还需要选择${3 - this.selectedKey.length}张照片!`);
+        toast(`还需要选择${3 - this.selectedIds.length}张照片!`);
       }
     },
 
-    generate() {
-      wx.showLoading({ title: '正在生成...' });
-
-      request('video', 'POST', {
-        openId: this.openId,
-        keys: this.selectedKey,
-      })
-        .then(() => this.fetchVideos(true))
-        .then(() => {
-          this.selectedKey = [];
-          wx.hideLoading();
-          return confirm('是否跳转到视频列表查看', '视频生成完毕');
-        })
-        .then(check => {
-          if (check) {
-            redirect('/pages/video-list/main');
-          }
+    async generate() {
+      try {
+        wx.showLoading({ title: '正在生成...' });
+        await _request('videos', 'POST', {
+          ids: this.selectedIds,
         });
+
+        await this.fetchVideos(true);
+        this.selectedIds = [];
+        wx.hideLoading();
+
+        if (await confirm('是否跳转到视频列表查看', '视频生成完毕'))
+          redirect('/pages/video-list/main');
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };

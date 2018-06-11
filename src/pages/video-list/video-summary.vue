@@ -1,7 +1,7 @@
 <template>
-  <a class="video" :href="'/pages/video-detail/main?key=' + video.video_key" hover-class="none">
-    <image class="thumbnail" :src="video.thumbnail" mode="aspectFill">
-      <div class="duration">{{video.duration}} s</div>
+  <a class="video" :href="'/pages/video-detail/main?id=' + video.id" hover-class="none">
+    <image class="thumbnail" :src="video.thumbnail_url" mode="aspectFill">
+      <div class="duration">{{video.length}} s</div>
     </image>
     <div class="body">
       <p class="title">{{video.name || '未命名视频'}}</p>

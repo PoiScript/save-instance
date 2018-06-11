@@ -18,21 +18,16 @@ import { mapState } from 'vuex';
 
 import store from './store';
 import rootStore from '../../store';
-import { switchTab, upload, toast } from '../../util';
+import { switchTab, toast, _upload } from '../../util';
 
 export default {
   store,
 
-  computed: {
-    ...mapState(['descr', 'address', 'image']),
+  computed: mapState(['descr', 'address', 'image']),
 
-    openId() {
-      return rootStore.state.openId;
-    },
-  },
   methods: {
     createFormData() {
-      let formData = { openId: this.openId };
+      let formData = {};
       if (this.descr) {
         formData = { ...formData, description: this.descr };
       }
@@ -42,12 +37,12 @@ export default {
       return formData;
     },
 
-    upload() {
+    async upload() {
       if (this.image) {
-        upload('upload', this.image, this.createFormData())
-          .then(() => switchTab('/pages/timeline/main'))
-          .then(() => toast('图片上传成功', 'success'))
-          .then(() => rootStore.dispatch('fetchPhotos', true));
+        await _upload('timeline', this.image, this.createFormData());
+        await switchTab('/pages/timeline/main');
+        toast('图片上传成功', 'success');
+        rootStore.dispatch('fetchPhotos', true);
       } else {
         toast('请选择需要上传的图片');
       }

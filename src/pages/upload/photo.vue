@@ -26,8 +26,9 @@ export default {
   computed: mapState(['image']),
 
   methods: {
-    choose() {
-      chooseImage().then(path => store.commit('setImage', path));
+    async choose() {
+      const path = await chooseImage();
+      store.commit('setImage', path);
     },
 
     remove() {

@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="video">
-    <video class="video" :src="video.video" :poster="video.thumbnail" controls="false"></video>
+    <video class="video" :src="video.video_url" :poster="video.thumbnail_url" controls="false"></video>
     <div class="weui-cells cell">
       <div class="weui-cell weui-cell_access">
         <div class="weui-cell_hd">
@@ -57,7 +57,7 @@ import {
   downloadFile,
   saveVideoToPhotosAlbum,
   toast,
-  request,
+  _request,
 } from '../../util';
 
 export default {
@@ -81,16 +81,14 @@ export default {
   },
 
   onShow() {
-    this.video = this.$store.getters.getVideoByKey(
-      parseInt(this.$root.$mp.query.key),
-    );
+    this.video = this.$store.getters.getVideoById(this.$root.$mp.query.id);
   },
 
   onShareAppMessage() {
     return {
       title: '咔记分享',
-      path: `/pages/share/main?share=${this.video.video_key}`,
-      imageUrl: this.video.thumbnail,
+      path: `/pages/share/main?share=${this.video.id}`,
+      imageUrl: this.video.thumbnail_url,
       success: () => {
         toast('分享发送成功!', 'success');
       },
@@ -101,32 +99,37 @@ export default {
     ...mapActions(['fetchVideos']),
     ...mapMutations(['updateVideoName']),
 
-    downloadClick() {
-      downloadFile(this.video.video)
-        .then(path => saveVideoToPhotosAlbum(path))
-        .catch(err => console.log(err));
+    async downloadClick() {
+      try {
+        const path = await downloadFile(this.video.video_url);
+        await saveVideoToPhotosAlbum(path);
+      } catch (e) {
+        console.log(e);
+      }
     },
 
     editName() {
       this.editingName = true;
     },
 
-    submitName(value) {
+    async submitName(value) {
       this.editingName = false;
 
       if (this.video.name === value) return;
 
-      confirm('是否更新简介?').then(check => {
-        if (check) {
-          wx.showLoading({ title: '正在更新...' });
+      const check = await confirm('是否更新简介?');
 
-          request('video/' + this.video.video_key, 'POST', {
-            name: value,
-          })
-            .then(newVideo => this.updateVideoName(newVideo))
-            .finally(() => wx.hideLoading());
-        }
-      });
+      if (check) {
+        wx.showLoading({ title: '正在更新...' });
+
+        const newVideo = await _request('videos/' + this.video.id, 'PUT', {
+          name: value,
+        });
+
+        this.updateVideoName(newVideo);
+
+        wx.hideLoading();
+      }
     },
   },
 };
@@ -166,7 +169,7 @@ page {
 .description-textarea {
   line-height: 1em;
   height: 3em;
-  width: 100%;
+  width: calc(100% - 30px);
 }
 
 button,

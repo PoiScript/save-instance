@@ -39,11 +39,7 @@
 <script>
 import format from 'date-fns/format';
 
-import {
-  downloadFile,
-  request,
-  saveVideoToPhotosAlbum,
-} from '../../util';
+import { downloadFile, request, saveVideoToPhotosAlbum } from '../../util';
 
 export default {
   data() {
@@ -58,20 +54,24 @@ export default {
     },
   },
 
-  onLoad() {
+  async onLoad() {
     wx.showLoading({ title: '正在加载...' });
-
-    request('video/share/' + this.$root.$mp.query.share)
-      .then(video => (this.video = video))
-      .catch(err => console.log(err))
-      .finally(() => wx.hideLoading());
+    try {
+      this.video = await request('videos/' + this.$root.$mp.query.share);
+    } catch (e) {
+      console.log(e);
+    }
+    wx.hideLoading();
   },
 
   methods: {
-    downloadClick() {
-      downloadFile(this.video.video)
-        .then(path => saveVideoToPhotosAlbum(path))
-        .catch(err => console.log(err));
+    async downloadClick() {
+      try {
+        const path = await downloadFile(this.video.video);
+        await saveVideoToPhotosAlbum(path);
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };

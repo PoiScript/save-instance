@@ -1,5 +1,5 @@
 <template>
-  <li @click="preview" class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.image_url + ')' }">
+  <li @click="preview" class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.photo_url + ')' }">
     <span class="dot"></span>
     <div class="time">
       <p>{{date}}</p>
@@ -27,8 +27,8 @@ export default {
   methods: {
     preview() {
       wx.previewImage({
-        current: this.photo.image_url,
-        urls: [this.photo.image_url],
+        current: this.photo.photo_url,
+        urls: [this.photo.photo_url],
       });
     },
   },

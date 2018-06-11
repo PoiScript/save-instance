@@ -3,13 +3,13 @@ import isToday from 'date-fns/is_today';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { request, warning } from './util';
+import { _request, warning } from './util';
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    openId: null,
+    jwt: {},
     photos: [],
     videos: [],
     settings: {
@@ -19,13 +19,18 @@ const store = new Vuex.Store({
     },
   },
   mutations: {
-    setOpenId(state, openId) {
-      state.openId = openId;
+    setJWT(state, jwt) {
+      state.jwt = jwt;
+      try {
+        wx.setStorageSync('jwt', jwt);
+      } catch (e) {
+        // TODO: handle error
+      }
     },
-    updateTodayPhoto(state, { location, description, image_url }) {
+    updateTodayPhoto(state, { location, description, photo_url }) {
       state.photos[0].location = location;
       state.photos[0].description = description;
-      state.photos[0].image_url = image_url;
+      state.photos[0].photo_url = photo_url;
     },
     settingsUpdated(state, settings) {
       state.settings = settings;
@@ -46,52 +51,61 @@ const store = new Vuex.Store({
   getters: {
     hasPhotoToday: state =>
       state.photos.length > 0 ? isToday(state.photos[0].created_at) : false,
-    getVideoByKey: state => key => state.videos.find(v => v.video_key === key),
+    getVideoById: state => id => state.videos.find(v => v.id === id),
   },
   actions: {
-    fetchPhotos: ({ state, commit }, force = false) => {
+    fetchPhotos: async ({ state, commit }, force = false) => {
       if (state.photos.length === 0 || force) {
-        request('timeline/' + state.openId, 'GET', null)
-          .then(data => commit('photosFetched', data))
-          .catch(() => warning('获取时间轴失败!'));
+        try {
+          const photos = await _request('timeline');
+          commit('photosFetched', photos);
+        } catch (e) {
+          console.log(e);
+          warning('获取时间轴失败!');
+        }
       }
     },
-    fetchVideos: ({ state, commit }, force = false) => {
+    fetchVideos: async ({ state, commit }, force = false) => {
       if (state.videos.length === 0 || force) {
-        request('video/list/' + state.openId, 'GET', null)
-          .then(data =>
-            commit(
-              'videosFetched',
-              data.map(video => {
-                video.created_at = format(video.created_at, 'M月D日 HH:mm');
-                return video;
-              }),
-            ),
-          )
-          .catch(err => {
-            console.log(err);
-            warning('获取视频列表失败!');
-          });
+        try {
+          const videos = await _request('videos');
+          commit(
+            'videosFetched',
+            videos.map(video => {
+              video.created_at = format(video.created_at, 'M月D日 HH:mm');
+              return video;
+            }),
+          );
+        } catch (e) {
+          console.log(e);
+          warning('获取视频列表失败!');
+        }
       }
     },
-    updateSettings: ({ state, commit }, settings) => {
+    updateSettings: async ({ state, commit }, settings) => {
       wx.showLoading({ title: '更新用户配置...' });
-
-      request('settings/' + state.openId, 'POST', {
-        ...state.settings,
-        ...settings,
-      })
-        .catch(() => warning('用户配置更新失败!'))
-        .then(settings => commit('settingsUpdated', settings))
-        .then(() => wx.hideLoading());
+      try {
+        const newSettings = await _request('settings', 'PUT', {
+          ...state.settings,
+          ...settings,
+        });
+        commit('settingsUpdated', newSettings);
+      } catch (e) {
+        console.log(e);
+        warning('用户配置更新失败!');
+      }
+      wx.hideLoading();
     },
-    getSettings: ({ state, commit }) => {
+    getSettings: async ({ state, commit }) => {
       wx.showLoading({ title: '获取用户配置...' });
-
-      request('settings/' + state.openId, 'GET', null)
-        .catch(() => warning('获取用户配置失败!'))
-        .then(settings => commit('settingsUpdated', settings))
-        .then(() => wx.hideLoading());
+      try {
+        const settings = await _request('settings');
+        commit('settingsUpdated', settings);
+      } catch (e) {
+        console.log(e);
+        warning('获取用户配置失败!');
+      }
+      wx.hideLoading();
     },
   },
 });

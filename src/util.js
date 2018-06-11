@@ -1,7 +1,24 @@
 import config from './config';
+import store from './store';
+
+import isFuture from 'date-fns/is_future';
+
+export const _request = (path, method = 'GET', data = null, auth = true) => {
+  const jwt = store.state.jwt;
+  return jwt && auth
+    ? isFuture(jwt.expires_in)
+      ? request(path, method, data, jwt.token)
+      : request('auth/refresh', 'POST', {
+          refresh_token: jwt.refresh_token,
+        }).then(jwt => {
+          store.commit('setJWT', jwt);
+          return request(path, method, data, jwt.token);
+        })
+    : request(path, method, data, null);
+};
 
 /** promisify wx.request api */
-export const request = (path, method, data) => {
+export const request = (path, method, data, token) => {
   wx.showNavigationBarLoading();
   return new Promise((resolve, reject) => {
     wx.request({
@@ -10,6 +27,7 @@ export const request = (path, method, data) => {
       url: config.api_url + path,
       header: {
         'content-type': 'application/json',
+        authorization: token,
       },
       success: res => {
         if (res.statusCode !== 200) {
@@ -28,8 +46,21 @@ export const request = (path, method, data) => {
   });
 };
 
+export const _upload = (path, filePath, formData) => {
+  const jwt = store.state.jwt;
+  return isFuture(jwt.expires_in)
+    ? upload(path, filePath, formData)
+    : request('auth/refresh', 'POST', {
+        refresh_token: jwt.refresh_token,
+      }).then(jwt => {
+        store.commit('setJWT', jwt);
+        return upload(path, filePath, formData);
+      });
+};
+
 /** promisify wx.uploadFile api */
 export const upload = (path, filePath, formData) => {
+  const jwt = store.state.jwt;
   wx.showNavigationBarLoading();
   wx.showLoading({
     title: '正在上传...',
@@ -40,7 +71,10 @@ export const upload = (path, filePath, formData) => {
       filePath,
       url: config.api_url + path,
       name: 'photo',
-      header: { 'content-type': 'multipart/form-data' },
+      header: {
+        'content-type': 'multipart/form-data',
+        authorization: jwt.token,
+      },
       success: res => {
         if (res.statusCode !== 200) {
           wx.showModal({
@@ -108,14 +142,14 @@ export const login = () => {
 /** promisify wx.getStorage api */
 export const getStorage = key => {
   wx.showNavigationBarLoading();
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     wx.getStorage({
       key,
       success: res => {
         resolve(res.data);
       },
       fail: () => {
-        reject('Get Storage Error');
+        resolve(null);
       },
       complete: () => {
         wx.hideNavigationBarLoading();

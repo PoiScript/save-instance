@@ -11,7 +11,7 @@
         <div class="weui-panel__bd">
           <div class="weui-panel__hd">设置</div>
           <div class="weui-media-box weui-media-box_small-appmsg">
-            <div class="weui-cells weui-cells_in-small-appmsg">
+            <div class="weui-cells weui-cells_in-small-appmsg" v-if="settings">
               <cell-switch title="拍照提醒"
                            img="/static/icons/remind.png"
                            :checked="settings.daily_notify"
@@ -34,7 +34,7 @@
             <cell-button img="/static/icons/tutorial.png" text="查看教程"></cell-button>
           </button>
         </a>
-        <button form-type="submit" hover-class="button-hover" open-type="contact">
+        <button form-type="submit" hover-class="none" open-type="contact">
           <cell-button img="/static/icons/contact.png" text="联系我们"></cell-button>
         </button>
       </panel>
@@ -51,7 +51,7 @@ import MpFooter from 'mp-weui/packages/footer';
 import { mapActions, mapState } from 'vuex';
 
 import store from '../../store';
-import { request } from '../../util';
+import { _request } from '../../util';
 import cellButton from './cell-button';
 import cellPicker from './cell-picker';
 import cellSwitch from './cell-switch';
@@ -70,7 +70,7 @@ export default {
 
   store,
 
-  computed: mapState(['openId', 'settings']),
+  computed: mapState(['settings']),
 
   data() {
     return {
@@ -108,10 +108,10 @@ export default {
       this.updateSettings({ duration: parseInt(value) });
     },
 
-    formSubmit(e) {
+    async formSubmit(e) {
       const formId = e.mp.detail.formId;
-      if (this.openId && !formId.includes('the formId is a mock one')) {
-        request('formId', 'POST', { openId: this.openId, formId });
+      if (!formId.includes('the formId is a mock one')) {
+        await _request('formId', 'POST', { formId });
       }
     },
   },

@@ -1,7 +1,7 @@
 <template>
   <form report-submit="true" class="container">
     <div v-if="videos.length > 0">
-      <video-summary v-for="video in videos" :key="video.video_key" :video="video"></video-summary>
+      <video-summary v-for="video in videos" :key="video.id" :video="video"></video-summary>
     </div>
     <big-image v-else text="视频列表空空如也" src="/static/picture/video_empty.jpg"></big-image>
   </form>
@@ -24,14 +24,15 @@ export default {
 
   computed: mapState(['videos']),
 
-  onLoad() {
+  async onLoad() {
     wx.showLoading({ title: '获取视频列表...' });
-
-    store.dispatch('fetchVideos', false).then(() => wx.hideLoading());
+    await store.dispatch('fetchVideos', false);
+    wx.hideLoading();
   },
 
-  onPullDownRefresh() {
-    store.dispatch('fetchVideos', true).then(() => wx.stopPullDownRefresh());
+  async onPullDownRefresh() {
+    await store.dispatch('fetchVideos', true);
+    wx.stopPullDownRefresh();
   },
 };
 </script>

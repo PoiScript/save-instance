@@ -2,7 +2,7 @@
   <div class="container">
     <div v-if="photos.length > 0" class="timeline">
       <div class="item-container">
-        <item v-for="photo in photos" :key="photo.photo_key" :photo="photo"></item>
+        <item v-for="photo in photos" :key="photo.id" :photo="photo"></item>
       </div>
       <a href="/pages/selector/main" class="timeline--fab-container" hover-class="none">
         <fab icon-img="/static/icons/movie.png"></fab>
@@ -31,8 +31,9 @@ export default {
 
   computed: mapState(['photos']),
 
-  onPullDownRefresh() {
-    store.dispatch('fetchPhotos', true).then(() => wx.stopPullDownRefresh());
+  async onPullDownRefresh() {
+    await store.dispatch('fetchPhotos', true);
+    wx.stopPullDownRefresh();
   },
 };
 </script>

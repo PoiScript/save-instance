@@ -28,8 +28,9 @@ export default {
   computed: mapState(['address']),
 
   methods: {
-    chooseAddress() {
-      chooseLocation().then(res => store.commit('setAddress', res.address));
+    async chooseAddress() {
+      const { address } = await chooseLocation();
+      store.commit('setAddress', address);
     },
   },
 };

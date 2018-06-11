@@ -21,7 +21,7 @@
 import { mapActions, mapState } from 'vuex';
 
 import store from '../../store';
-import { confirm, redirect, request, toast, _request } from '../../util';
+import { confirm, redirect, toast, request } from '../../util';
 
 export default {
   store,
@@ -68,7 +68,7 @@ export default {
     async generate() {
       try {
         wx.showLoading({ title: '正在生成...' });
-        await _request('videos', 'POST', {
+        await request('videos', 'POST', {
           ids: this.selectedIds,
         });
 

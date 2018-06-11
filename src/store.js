@@ -3,7 +3,7 @@ import isToday from 'date-fns/is_today';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import { _request, warning } from './util';
+import { request, warning } from './util';
 
 Vue.use(Vuex);
 
@@ -57,7 +57,7 @@ const store = new Vuex.Store({
     fetchPhotos: async ({ state, commit }, force = false) => {
       if (state.photos.length === 0 || force) {
         try {
-          const photos = await _request('timeline');
+          const photos = await request('timeline');
           commit('photosFetched', photos);
         } catch (e) {
           console.log(e);
@@ -68,7 +68,7 @@ const store = new Vuex.Store({
     fetchVideos: async ({ state, commit }, force = false) => {
       if (state.videos.length === 0 || force) {
         try {
-          const videos = await _request('videos');
+          const videos = await request('videos');
           commit(
             'videosFetched',
             videos.map(video => {
@@ -85,7 +85,7 @@ const store = new Vuex.Store({
     updateSettings: async ({ state, commit }, settings) => {
       wx.showLoading({ title: '更新用户配置...' });
       try {
-        const newSettings = await _request('settings', 'PUT', {
+        const newSettings = await request('settings', 'PUT', {
           ...state.settings,
           ...settings,
         });
@@ -99,7 +99,7 @@ const store = new Vuex.Store({
     getSettings: async ({ state, commit }) => {
       wx.showLoading({ title: '获取用户配置...' });
       try {
-        const settings = await _request('settings');
+        const settings = await request('settings');
         commit('settingsUpdated', settings);
       } catch (e) {
         console.log(e);

@@ -18,7 +18,7 @@ import { mapState } from 'vuex';
 
 import store from './store';
 import rootStore from '../../store';
-import { switchTab, toast, _upload } from '../../util';
+import { switchTab, toast, upload } from '../../util';
 
 export default {
   store,
@@ -39,7 +39,7 @@ export default {
 
     async upload() {
       if (this.image) {
-        await _upload('timeline', this.image, this.createFormData());
+        await upload('timeline', this.image, this.createFormData());
         await switchTab('/pages/timeline/main');
         toast('图片上传成功', 'success');
         rootStore.dispatch('fetchPhotos', true);

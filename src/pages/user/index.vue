@@ -51,7 +51,7 @@ import MpFooter from 'mp-weui/packages/footer';
 import { mapActions, mapState } from 'vuex';
 
 import store from '../../store';
-import { _request } from '../../util';
+import { request } from '../../util';
 import cellButton from './cell-button';
 import cellPicker from './cell-picker';
 import cellSwitch from './cell-switch';
@@ -111,7 +111,7 @@ export default {
     async formSubmit(e) {
       const formId = e.mp.detail.formId;
       if (!formId.includes('the formId is a mock one')) {
-        await _request('formId', 'POST', { formId });
+        await request('formId', 'POST', { formId });
       }
     },
   },

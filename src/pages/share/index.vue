@@ -39,7 +39,7 @@
 <script>
 import format from 'date-fns/format';
 
-import { downloadFile, request, saveVideoToPhotosAlbum } from '../../util';
+import { request, saveVideoToAlbum } from '../../util';
 
 export default {
   data() {
@@ -67,8 +67,7 @@ export default {
   methods: {
     async downloadClick() {
       try {
-        const path = await downloadFile(this.video.video);
-        await saveVideoToPhotosAlbum(path);
+        await saveVideoToAlbum(this.video.video);
       } catch (e) {
         console.log(e);
       }

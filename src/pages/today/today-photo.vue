@@ -51,11 +51,11 @@ import { mapMutations } from 'vuex';
 import fab from '../../components/fab';
 import store from '../../store.js';
 import {
-  _request,
+  request,
   chooseImage,
   chooseLocation,
   confirm,
-  _upload,
+  upload,
 } from '../../util';
 
 export default {
@@ -92,7 +92,7 @@ export default {
       const path = await chooseImage();
 
       if (await confirm('是否上传该图片?')) {
-        const newPhoto = await _upload(
+        const newPhoto = await upload(
           `timeline/${this.photo.id}/photo`,
           path,
           null,
@@ -114,7 +114,7 @@ export default {
         wx.showLoading({ title: '正在更新...' });
 
         try {
-          const newPhoto = await _request(
+          const newPhoto = await request(
             `timeline/${this.photo.id}/meta`,
             'PUT',
             {
@@ -144,7 +144,7 @@ export default {
 
       wx.showLoading({ title: '正在更新...' });
 
-      const newPhoto = await _request(`timeline/${this.photo.id}/meta`, 'PUT', {
+      const newPhoto = await request(`timeline/${this.photo.id}/meta`, 'PUT', {
         location: address,
         description: this.photo.description,
       });

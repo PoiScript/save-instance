@@ -1,24 +1,7 @@
-import config from './config';
-import store from './store';
-
-import isFuture from 'date-fns/is_future';
-
-export const _request = (path, method = 'GET', data = null, auth = true) => {
-  const jwt = store.state.jwt;
-  return jwt && auth
-    ? isFuture(jwt.expires_in)
-      ? request(path, method, data, jwt.token)
-      : request('auth/refresh', 'POST', {
-          refresh_token: jwt.refresh_token,
-        }).then(jwt => {
-          store.commit('setJWT', jwt);
-          return request(path, method, data, jwt.token);
-        })
-    : request(path, method, data, null);
-};
+import config from '../config';
 
 /** promisify wx.request api */
-export const request = (path, method, data, token) => {
+export const request = (path, method, data, headers = {}) => {
   wx.showNavigationBarLoading();
   return new Promise((resolve, reject) => {
     wx.request({
@@ -26,8 +9,8 @@ export const request = (path, method, data, token) => {
       data,
       url: config.api_url + path,
       header: {
+        ...headers,
         'content-type': 'application/json',
-        authorization: token,
       },
       success: res => {
         if (res.statusCode !== 200) {
@@ -46,25 +29,10 @@ export const request = (path, method, data, token) => {
   });
 };
 
-export const _upload = (path, filePath, formData) => {
-  const jwt = store.state.jwt;
-  return isFuture(jwt.expires_in)
-    ? upload(path, filePath, formData)
-    : request('auth/refresh', 'POST', {
-        refresh_token: jwt.refresh_token,
-      }).then(jwt => {
-        store.commit('setJWT', jwt);
-        return upload(path, filePath, formData);
-      });
-};
-
 /** promisify wx.uploadFile api */
-export const upload = (path, filePath, formData) => {
-  const jwt = store.state.jwt;
+export const upload = (path, filePath, formData, headers = {}) => {
   wx.showNavigationBarLoading();
-  wx.showLoading({
-    title: '正在上传...',
-  });
+  wx.showLoading({ title: '正在上传...' });
   return new Promise((resolve, reject) => {
     wx.uploadFile({
       formData,
@@ -72,27 +40,19 @@ export const upload = (path, filePath, formData) => {
       url: config.api_url + path,
       name: 'photo',
       header: {
+        ...headers,
         'content-type': 'multipart/form-data',
-        authorization: jwt.token,
       },
       success: res => {
         if (res.statusCode !== 200) {
-          wx.showModal({
-            content: '上传失败!',
-            title: '提示',
-            showCancel: false,
-          });
+          warning('上传失败!');
           reject('Request Failed with status code' + res.statusCode);
         } else {
           resolve(res.data);
         }
       },
       fail: err => {
-        wx.showModal({
-          content: '上传失败!',
-          title: '提示',
-          showCancel: false,
-        });
+        warning('上传失败!');
         reject('Network Failed: ' + err);
       },
       complete: () => {
@@ -106,29 +66,19 @@ export const upload = (path, filePath, formData) => {
 /** promisify wx.login api */
 export const login = () => {
   wx.showNavigationBarLoading();
-  wx.showLoading({
-    title: '正在登录...',
-  });
+  wx.showLoading({ title: '正在登录...' });
   return new Promise((resolve, reject) => {
     wx.login({
       success: res => {
         if (res.code) {
           resolve(res.code);
         } else {
-          wx.showModal({
-            content: '登录失败!',
-            title: '提示',
-            showCancel: false,
-          });
+          warning('登录失败!');
           reject('Login Failed');
         }
       },
       fail: () => {
-        wx.showModal({
-          content: '登录失败!',
-          title: '提示',
-          showCancel: false,
-        });
+        warning('登录失败!');
         reject('Login Failed');
       },
       complete: () => {
@@ -230,10 +180,10 @@ export const confirm = (content, title = '请确认') =>
     });
   });
 
-export const warning = content =>
+export const warning = (content, title = '错误') =>
   wx.showModal({
     content,
-    title: '错误',
+    title,
     showCancel: false,
   });
 
@@ -277,11 +227,9 @@ export const redirect = url =>
     });
   });
 
-export const downloadFile = url => {
+export const saveVideo = url => {
   wx.showNavigationBarLoading();
-  wx.showLoading({
-    title: '正在下载...',
-  });
+  wx.showLoading({ title: '正在下载...' });
   return new Promise((resolve, reject) => {
     wx.downloadFile({
       url,
@@ -289,12 +237,12 @@ export const downloadFile = url => {
         if (res.statusCode === 200) {
           resolve(res.tempFilePath);
         } else {
-          warning('视频下载失败!');
+          warning('下载失败!');
           reject('Download File Failed.');
         }
       },
       fail: res => {
-        warning('视频下载失败!');
+        warning('下载失败!');
         reject('Download File Failed: ' + JSON.stringify(res));
       },
       complete: () => {
@@ -305,16 +253,37 @@ export const downloadFile = url => {
   });
 };
 
-export const saveVideoToPhotosAlbum = path =>
-  new Promise((resolve, reject) => {
-    wx.saveVideoToPhotosAlbum({
-      filePath: path,
-      success: () => {
-        toast('视频下载成功', 'success');
-        resolve();
+export const saveVideoToAlbum = url => {
+  wx.showNavigationBarLoading();
+  wx.showLoading({ title: '正在下载...' });
+  return new Promise((resolve, reject) => {
+    wx.downloadFile({
+      url,
+      success: res => {
+        if (res.statusCode === 200) {
+          wx.saveVideoToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success: () => {
+              toast('下载成功', 'success');
+              resolve();
+            },
+            fail: res => {
+              reject('Save Video Failed: ' + JSON.stringify(res));
+            },
+          });
+        } else {
+          warning('下载失败!');
+          reject('Download File Failed.');
+        }
       },
       fail: res => {
-        reject('Save Video Failed: ' + JSON.stringify(res));
+        warning('下载失败!');
+        reject('Download File Failed: ' + JSON.stringify(res));
+      },
+      complete: () => {
+        wx.hideLoading();
+        wx.hideNavigationBarLoading();
       },
     });
   });
+};

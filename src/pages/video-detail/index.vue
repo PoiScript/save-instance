@@ -52,13 +52,7 @@ import { mapActions, mapMutations } from 'vuex';
 
 import fab from '../../components/fab';
 import store from '../../store';
-import {
-  confirm,
-  downloadFile,
-  saveVideoToPhotosAlbum,
-  toast,
-  _request,
-} from '../../util';
+import { confirm, saveVideoToAlbum, toast, request } from '../../util';
 
 export default {
   components: {
@@ -101,8 +95,7 @@ export default {
 
     async downloadClick() {
       try {
-        const path = await downloadFile(this.video.video_url);
-        await saveVideoToPhotosAlbum(path);
+        await saveVideoToAlbum(this.video.video_url);
       } catch (e) {
         console.log(e);
       }
@@ -122,7 +115,7 @@ export default {
       if (check) {
         wx.showLoading({ title: '正在更新...' });
 
-        const newVideo = await _request('videos/' + this.video.id, 'PUT', {
+        const newVideo = await request('videos/' + this.video.id, 'PUT', {
           name: value,
         });
 

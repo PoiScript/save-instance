@@ -10,6 +10,11 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     jwt: {},
+    editing: {
+      photo_url: null,
+      description: null,
+      location: null,
+    },
     photos: [],
     videos: [],
     settings: {
@@ -26,6 +31,9 @@ const store = new Vuex.Store({
       } catch (e) {
         // TODO: handle error
       }
+    },
+    updateEditing(state, prop) {
+      state.editing = { ...state.editing, ...prop };
     },
     updateTodayPhoto(state, { location, description, photo_url }) {
       state.photos[0].location = location;
@@ -52,6 +60,9 @@ const store = new Vuex.Store({
     hasPhotoToday: state =>
       state.photos.length > 0 ? isToday(state.photos[0].created_at) : false,
     getVideoById: state => id => state.videos.find(v => v.id === id),
+    getPhotoById: state => id => state.photos.find(v => v.id === id),
+    wordCount: state =>
+      state.editing.description ? state.editing.description.length : 0,
   },
   actions: {
     fetchPhotos: async ({ state, commit }, force = false) => {

@@ -1,5 +1,4 @@
-import format from 'date-fns/format';
-import isToday from 'date-fns/is_today';
+import { format, max, min } from 'date-fns';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -32,13 +31,15 @@ const store = new Vuex.Store({
         // TODO: handle error
       }
     },
+    clearEditing(state) {
+      state.editing = {
+        photo_url: null,
+        description: null,
+        location: null,
+      };
+    },
     updateEditing(state, prop) {
       state.editing = { ...state.editing, ...prop };
-    },
-    updateTodayPhoto(state, { location, description, photo_url }) {
-      state.photos[0].location = location;
-      state.photos[0].description = description;
-      state.photos[0].photo_url = photo_url;
     },
     settingsUpdated(state, settings) {
       state.settings = settings;
@@ -57,12 +58,16 @@ const store = new Vuex.Store({
     },
   },
   getters: {
-    hasPhotoToday: state =>
-      state.photos.length > 0 ? isToday(state.photos[0].created_at) : false,
     getVideoById: state => id => state.videos.find(v => v.id === id),
     getPhotoById: state => id => state.photos.find(v => v.id === id),
+    firstDayInTimeline: state => min(state.photos.map(p => p.created_at)),
+    lastDayInTimeline: state => max(state.photos.map(p => p.created_at)),
     wordCount: state =>
       state.editing.description ? state.editing.description.length : 0,
+    editingDirty: state =>
+      state.editing.photo_url ||
+      state.editing.description ||
+      state.editing.location,
   },
   actions: {
     fetchPhotos: async ({ state, commit }, force = false) => {

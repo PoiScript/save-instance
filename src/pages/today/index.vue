@@ -2,64 +2,68 @@
   <form report-submit="true" class="container">
       <div class="btn-row">
         <span @click="prior">prior</span>
-        <span class="show-title" @click="showModal = !showModal">{{title}}</span>
+        <span class="show-title" @click="showCalendar = true">{{title}}</span>
         <span @click="next">next</span>
       </div>
-      <today-photo v-if="hasPhotoToday"></today-photo>
-      <a href="/pages/upload/main" v-else hover-class="none">
+      <photo v-if="photo" :photo="photo"></photo>
+      <a class="empty-photo" href="/pages/edit/main" v-else hover-class="none">
         <ripple type="circle">
           <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
         </ripple>
       </a>
-      <calendar v-if="showModal" @close="showModal = false" @dateClick="dateClick" :select="select"></calendar>
+      <calendar v-if="showCalendar" @dateClick="dateClick" :select="selectedDate"></calendar>
   </form>
 </template>
 
 <script>
 import ripple from 'mpvue-ripple';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
-import TodayPhoto from './today-photo';
+import photo from './photo';
 import store from '../../store.js';
 import bigImage from '../../components/big-image';
 
 import calendar from '../../components/calendar';
 
-import { addDays, format, startOfToday, subDays } from 'date-fns';
+import { addDays, format, isSameDay, subDays } from 'date-fns';
 
 export default {
   components: {
     bigImage,
     ripple,
-    TodayPhoto,
+    photo,
     calendar,
-  },
-
-  data() {
-    return {
-      showModal: false,
-      select: startOfToday().getTime(),
-    };
   },
 
   store,
 
+  data() {
+    return {
+      showCalendar: false,
+      selectedDate: new Date(),
+    };
+  },
+
   computed: {
-    ...mapGetters(['hasPhotoToday']),
+    ...mapState(['photos']),
+    photo() {
+      return this.photos.find(p => isSameDay(this.selectedDate, p.created_at));
+    },
     title() {
-      return format(this.select, 'YYYY/MM/DD');
+      return format(this.selectedDate, 'YYYY/MM/DD');
     },
   },
 
   methods: {
-    dateClick(timestamp) {
-      this.select = timestamp;
+    dateClick(date) {
+      this.showCalendar = false;
+      this.selectedDate = date;
     },
     next() {
-      this.select = addDays(this.select, 1).getTime();
+      this.selectedDate = addDays(this.selectedDate, 1);
     },
     prior() {
-      this.select = subDays(this.select, 1).getTime();
+      this.selectedDate = subDays(this.selectedDate, 1);
     },
   },
 };
@@ -89,5 +93,10 @@ page {
 .show-title {
   flex: 1 1 auto;
   text-align: center;
+}
+
+.empty-photo {
+  width: 320px;
+  padding: 100px 0;
 }
 </style>

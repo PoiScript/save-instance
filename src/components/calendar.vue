@@ -16,8 +16,8 @@
         <div class="week">四</div>
         <div class="week">五</div>
         <div class="week">六</div>
-        <div class="day -mark" v-for="day in days" :key="day.timestamp" @click="click(day.timestamp)"
-             :class="{ '-other': !day.isSameMonth, '-select': day.isSelect, '-today': day.isToday }">
+        <div class="day" v-for="day in days" :key="day.date" @click="click(day.day)"
+             :class="{ '-other': !day.isSameMonth, '-select': day.isSelect, '-today': day.isToday, '-mark': day.isMark }">
           <div>{{day.date}}</div>
         </div>
       </div>
@@ -37,39 +37,28 @@ import {
   isToday,
   lastDayOfMonth,
   startOfMonth,
-  startOfToday,
   startOfWeek,
   subMonths,
 } from 'date-fns';
+import { mapState, mapGetters } from 'vuex';
+
+import store from '../store';
 
 export default {
-  props: {
-    select: {
-      type: Number,
-      required: true,
-    },
-    markDate: {
-      type: Array,
-      default: () => [],
-    },
-  },
+  props: ['select'],
 
   data() {
     return {
-      select: startOfToday(),
-      show: startOfToday(),
+      show: this.select,
     };
   },
 
+  store,
+
   computed: {
+    ...mapState(['photos']),
     title() {
       return format(this.show, 'YYYY 年 M 月');
-    },
-    start() {
-      return this.markDate[0];
-    },
-    end() {
-      return this.markDate[this.markDate.length - 1];
     },
     days() {
       return eachDay(
@@ -77,10 +66,11 @@ export default {
         endOfWeek(this.lastDayInMonth),
       ).map(day => ({
         date: day.getDate(),
+        day: day,
+        isMark: this.photos.some(p => isSameDay(p.created_at, day)),
         isSelect: isSameDay(this.select, day),
         isToday: isToday(day),
         isSameMonth: isSameMonth(day, this.firstDayInMonth),
-        timestamp: day.getTime(),
       }));
     },
     firstDayInMonth() {
@@ -92,41 +82,29 @@ export default {
   },
 
   methods: {
+    ...mapGetters(['firstDayInTimeline', 'lastDayInTimeline']),
     today() {
-      this.show = startOfToday();
+      this.show = new Date();
     },
     prior() {
       const lastDayInPriorMonth = lastDayOfMonth(subMonths(this.show, 1));
-      if (isAfter(lastDayInPriorMonth, this.start)) {
+      if (isAfter(lastDayInPriorMonth, this.firstDayInTimeline)) {
         this.show = lastDayInPriorMonth;
       }
     },
     next() {
       const firstDayInNextMonth = startOfMonth(addMonths(this.show, 1));
-      if (isBefore(firstDayInNextMonth, this.end)) {
+      if (isBefore(firstDayInNextMonth, this.lastDayInTimeline)) {
         this.show = firstDayInNextMonth;
       }
     },
-    click(timestamp) {
-      this.$emit('close');
-      if (!isSameDay(timestamp, this.select)) {
-        this.$emit('dateClick', timestamp);
-      }
+    click(date) {
+      this.$emit('dateClick', date);
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.calendar-enter-active,
-.calendar-leave-active {
-  transition: opacity 0.5s;
-}
-
-.calendar-enter, .calendar-leave-to /* .fade-leave-active below version 2.1.8 */
- {
-  opacity: 0;
-}
-
 .calendar-mask {
   position: fixed;
   z-index: 9998;
@@ -142,11 +120,6 @@ export default {
 .calendar-wrapper {
   display: table-cell;
   vertical-align: middle;
-}
-
-.calendar-container {
-  background-color: #2d8cf0;
-  flex-direction: column;
 }
 
 .spacer {

@@ -61,6 +61,7 @@ export default {
 
   data() {
     return {
+      id: null,
       originalPhoto: null,
     };
   },
@@ -71,24 +72,29 @@ export default {
       description: state => state.editing.description,
       location: state => state.editing.location,
     }),
-    ...mapGetters(['wordCount', 'getPhotoById']),
+    ...mapGetters(['wordCount', 'getPhotoById', 'editingDirty']),
+    formData() {
+      let res = {};
+      if (this.description) {
+        res.description = this.description;
+      }
+      if (this.location) {
+        res.location = this.location;
+      }
+      return res;
+    },
   },
 
   onShow() {
-    if (this.$root.$mp.query.id) {
-      this.originalPhoto = this.getPhotoById(this.$root.$mp.query.id);
+    this.id = this.$root.$mp.query.id;
+    if (this.id && !this.editingDirty) {
+      this.originalPhoto = this.getPhotoById(this.id);
       this.updateEditing(this.originalPhoto);
-    } else {
-      this.updateEditing({
-        photo_url: null,
-        description: null,
-        location: null,
-      });
     }
   },
 
   methods: {
-    ...mapMutations(['updateEditing']),
+    ...mapMutations(['updateEditing', 'clearEditing']),
 
     async chooseImage() {
       const imgPath = await chooseImage();
@@ -116,7 +122,7 @@ export default {
     },
 
     submit() {
-      if (this.$root.$mp.query.id) {
+      if (this.id) {
         this.updatePhoto();
       } else {
         this.createPhoto();
@@ -125,7 +131,7 @@ export default {
 
     async createPhoto() {
       if (this.photo_url) {
-        await upload('timeline', this.photo_url, this.createFormData());
+        await upload('timeline', this.photo_url, this.formData);
         await switchTab('/pages/timeline/main');
         toast('图片上传成功', 'success');
         await store.dispatch('fetchPhotos', true);
@@ -153,8 +159,10 @@ export default {
         });
       }
 
+      this.clearEditing();
+
       wx.hideLoading();
-      await switchTab('/pages/today/main?id=' + this.originalPhoto.id);
+      await switchTab('/pages/today/main');
       await store.dispatch('fetchPhotos', true);
     },
   },

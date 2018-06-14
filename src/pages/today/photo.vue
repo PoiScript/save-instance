@@ -26,19 +26,13 @@ import fab from '../../components/fab';
 import store from '../../store.js';
 
 export default {
-  name: 'TodayPhoto',
+  props: ['photo'],
 
   components: {
     fab,
   },
 
   store,
-
-  computed: {
-    photo() {
-      return store.state.photos[0];
-    },
-  },
 
   methods: {
     previewImage() {

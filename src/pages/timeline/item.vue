@@ -1,5 +1,5 @@
 <template>
-  <li @click="preview" class="item" v-if="photo" v-bind:style="{ backgroundImage: 'url(' + photo.photo_url + ')' }">
+  <li @click="preview" class="item" :style="{ backgroundImage: photo.photo_url ? 'url(' + photo.photo_url + '/thumbnail)' : '' }">
     <span class="dot"></span>
     <div class="time">
       <p>{{date}}</p>
@@ -15,7 +15,12 @@
 import format from 'date-fns/format';
 
 export default {
-  props: ['photo'],
+  props: {
+    photo: {
+      type: Object,
+      required: true,
+    },
+  },
 
   data() {
     return {

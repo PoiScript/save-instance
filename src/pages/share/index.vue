@@ -1,23 +1,7 @@
 <template>
   <div class="container" v-if="video">
-    <video class="video" :src="video.video" :poster="video.thumbnail" controls="false"></video>
-    <div class="weui-cells cell">
-      <div class="weui-cell weui-cell_access">
-        <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/description.png"/>
-        </div>
-        <div class="weui-cell__bd">视频名称</div>
-      </div>
-      <div class="cell-detail">
-        {{video.name || '未命名'}}
-      </div>
-      <div class="weui-cell weui-cell_access">
-        <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/period.png"/>
-        </div>
-        <div class="weui-cell__bd">生成时间</div>
-        <div class="weui-cell__ft">{{date}}</div>
-      </div>
+    <video-player :video="video"></video-player>
+    <panel title="操作">
       <div class="weui-cell weui-cell_access" @click="downloadClick">
         <div class="weui-cell_hd">
           <img class="weui-cell_icon" src="/static/icons/download.png"/>
@@ -32,32 +16,39 @@
         <div class="weui-cell__bd">返回首页</div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </a>
-    </div>
+    </panel>
   </div>
 </template>
 
 <script>
 import format from 'date-fns/format';
+import MpCell from 'mp-weui/packages/cell';
+import MpCellGroup from 'mp-weui/packages/cell-group';
 
+import videoPlayer from '../../components/video-player';
+import panel from '../../components/panel';
 import { request, saveVideoToAlbum } from '../../util';
 
 export default {
+  components: {
+    MpCell,
+    MpCellGroup,
+    videoPlayer,
+    panel,
+  },
+
   data() {
     return {
       video: null,
     };
   },
 
-  computed: {
-    date() {
-      return this.video ? format(this.video.created_at, 'M月D日 HH:mm') : '';
-    },
-  },
-
   async onLoad() {
     wx.showLoading({ title: '正在加载...' });
     try {
-      this.video = await request('videos/' + this.$root.$mp.query.share);
+      const video = await request('videos/' + this.$root.$mp.query.share);
+      video.created_at = format(video.created_at, 'M月D日 HH:mm');
+      this.video = video;
     } catch (e) {
       console.log(e);
     }
@@ -89,21 +80,5 @@ page {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-}
-
-.video {
-  width: 100%;
-}
-
-.cell {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-.cell-detail {
-  padding: 0 15px 10px 15px;
-  font-size: 0.9em;
-  color: #555555;
 }
 </style>

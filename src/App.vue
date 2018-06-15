@@ -16,7 +16,7 @@ export default {
       const jwt = await getStorage('jwt');
       if (!jwt) {
         const code = await login();
-        const jwt = await request('auth/login', 'POST', { code });
+        const jwt = await request('auth/login', 'POST', { code }, false);
         store.commit('setJWT', jwt);
       } else {
         store.commit('setJWT', jwt);

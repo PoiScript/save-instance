@@ -2,7 +2,7 @@
   <div class="photo-container">
     <div class="photo">
       <img class="photo-content" :src="photo.photo_url" mode="aspectFill" @click="previewImage"/>
-      <a :href="'/pages/edit/main?id=' + photo.id" class="fab-container" hover-class="none">
+      <a :href="'/pages/photo-edit/main?id=' + photo.id" class="fab-container" hover-class="none">
         <fab icon-img="/static/icons/edit_white.png"></fab>
       </a>
     </div>

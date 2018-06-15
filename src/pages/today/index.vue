@@ -6,7 +6,7 @@
         <span @click="next">next</span>
       </div>
       <photo v-if="photo" :photo="photo"></photo>
-      <a class="empty-photo" href="/pages/edit/main" v-else hover-class="none">
+      <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
         <ripple type="circle">
           <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
         </ripple>

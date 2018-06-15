@@ -1,17 +1,19 @@
 <template>
   <form report-submit="true" class="container">
-      <div class="btn-row">
-        <span @click="prior">prior</span>
-        <span class="show-title" @click="showCalendar = true">{{title}}</span>
-        <span @click="next">next</span>
-      </div>
-      <photo v-if="photo" :photo="photo"></photo>
-      <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
-        <ripple type="circle">
-          <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
-        </ripple>
-      </a>
-      <calendar v-if="showCalendar" @dateClick="dateClick" :select="selectedDate"></calendar>
+    <div class="btn-row">
+      <span @click="prior">prior</span>
+      <span class="show-title" @click="showCalendar = true">{{title}}</span>
+      <span @click="next">next</span>
+    </div>
+    <photo v-if="photo" :photo="photo"></photo>
+    <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
+      <ripple type="circle">
+        <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
+      </ripple>
+    </a>
+    <div :class="showCalendar ? 'calendar-visible' : 'calendar-hidden'">
+      <calendar @dateClick="dateClick" :select="selectedDate"></calendar>
+    </div>
   </form>
 </template>
 
@@ -98,5 +100,16 @@ page {
 .empty-photo {
   width: 320px;
   padding: 100px 0;
+}
+
+.calendar-visible {
+  visibility: visible;
+  opacity: 1;
+  transition: all 0.33s linear;
+}
+
+.calendar-hidden {
+  visibility: hidden;
+  opacity: 0;
 }
 </style>

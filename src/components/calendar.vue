@@ -8,7 +8,7 @@
         <span @click="prior">p</span>
         <span @click="next">n</span>
       </div>
-      <div class="content">
+      <div class="row">
         <div class="week">日</div>
         <div class="week">一</div>
         <div class="week">二</div>
@@ -16,9 +16,11 @@
         <div class="week">四</div>
         <div class="week">五</div>
         <div class="week">六</div>
-        <div class="day" v-for="day in days" :key="day.date" @click="click(day.day)"
+      </div>
+      <div class="row" v-for="(chunk, chunkIndex) in dayChunks" :key="chunkIndex">
+        <div class="day" v-for="(day, dayIndex) in chunk" :key="dayIndex" @click="click(day.day)"
              :class="{ '-other': !day.isSameMonth, '-select': day.isSelect, '-today': day.isToday, '-mark': day.isMark }">
-          <div>{{day.date}}</div>
+          {{day.date}}
         </div>
       </div>
     </div>
@@ -40,7 +42,7 @@ import {
   startOfWeek,
   subMonths,
 } from 'date-fns';
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 
 import store from '../store';
 
@@ -60,8 +62,8 @@ export default {
     title() {
       return format(this.show, 'YYYY 年 M 月');
     },
-    days() {
-      return eachDay(
+    dayChunks() {
+      const days = eachDay(
         startOfWeek(this.firstDayInMonth),
         endOfWeek(this.lastDayInMonth),
       ).map(day => ({
@@ -72,6 +74,11 @@ export default {
         isToday: isToday(day),
         isSameMonth: isSameMonth(day, this.firstDayInMonth),
       }));
+      const res = [];
+      for (let i = 0; i < days.length; i += 7) {
+        res.push(days.slice(i, i + 7));
+      }
+      return res;
     },
     firstDayInMonth() {
       return startOfMonth(this.show);
@@ -127,29 +134,52 @@ export default {
 }
 
 .top {
-  padding: 0 16px;
+  padding: 0;
+  margin: 0 auto;
   display: flex;
+  width: 300px;
+
+  > .title {
+    font-size: 20px;
+  }
 }
 
-.content {
+.row {
   display: flex;
-  flex-wrap: wrap;
-  padding: 0;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: space-around;
+  width: 300px;
+  margin: 0 auto;
 }
 
 .day {
-  padding: 10px;
-  display: flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: #fff;
+  line-height: 30px;
   text-align: center;
-  height: 10vw;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  max-width: 10%;
-  flex: 0 0 10%;
-  margin: 2vw;
+  margin-top: 5px;
+
+  &.-today {
+    position: relative;
+
+    &::before {
+      transform: translateX(-50%);
+      border-radius: 100%;
+      position: absolute;
+      background: white;
+      bottom: 5px;
+      height: 5px;
+      width: 5px;
+      content: '';
+      left: 50%;
+    }
+
+    &.-select::before {
+      background: #2d8cf0;
+    }
+  }
 
   &.-mark {
     border: 2px solid white;
@@ -160,6 +190,9 @@ export default {
     color: #2d8cf0;
     background-color: white;
     border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
   }
 
   &.-other {
@@ -173,6 +206,7 @@ export default {
 
 .week {
   @extend .day;
+  font-size: 15px;
   color: lighten(#2d8cf0, 40%);
 }
 </style>

@@ -10,7 +10,7 @@
       </cover-view>
       <h2 class="title" :class="{'-empty': !video.name}">{{video.name || '未命名'}}</h2>
       <h3 class="subtitle">{{video.created_at}} | {{video.length}}s</h3>
-      <p class="description" :class="{'-empty': !video.description}">没有视频描述</p>
+      <p class="description" :class="{'-empty': !video.description}">{{video.description || '没有视频描述'}}</p>
     </div>
   </div>
 </template>

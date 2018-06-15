@@ -56,7 +56,7 @@ import cellButton from './cell-button';
 import cellPicker from './cell-picker';
 import cellSwitch from './cell-switch';
 import userInfo from './info';
-import panel from './panel';
+import panel from '../../components/panel';
 
 export default {
   components: {
@@ -138,7 +138,7 @@ button::after {
 }
 
 .weui-panel--padding {
-  margin-top: 35px;
+  margin: 35px 0;
 }
 
 ::-webkit-scrollbar {

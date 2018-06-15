@@ -1,38 +1,20 @@
 <template>
   <div class="container" v-if="video">
-    <video class="video" :src="video.video_url" :poster="video.thumbnail_url" controls="false"></video>
-    <div class="weui-cells cell">
-      <div class="weui-cell weui-cell_access">
+    <video-player :video="video"></video-player>
+    <panel title="操作">
+      <div class="weui-cell weui-cell_access" @click="navigateToEditor">
         <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/description.png"/>
+          <img class="weui-cell_icon" src="/static/icons/file.png"/>
         </div>
-        <div class="weui-cell__bd">视频名称</div>
-        <div class="weui-cell_hd" @click="editName">
-          <img class="weui-cell_icon edit-button" src="/static/icons/edit.png"/>
-        </div>
-      </div>
-      <textarea class="cell-detail description-textarea"
-                title="video description"
-                :focus="editingName"
-                :disabled="!editingName"
-                :value="video.name"
-                placeholder="未命名"
-                wrap="hard"
-                @blur="submitName($event.target.value)"
-      ></textarea>
-      <div class="weui-cell weui-cell_access">
-        <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/period.png"/>
-        </div>
-        <div class="weui-cell__bd">生成时间</div>
-        <div class="weui-cell__ft">{{video.created_at}}</div>
+        <div class="weui-cell__bd">编辑信息</div>
+        <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </div>
       <button class="weui-cell weui-cell_access" open-type="share">
-        <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/share.png"/>
-        </div>
-        <div class="weui-cell__bd">分享视频</div>
-        <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          <span class="weui-cell_hd">
+            <img class="weui-cell_icon" src="/static/icons/share.png"/>
+          </span>
+        <span class="weui-cell__bd">分享视频</span>
+        <span class="weui-cell__ft weui-cell__ft_in-access"></span>
       </button>
       <div class="weui-cell weui-cell_access" @click="downloadClick">
         <div class="weui-cell_hd">
@@ -41,38 +23,49 @@
         <div class="weui-cell__bd">下载视频</div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </div>
-    </div>
+      <div class="weui-cell weui-cell_access" @click="deleteClick">
+        <div class="weui-cell_hd">
+          <img class="weui-cell_icon" src="/static/icons/delete.png"/>
+        </div>
+        <div class="weui-cell__bd">删除视频</div>
+        <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+      </div>
+    </panel>
   </div>
 </template>
 
 <script>
 import MpCell from 'mp-weui/packages/cell';
 import MpCellGroup from 'mp-weui/packages/cell-group';
-import { mapActions, mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 
-import fab from '../../components/fab';
+import videoPlayer from '../../components/video-player';
+import panel from '../../components/panel';
 import store from '../../store';
-import { confirm, saveVideoToAlbum, toast, request } from '../../util';
+import {
+  confirm,
+  request,
+  saveVideoToAlbum,
+  toast,
+  warning,
+  navigate,
+} from '../../util';
 
 export default {
   components: {
-    fab,
+    panel,
     MpCell,
     MpCellGroup,
+    videoPlayer,
   },
 
   data() {
     return {
       video: null,
-      editingName: false,
     };
   },
 
   store,
-
-  onLoad() {
-    this.fetchVideos(false);
-  },
 
   onShow() {
     this.video = this.$store.getters.getVideoById(this.$root.$mp.query.id);
@@ -91,7 +84,11 @@ export default {
 
   methods: {
     ...mapActions(['fetchVideos']),
-    ...mapMutations(['updateVideoName']),
+
+    // TODO: use navigator
+    navigateToEditor() {
+      navigate(`/pages/video-editor/main?id=${this.video.id}`);
+    },
 
     async downloadClick() {
       try {
@@ -101,34 +98,25 @@ export default {
       }
     },
 
-    editName() {
-      this.editingName = true;
-    },
-
-    async submitName(value) {
-      this.editingName = false;
-
-      if (this.video.name === value) return;
-
-      const check = await confirm('是否更新简介?');
-
-      if (check) {
-        wx.showLoading({ title: '正在更新...' });
-
-        const newVideo = await request('videos/' + this.video.id, 'PUT', {
-          name: value,
-        });
-
-        this.updateVideoName(newVideo);
-
-        wx.hideLoading();
+    async deleteClick() {
+      if (await confirm('是否该视频?')) {
+        try {
+          wx.showLoading({ title: '正在删除视频...' });
+          await request('videos/' + this.video.id, 'DELETE', {});
+          await this.fetchVideos(true);
+          wx.hideLoading();
+          wx.navigateBack();
+        } catch (e) {
+          console.log(e);
+          warning('视频删除失败!');
+        }
       }
     },
   },
 };
 </script>
 
-<style>
+<style lang="scss">
 page {
   height: 100%;
   background-color: #f5f5f5;
@@ -137,32 +125,7 @@ page {
 .container {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.video {
-  width: 100%;
-}
-
-.cell {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-.cell-detail {
-  padding: 0 15px 10px 15px;
-  font-size: 0.9em;
-  color: #555555;
-}
-
-.description-textarea {
-  line-height: 1em;
-  height: 3em;
-  width: calc(100% - 30px);
+  background-color: #f5f5f5;
 }
 
 button,

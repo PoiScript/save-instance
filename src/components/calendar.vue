@@ -58,7 +58,8 @@ export default {
   store,
 
   computed: {
-    ...mapState(['photos']),
+    ...mapState({ photos: state => state.timeline.photos }),
+
     title() {
       return format(this.show, 'YYYY 年 M 月');
     },

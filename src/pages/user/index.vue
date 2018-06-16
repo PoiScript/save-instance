@@ -11,18 +11,18 @@
         <div class="weui-panel__bd">
           <div class="weui-panel__hd">设置</div>
           <div class="weui-media-box weui-media-box_small-appmsg">
-            <div class="weui-cells weui-cells_in-small-appmsg" v-if="settings">
+            <div class="weui-cells weui-cells_in-small-appmsg">
               <cell-switch title="拍照提醒"
                            img="/static/icons/remind.png"
-                           :checked="settings.daily_notify"
+                           :checked="daily_notify"
                            :onSwitchChange="switchDailyNotify"></cell-switch>
-              <cell-picker title="提醒时间" v-if="settings.daily_notify"
+              <cell-picker title="提醒时间" v-if="daily_notify"
                            img="/static/icons/period.png"
-                           :value="settings.notify_time" :range="notifyTimes"
+                           :value="notify_time" :range="notifyTimes"
                            :onPickerChange="changeNotifyTime"></cell-picker>
               <cell-picker title="每幅时长"
                            img="/static/icons/duration.png"
-                           :value="settings.duration" :range="durations"
+                           :value="duration" :range="durations"
                            :onPickerChange="changeDuration"></cell-picker>
             </div>
           </div>
@@ -70,7 +70,11 @@ export default {
 
   store,
 
-  computed: mapState(['settings']),
+  computed: mapState({
+    daily_notify: state => state.settings.daily_notify,
+    notify_time: state => state.settings.notify_time,
+    duration: state => state.settings.duration,
+  }),
 
   data() {
     return {

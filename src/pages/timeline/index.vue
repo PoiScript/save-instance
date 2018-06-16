@@ -29,7 +29,7 @@ export default {
 
   store,
 
-  computed: mapState(['photos']),
+  computed: mapState({ photos: state => state.timeline.photos }),
 
   async onPullDownRefresh() {
     await store.dispatch('fetchPhotos', true);

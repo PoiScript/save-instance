@@ -19,7 +19,7 @@ import isFuture from 'date-fns/is_future';
 import store from '../store';
 
 export const request = (path, method = 'GET', data = null, auth = true) => {
-  const jwt = store.state.jwt;
+  const jwt = store.state.auth.jwt;
   return jwt && auth
     ? isFuture(jwt.expires_in)
       ? wxRequest(path, method, data, { authorization: jwt.token })
@@ -33,7 +33,7 @@ export const request = (path, method = 'GET', data = null, auth = true) => {
 };
 
 export const upload = (path, filePath, formData) => {
-  const jwt = store.state.jwt;
+  const jwt = store.state.auth.jwt;
   return isFuture(jwt.expires_in)
     ? wxUpload(path, filePath, formData, { authorization: jwt.token })
     : wxRequest('auth/refresh', 'POST', {

@@ -141,7 +141,7 @@ export default {
     },
 
     async updatePhoto() {
-      wx.showLoading({ title: '正在上传...' });
+      wx.showLoading({ title: '正在更新...' });
 
       const id = this.originalPhoto.id;
 

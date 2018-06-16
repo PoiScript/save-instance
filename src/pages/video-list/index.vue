@@ -22,7 +22,7 @@ export default {
 
   store,
 
-  computed: mapState(['videos']),
+  computed: mapState({ videos: state => state.videos.videos }),
 
   async onLoad() {
     wx.showLoading({ title: '获取视频列表...' });

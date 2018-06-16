@@ -33,7 +33,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['photos']),
+    ...mapState({ photos: state => state.timeline.photos }),
 
     selected() {
       const result = {};

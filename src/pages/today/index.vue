@@ -22,7 +22,7 @@ import ripple from 'mpvue-ripple';
 import { mapState } from 'vuex';
 
 import photo from './photo';
-import store from '../../store.js';
+import store from '../../store';
 import bigImage from '../../components/big-image';
 
 import calendar from '../../components/calendar';
@@ -47,7 +47,8 @@ export default {
   },
 
   computed: {
-    ...mapState(['photos']),
+    ...mapState({ photos: state => state.timeline.photos }),
+
     photo() {
       return this.photos.find(p => isSameDay(this.selectedDate, p.created_at));
     },

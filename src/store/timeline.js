@@ -1,4 +1,4 @@
-import { request, warning } from '../util';
+import { request, warning, upload } from '../util';
 import { max, min, isSameDay, format } from 'date-fns';
 
 export const timeline = {
@@ -28,7 +28,8 @@ export const timeline = {
   },
   getters: {
     getPhotoById: state => id => state.photos.find(p => p.id === id),
-    selectedDate: state => format(state.selected.date, 'YYYY/MM/DD'),
+    selectedDate: state =>
+      format(state.selected.date || new Date(), 'YYYY/MM/DD'),
     firstDayInTimeline: state => min(state.photos.map(p => p.created_at)),
     lastDayInTimeline: state => max(state.photos.map(p => p.created_at)),
   },
@@ -38,9 +39,8 @@ export const timeline = {
         try {
           const photos = await request('timeline');
           commit('photosFetched', photos);
-          if (!state.selected.date) {
-            commit('setSelectedDate', new Date());
-          }
+          // don't forget to update the selected photo as well
+          commit('setSelectedDate', state.selected.date || new Date());
         } catch (e) {
           console.log(e);
           warning('获取时间轴失败!');

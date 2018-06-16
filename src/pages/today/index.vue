@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { addDays, subDays } from 'date-fns';
 import ripple from 'mpvue-ripple';
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
@@ -26,8 +27,6 @@ import store from '../../store';
 import bigImage from '../../components/big-image';
 
 import calendar from '../../components/calendar';
-
-import { addDays, subDays } from 'date-fns';
 
 export default {
   components: {

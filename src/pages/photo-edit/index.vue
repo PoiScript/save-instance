@@ -111,7 +111,7 @@ export default {
     },
 
     async chooseAddress() {
-      this.location = await chooseLocation().then(({ address }) => address);
+      this.location = await chooseLocation();
     },
 
     updateDescr(e) {

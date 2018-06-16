@@ -1,5 +1,5 @@
 <template>
-  <li @click="preview" class="item" :style="{ backgroundImage: photo.photo_url ? 'url(' + photo.photo_url + '/thumbnail)' : '' }">
+  <li @click="preview" @longpress="actionSheet" class="item" :style="{ backgroundImage: photo.photo_url ? 'url(' + photo.photo_url + '/thumbnail)' : '' }">
     <span class="dot"></span>
     <div class="time">
       <p>{{date}}</p>
@@ -13,6 +13,10 @@
 
 <script>
 import format from 'date-fns/format';
+import { mapMutations } from 'vuex';
+
+import store from '../../store';
+import { showActionSheet, switchTab, navigate } from '../../util';
 
 export default {
   props: {
@@ -29,12 +33,31 @@ export default {
     };
   },
 
+  store,
+
   methods: {
+    ...mapMutations(['setSelectedPhoto']),
+
     preview() {
       wx.previewImage({
         current: this.photo.photo_url,
         urls: [this.photo.photo_url],
       });
+    },
+
+    async actionSheet() {
+      switch (await showActionSheet('在 "今日" 中查看', '跳转至编辑页面')) {
+        case 0:
+          this.setSelectedPhoto(this.photo);
+          switchTab('/pages/today/main');
+          break;
+        case 1:
+          navigate('/pages/photo-edit/main?id=' + this.photo.id);
+          break;
+        default:
+          // do nothing
+          break;
+      }
     },
   },
 };

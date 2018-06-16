@@ -2,9 +2,9 @@
   <div class="photo-container">
     <div class="photo">
       <img class="photo-content" :src="photo.photo_url" mode="aspectFill" @click="previewImage"/>
-      <a :href="'/pages/photo-edit/main?id=' + photo.id" class="fab-container" hover-class="none">
+      <div class="fab-container" hover-class="none" @click="navigate" @longpress="showActionSheet">
         <fab icon-img="/static/icons/edit_white.png"></fab>
-      </a>
+      </div>
     </div>
     <div class="cells">
       <div class="title">
@@ -22,8 +22,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 import fab from '../../components/fab';
-import store from '../../store.js';
+import store from '../../store';
+import {
+  chooseImage,
+  chooseLocation,
+  navigate,
+  showActionSheet,
+} from '../../util';
 
 export default {
   props: ['photo'],
@@ -35,11 +43,38 @@ export default {
   store,
 
   methods: {
+    ...mapActions(['updatePhotoMeta', 'updatePhotoImage']),
+
     previewImage() {
       wx.previewImage({
         current: this.photo.photo_url,
         urls: [this.photo.photo_url],
       });
+    },
+
+    navigate() {
+      navigate('/pages/photo-edit/main?id=' + this.photo.id);
+    },
+
+    async showActionSheet() {
+      switch (await showActionSheet('替换照片', '重新定位')) {
+        case 0:
+          this.updatePhotoImage({
+            id: this.photo.id,
+            path: await chooseImage(),
+          });
+          break;
+        case 1:
+          this.updatePhotoMeta({
+            id: this.photo.id,
+            description: this.photo.description,
+            location: await chooseLocation(),
+          });
+          break;
+        default:
+          // do nothing
+          break;
+      }
     },
   },
 };

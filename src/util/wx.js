@@ -191,7 +191,7 @@ export const chooseLocation = () =>
   new Promise((resolve, reject) => {
     wx.chooseLocation({
       success: res => {
-        resolve(res);
+        resolve(res.address);
       },
       fail: err => {
         reject('Choose Location Error' + JSON.stringify(err));

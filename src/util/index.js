@@ -12,6 +12,7 @@ export {
   redirect,
   saveVideo,
   saveVideoToAlbum,
+  showActionSheet,
 } from './wx';
 
 import { request as wxRequest, upload as wxUpload } from './wx';

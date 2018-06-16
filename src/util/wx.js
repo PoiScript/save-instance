@@ -287,3 +287,17 @@ export const saveVideoToAlbum = url => {
     });
   });
 };
+
+export const showActionSheet = (...itemList) => {
+  return new Promise((resolve, reject) => {
+    wx.showActionSheet({
+      itemList,
+      success: res => {
+        resolve(res.tapIndex);
+      },
+      fail: res => {
+        reject('Show ActionSheet Failed' + res.errMsg);
+      },
+    });
+  });
+};

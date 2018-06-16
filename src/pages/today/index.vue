@@ -2,7 +2,7 @@
   <form report-submit="true" class="container">
     <div class="btn-row">
       <span @click="prior">prior</span>
-      <span class="show-title" @click="showCalendar = true">{{title}}</span>
+      <span class="show-title" @click="showCalendar = true">{{selectedDate}}</span>
       <span @click="next">next</span>
     </div>
     <photo v-if="photo" :photo="photo"></photo>
@@ -19,7 +19,7 @@
 
 <script>
 import ripple from 'mpvue-ripple';
-import { mapState } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 import photo from './photo';
 import store from '../../store';
@@ -27,7 +27,7 @@ import bigImage from '../../components/big-image';
 
 import calendar from '../../components/calendar';
 
-import { addDays, format, isSameDay, subDays } from 'date-fns';
+import { addDays, subDays } from 'date-fns';
 
 export default {
   components: {
@@ -42,31 +42,29 @@ export default {
   data() {
     return {
       showCalendar: false,
-      selectedDate: new Date(),
     };
   },
 
   computed: {
-    ...mapState({ photos: state => state.timeline.photos }),
-
-    photo() {
-      return this.photos.find(p => isSameDay(this.selectedDate, p.created_at));
-    },
-    title() {
-      return format(this.selectedDate, 'YYYY/MM/DD');
-    },
+    ...mapGetters(['selectedDate']),
+    ...mapState({
+      date: state => state.timeline.selected.date,
+      photo: state => state.timeline.selected.photo,
+    }),
   },
 
   methods: {
+    ...mapMutations(['setSelectedDate']),
+
     dateClick(date) {
       this.showCalendar = false;
-      this.selectedDate = date;
+      this.setSelectedDate(date);
     },
     next() {
-      this.selectedDate = addDays(this.selectedDate, 1);
+      this.setSelectedDate(addDays(this.date, 1));
     },
     prior() {
-      this.selectedDate = subDays(this.selectedDate, 1);
+      this.setSelectedDate(subDays(this.date, 1));
     },
   },
 };

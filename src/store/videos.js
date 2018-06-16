@@ -1,5 +1,6 @@
-import { request, warning } from '../util';
 import { format } from 'date-fns';
+
+import { confirm, request, warning, saveVideoToAlbum } from '../util';
 
 export const videos = {
   state: {
@@ -29,6 +30,27 @@ export const videos = {
           console.log(e);
           warning('获取视频列表失败!');
         }
+      }
+    },
+    deleteVideo: async ({ dispatch }, id) => {
+      wx.showLoading({ title: '正在删除视频...' });
+
+      try {
+        await request('videos/' + id, 'DELETE', {});
+      } catch (e) {
+        console.log(e);
+        warning('视频删除失败!');
+      }
+
+      await dispatch('fetchVideos', true);
+
+      wx.hideLoading();
+    },
+    downloadVideo: async (context, url) => {
+      try {
+        await saveVideoToAlbum(url);
+      } catch (e) {
+        console.log(e);
       }
     },
   },

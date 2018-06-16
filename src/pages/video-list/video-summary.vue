@@ -1,5 +1,5 @@
 <template>
-  <a class="video" :href="'/pages/video-detail/main?id=' + video.id" hover-class="none">
+  <div class="video" @click="navigate" @longpress="showActionSheet">
     <image class="thumbnail" :src="video.thumbnail_url" mode="aspectFill">
       <div class="duration">{{video.length}} s</div>
     </image>
@@ -7,16 +7,50 @@
       <p class="title">{{video.name || '未命名视频'}}</p>
       <p class="date">{{video.created_at}}</p>
     </div>
-  </a>
+  </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
+import store from '../../store';
+import { confirm, navigate, showActionSheet } from '../../util';
+
 export default {
   name: 'videoSummary',
   props: {
     video: {
       type: Object,
       required: true,
+    },
+  },
+
+  store,
+
+  methods: {
+    ...mapActions(['deleteVideo', 'downloadVideo']),
+
+    navigate() {
+      navigate('/pages/video-detail/main?id=' + this.video.id);
+    },
+
+    async showActionSheet() {
+      switch (await showActionSheet('编辑', '下载', '删除')) {
+        case 0:
+          navigate(`/pages/video-editor/main?id=${this.video.id}`);
+          break;
+        case 1:
+          this.downloadVideo(this.video.video_url);
+          break;
+        case 2:
+          if (await confirm('是否该视频?')) {
+            this.deleteVideo(this.video.id);
+          }
+          break;
+        default:
+          // do nothing
+          break;
+      }
     },
   },
 };

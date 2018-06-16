@@ -42,14 +42,7 @@ import { mapActions } from 'vuex';
 import videoPlayer from '../../components/video-player';
 import panel from '../../components/panel';
 import store from '../../store';
-import {
-  confirm,
-  request,
-  saveVideoToAlbum,
-  toast,
-  warning,
-  navigate,
-} from '../../util';
+import { confirm, navigate, toast } from '../../util';
 
 export default {
   components: {
@@ -83,33 +76,20 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchVideos']),
+    ...mapActions(['fetchVideos', 'deleteVideo', 'downloadVideo']),
 
     // TODO: use navigator
     navigateToEditor() {
       navigate(`/pages/video-editor/main?id=${this.video.id}`);
     },
 
-    async downloadClick() {
-      try {
-        await saveVideoToAlbum(this.video.video_url);
-      } catch (e) {
-        console.log(e);
-      }
+    downloadClick() {
+      this.downloadVideo(this.video.video_url);
     },
 
     async deleteClick() {
       if (await confirm('是否该视频?')) {
-        try {
-          wx.showLoading({ title: '正在删除视频...' });
-          await request('videos/' + this.video.id, 'DELETE', {});
-          await this.fetchVideos(true);
-          wx.hideLoading();
-          wx.navigateBack();
-        } catch (e) {
-          console.log(e);
-          warning('视频删除失败!');
-        }
+        this.deleteVideo(this.video.id).then(() => wx.navigateBack());
       }
     },
   },

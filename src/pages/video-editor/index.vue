@@ -45,7 +45,7 @@ export default {
 
   computed: {
     wordCount() {
-      return this.description.length;
+      return this.description ? this.description.length : 0;
     },
   },
 

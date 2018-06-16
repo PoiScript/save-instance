@@ -15,33 +15,6 @@ const store = new Vuex.Store({
     timeline,
     videos,
   },
-  state: {
-    editing: {
-      photo_url: null,
-      description: null,
-      location: null,
-    },
-  },
-  mutations: {
-    clearEditing(state) {
-      state.editing = {
-        photo_url: null,
-        description: null,
-        location: null,
-      };
-    },
-    updateEditing(state, prop) {
-      state.editing = { ...state.editing, ...prop };
-    },
-  },
-  getters: {
-    wordCount: state =>
-      state.editing.description ? state.editing.description.length : 0,
-    editingDirty: state =>
-      state.editing.photo_url ||
-      state.editing.description ||
-      state.editing.location,
-  },
 });
 
 export default store;

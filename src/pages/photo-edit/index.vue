@@ -39,17 +39,16 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import fab from '../../components/fab';
 import store from '../../store';
 import {
   chooseImage,
   chooseLocation,
+  request,
   toast,
   upload,
-  switchTab,
-  request,
 } from '../../util';
 
 export default {
@@ -62,17 +61,19 @@ export default {
   data() {
     return {
       id: null,
-      originalPhoto: null,
+      photo_url: null,
+      description: null,
+      location: null,
+      original: null,
     };
   },
 
   computed: {
-    ...mapState({
-      photo_url: state => state.editing.photo_url,
-      description: state => state.editing.description,
-      location: state => state.editing.location,
-    }),
-    ...mapGetters(['wordCount', 'getPhotoById', 'editingDirty']),
+    ...mapGetters(['getPhotoById']),
+
+    wordCount() {
+      return this.description ? this.description.length : 0;
+    },
     formData() {
       let res = {};
       if (this.description) {
@@ -87,27 +88,34 @@ export default {
 
   onShow() {
     this.id = this.$root.$mp.query.id;
-    if (this.id && !this.editingDirty) {
-      this.originalPhoto = this.getPhotoById(this.id);
-      this.updateEditing(this.originalPhoto);
+    if (this.id) {
+      if (this.id !== (this.original ? this.original.id : null)) {
+        this.original = this.getPhotoById(this.id);
+        this.photo_url = this.original.photo_url;
+        this.description = this.original.description;
+        this.location = this.original.location;
+      }
+    } else {
+      this.original = null;
+      this.photo_url = null;
+      this.description = null;
+      this.location = null;
     }
   },
 
   methods: {
-    ...mapMutations(['updateEditing', 'clearEditing']),
+    ...mapActions(['fetchPhotos']),
 
     async chooseImage() {
-      const imgPath = await chooseImage();
-      this.updateEditing({ photo_url: imgPath });
+      this.photo_url = await chooseImage();
     },
 
     async chooseAddress() {
-      const { address } = await chooseLocation();
-      this.updateEditing({ location: address });
+      this.location = await chooseLocation().then(({ address }) => address);
     },
 
     updateDescr(e) {
-      this.updateEditing({ description: e.target.value });
+      this.description = e.target.value;
     },
 
     previewClick() {
@@ -132,38 +140,43 @@ export default {
     async createPhoto() {
       if (this.photo_url) {
         await upload('timeline', this.photo_url, this.formData);
-        await switchTab('/pages/timeline/main');
+        wx.navigateBack();
         toast('图片上传成功', 'success');
-        await store.dispatch('fetchPhotos', true);
+        await this.fetchPhotos(true);
       } else {
         toast('请选择需要上传的图片');
       }
     },
 
     async updatePhoto() {
-      wx.showLoading({ title: '正在更新...' });
+      const promise = [];
 
-      const id = this.originalPhoto.id;
-
-      if (this.originalPhoto.photo_url !== this.photo_url) {
-        await upload(`timeline/${id}/photo`, this.photo_url);
+      if (this.original.photo_url !== this.photo_url) {
+        promise.push(upload(`timeline/${this.id}/photo`, this.photo_url));
       }
 
       if (
-        this.originalPhoto.location !== this.location ||
-        this.originalPhoto.description !== this.description
+        this.original.location !== this.location ||
+        this.original.description !== this.description
       ) {
-        await request(`timeline/${id}/meta`, 'PUT', {
-          description: this.description,
-          location: this.location,
-        });
+        promise.push(
+          request(`timeline/${this.id}/meta`, 'PUT', {
+            description: this.description,
+            location: this.location,
+          }),
+        );
       }
 
-      this.clearEditing();
+      if (promise.length > 0) {
+        wx.showLoading({ title: '正在更新...' });
 
-      wx.hideLoading();
-      await switchTab('/pages/today/main');
-      await store.dispatch('fetchPhotos', true);
+        await Promise.all(promise);
+        await this.fetchPhotos(true);
+
+        wx.hideLoading();
+      }
+
+      wx.navigateBack();
     },
   },
 };

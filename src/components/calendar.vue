@@ -1,5 +1,5 @@
 <template>
-  <div class="calendar-mask">
+  <div class="calendar-mask" @touchstart="touchStart" @touchend="touchEnd">
     <div class="calendar-wrapper">
       <div class="top">
         <span class="title">{{title}}</span>
@@ -50,6 +50,7 @@ export default {
   data() {
     return {
       show: new Date(),
+      startPageX: 0,
     };
   },
 
@@ -121,6 +122,17 @@ export default {
         this.setSelectedDate(day.day);
       }
       this.$emit('close');
+    },
+    touchStart(event) {
+      this.startPageX = event.mp.changedTouches[0].pageX;
+    },
+    touchEnd(event) {
+      const offsetX = this.startPageX - event.mp.changedTouches[0].pageX;
+      if (offsetX > 150) {
+        this.prior();
+      } else if (offsetX < -150) {
+        this.next();
+      }
     },
   },
 };

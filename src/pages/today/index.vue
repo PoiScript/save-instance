@@ -1,16 +1,18 @@
 <template>
-  <form :report-submit="true" class="container">
-    <div class="btn-row">
-      <span class="arrow -left" :class="{ '-disable': reachTheStart }" @click="prior"></span>
-      <span class="show-title" @click="showCalendar = true">{{selectedDate}}</span>
-      <span class="arrow -right" :class="{ '-disable': reachTheEnd }" @click="next"></span>
+  <form :report-submit="true">
+    <div class="container" @touchstart="touchStart" @touchend="touchEnd">
+      <div class="btn-row">
+        <span class="arrow -left" :class="{ '-disable': reachTheStart }" @click="prior"></span>
+        <span class="show-title" @click="showCalendar = true">{{selectedDate}}</span>
+        <span class="arrow -right" :class="{ '-disable': reachTheEnd }" @click="next"></span>
+      </div>
+      <photo v-if="photo" :photo="photo"></photo>
+      <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
+        <ripple type="circle">
+          <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
+        </ripple>
+      </a>
     </div>
-    <photo v-if="photo" :photo="photo"></photo>
-    <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
-      <ripple type="circle">
-        <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
-      </ripple>
-    </a>
     <div :class="showCalendar ? 'calendar-visible' : 'calendar-hidden'">
       <calendar @close="showCalendar = false"></calendar>
     </div>
@@ -18,7 +20,7 @@
 </template>
 
 <script>
-import { addDays, subDays, isToday, isSameDay } from 'date-fns';
+import { addDays, isSameDay, isToday, subDays } from 'date-fns';
 import ripple from 'mpvue-ripple';
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
@@ -40,6 +42,7 @@ export default {
   data() {
     return {
       showCalendar: false,
+      startPageX: 0,
     };
   },
 
@@ -71,6 +74,17 @@ export default {
         this.setSelectedDate(subDays(this.date, 1));
       }
     },
+    touchStart(event) {
+      this.startPageX = event.mp.changedTouches[0].pageX;
+    },
+    touchEnd(event) {
+      const offsetX = this.startPageX - event.mp.changedTouches[0].pageX;
+      if (offsetX > 150) {
+        this.prior();
+      } else if (offsetX < -150) {
+        this.next();
+      }
+    },
   },
 };
 </script>
@@ -95,6 +109,7 @@ page {
 
 .btn-row {
   display: flex;
+  width: 320px;
   margin: 10px;
   align-items: center;
 

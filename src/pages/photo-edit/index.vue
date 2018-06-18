@@ -1,9 +1,8 @@
 <template>
   <div>
     <div class="image-uploader">
-      <div class="preview" :class="{ '-stripes': !hasPhoto }" @click="previewClick"
-           :style="{ backgroundImage: backgroundImage }">
-        <div v-if="!hasPhoto">点击上传照片</div>
+      <div class="preview" :style="imageStyleStr" :class="{ '-stripes': !photo_url }" @click="previewClick">
+        <div v-if="!photo_url">点击上传照片</div>
       </div>
       <div class="fab-container" @click="chooseImage">
         <fab icon-img="/static/icons/upload.png"></fab>
@@ -71,11 +70,8 @@ export default {
   computed: {
     ...mapGetters(['getPhotoById']),
 
-    hasPhoto() {
-      return !!this.photo_url;
-    },
-    backgroundImage() {
-      return this.photo_url ? `url(${this.photo_url})` : '';
+    imageStyleStr() {
+      return this.photo_url ? `background-image: url(${this.photo_url})` : '';
     },
     wordCount() {
       return this.description ? this.description.length : 0;
@@ -101,7 +97,8 @@ export default {
         this.description = this.original.description;
         this.location = this.original.location;
       }
-    } else {
+      // check if the form is dirty before resting
+    } else if (!this.photo_url && !this.description && !this.location) {
       this.original = null;
       this.photo_url = null;
       this.description = null;
@@ -114,7 +111,6 @@ export default {
 
     async chooseImage() {
       this.photo_url = await chooseImage();
-      console.log(this.photo_url);
     },
 
     async chooseAddress() {
@@ -138,10 +134,8 @@ export default {
 
     submit() {
       if (this.id) {
-        // console.log('updatePhoto');
         this.updatePhoto();
       } else {
-        // console.log('createPhoto');
         this.createPhoto();
       }
     },

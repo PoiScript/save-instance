@@ -1,9 +1,9 @@
 <template>
-  <form report-submit="true" class="container">
+  <form :report-submit="true" class="container">
     <div class="btn-row">
-      <span class="arrow -left" @click="prior"></span>
+      <span class="arrow -left" :class="{ '-disable': reachTheStart }" @click="prior"></span>
       <span class="show-title" @click="showCalendar = true">{{selectedDate}}</span>
-      <span class="arrow -right" :class="{ '-disable': isSelectedToday }" @click="next"></span>
+      <span class="arrow -right" :class="{ '-disable': reachTheEnd }" @click="next"></span>
     </div>
     <photo v-if="photo" :photo="photo"></photo>
     <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { addDays, subDays, isAfter } from 'date-fns';
+import { addDays, subDays, isToday, isSameDay } from 'date-fns';
 import ripple from 'mpvue-ripple';
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
@@ -44,23 +44,30 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['selectedDate', 'isSelectedToday', 'firstDayInTimeline']),
+    ...mapGetters(['selectedDate', 'firstMonthInTimeline']),
     ...mapState({
       date: state => state.timeline.selected.date,
       photo: state => state.timeline.selected.photo,
     }),
+
+    reachTheStart() {
+      return isSameDay(this.date, this.firstMonthInTimeline);
+    },
+    reachTheEnd() {
+      return isToday(this.date);
+    },
   },
 
   methods: {
     ...mapMutations(['setSelectedDate']),
 
     next() {
-      if (!this.isSelectedToday) {
+      if (!this.reachTheEnd) {
         this.setSelectedDate(addDays(this.date, 1));
       }
     },
     prior() {
-      if (isAfter(this.date, this.firstDayInTimeline)) {
+      if (!this.reachTheStart) {
         this.setSelectedDate(subDays(this.date, 1));
       }
     },

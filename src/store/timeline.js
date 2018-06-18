@@ -1,5 +1,5 @@
 import { request, upload, warning } from '../util';
-import { format, isSameDay, isToday, max, min } from 'date-fns';
+import { format, isSameDay, min, startOfMonth } from 'date-fns';
 
 export const timeline = {
   state: {
@@ -29,9 +29,8 @@ export const timeline = {
   getters: {
     getPhotoById: state => id => state.photos.find(p => p.id === id),
     selectedDate: state => format(state.selected.date, 'YYYY/MM/DD'),
-    isSelectedToday: state => isToday(state.selected.date),
-    firstDayInTimeline: state => min(state.photos.map(p => p.created_at)),
-    lastDayInTimeline: state => max(state.photos.map(p => p.created_at)),
+    firstMonthInTimeline: state =>
+      startOfMonth(min(...state.photos.map(p => p.created_at), new Date())),
   },
   actions: {
     fetchPhotos: async ({ state, commit }) => {

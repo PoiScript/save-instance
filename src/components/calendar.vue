@@ -5,8 +5,8 @@
         <span class="title">{{title}}</span>
         <span class="spacer"></span>
         <img class="icon" src="/static/icons/today.png" @click="today">
-        <span class="arrow -left"  @click="prior"></span>
-        <span class="arrow -right -disable" @click="next"></span>
+        <span class="arrow -left" :class="{ '-disable': reachTheStart }" @click="prior"></span>
+        <span class="arrow -right" :class="{ '-disable': reachTheEnd }" @click="next"></span>
       </div>
       <div class="row">
         <div class="week">日</div>
@@ -32,18 +32,17 @@ import {
   eachDay,
   endOfWeek,
   format,
-  isAfter,
-  isBefore,
+  isFuture,
   isSameDay,
   isSameMonth,
+  isThisMonth,
   isToday,
-  isFuture,
   lastDayOfMonth,
   startOfMonth,
   startOfWeek,
   subMonths,
 } from 'date-fns';
-import { mapGetters, mapState, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 
 import store from '../store';
 
@@ -61,6 +60,7 @@ export default {
       photos: state => state.timeline.photos,
       selected: state => state.timeline.selected.date,
     }),
+    ...mapGetters(['firstMonthInTimeline']),
 
     title() {
       return format(this.show, 'YYYY 年 M 月');
@@ -89,26 +89,29 @@ export default {
     endOfCalendar() {
       return endOfWeek(lastDayOfMonth(this.show));
     },
+    reachTheStart() {
+      return isSameMonth(this.show, this.firstMonthInTimeline);
+    },
+    reachTheEnd() {
+      return isThisMonth(this.show);
+    },
   },
 
   methods: {
     ...mapMutations(['setSelectedDate', 'setSelectedPhoto']),
-    ...mapGetters(['firstDayInTimeline', 'lastDayInTimeline']),
 
     today() {
       this.setSelectedDate(new Date());
       this.$emit('close');
     },
     prior() {
-      const lastDayInPriorMonth = lastDayOfMonth(subMonths(this.show, 1));
-      if (isAfter(lastDayInPriorMonth, this.firstDayInTimeline)) {
-        this.show = lastDayInPriorMonth;
+      if (!this.reachTheStart) {
+        this.show = subMonths(this.show, 1);
       }
     },
     next() {
-      const firstDayInNextMonth = startOfMonth(addMonths(this.show, 1));
-      if (isBefore(firstDayInNextMonth, this.lastDayInTimeline)) {
-        this.show = firstDayInNextMonth;
+      if (!this.reachTheEnd) {
+        this.show = addMonths(this.show, 1);
       }
     },
     click(day) {

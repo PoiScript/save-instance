@@ -18,8 +18,8 @@
         <div class="week">六</div>
       </div>
       <div class="row" v-for="(chunk, chunkIndex) in dayChunks" :key="chunkIndex">
-        <div class="day" v-for="(day, dayIndex) in chunk" :key="dayIndex" @click="click(day.day)"
-             :class="{ '-other': !day.isSameMonth, '-select': day.isSelect, '-today': day.isToday, '-mark': day.isMark }">
+        <div class="day" v-for="(day, dayIndex) in chunk" :key="dayIndex" @click="day.isFuture ? null : click(day)"
+             :class="{ '-other': !day.isSameMonth, '-select': day.isSelect, '-today': day.isToday, '-mark': !!day.photo, '-future': day.isFuture }">
           {{day.date}}
         </div>
       </div>
@@ -37,60 +37,64 @@ import {
   isSameDay,
   isSameMonth,
   isToday,
+  isFuture,
   lastDayOfMonth,
   startOfMonth,
   startOfWeek,
   subMonths,
 } from 'date-fns';
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters, mapState, mapMutations } from 'vuex';
 
 import store from '../store';
 
 export default {
-  props: ['select'],
-
   data() {
     return {
-      show: this.select,
+      show: new Date(),
     };
   },
 
   store,
 
   computed: {
-    ...mapState({ photos: state => state.timeline.photos }),
+    ...mapState({
+      photos: state => state.timeline.photos,
+      selected: state => state.timeline.selected.date,
+    }),
 
     title() {
       return format(this.show, 'YYYY 年 M 月');
     },
     dayChunks() {
-      const days = eachDay(
-        startOfWeek(this.firstDayInMonth),
-        endOfWeek(this.lastDayInMonth),
-      ).map(day => ({
-        date: day.getDate(),
-        day: day,
-        isMark: this.photos.some(p => isSameDay(p.created_at, day)),
-        isSelect: isSameDay(this.select, day),
-        isToday: isToday(day),
-        isSameMonth: isSameMonth(day, this.firstDayInMonth),
-      }));
+      const days = eachDay(this.startOfCalendar, this.endOfCalendar).map(
+        day => ({
+          date: day.getDate(),
+          day: day,
+          photo: this.photos.find(p => isSameDay(p.created_at, day)),
+          isSelect: isSameDay(this.selected, day),
+          isToday: isToday(day),
+          isSameMonth: isSameMonth(day, this.show),
+          isFuture: isFuture(day),
+        }),
+      );
       const res = [];
       for (let i = 0; i < days.length; i += 7) {
         res.push(days.slice(i, i + 7));
       }
       return res;
     },
-    firstDayInMonth() {
-      return startOfMonth(this.show);
+    startOfCalendar() {
+      return startOfWeek(startOfMonth(this.show));
     },
-    lastDayInMonth() {
-      return lastDayOfMonth(this.show);
+    endOfCalendar() {
+      return endOfWeek(lastDayOfMonth(this.show));
     },
   },
 
   methods: {
+    ...mapMutations(['setSelectedDate', 'setSelectedPhoto']),
     ...mapGetters(['firstDayInTimeline', 'lastDayInTimeline']),
+
     today() {
       this.show = new Date();
     },
@@ -106,8 +110,13 @@ export default {
         this.show = firstDayInNextMonth;
       }
     },
-    click(date) {
-      this.$emit('dateClick', date);
+    click(day) {
+      if (day.photo) {
+        this.setSelectedPhoto(day.photo);
+      } else {
+        this.setSelectedDate(day.day);
+      }
+      this.$emit('close');
     },
   },
 };
@@ -202,6 +211,10 @@ export default {
     &.-mark {
       border: 2px solid lighten(#2d8cf0, 30%);
     }
+  }
+
+  &.-future {
+    color: lighten(#2d8cf0, 30%);
   }
 }
 

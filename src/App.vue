@@ -21,7 +21,7 @@ export default {
       } else {
         store.commit('setJWT', jwt);
       }
-      await store.dispatch('fetchPhotos', true);
+      await store.dispatch('fetchPhotos');
     } catch (e) {
       console.log(e);
     }

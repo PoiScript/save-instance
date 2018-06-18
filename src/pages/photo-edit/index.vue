@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="image-uploader">
-      <div class="preview" :class="{ '-stripes': !photo_url }" @click="previewClick"
-           :style="{ backgroundImage: photo_url ? 'url(' + photo_url + ')' : '' }">
-        <div v-if="!photo_url">点击上传照片</div>
+      <div class="preview" :class="{ '-stripes': !hasPhoto }" @click="previewClick"
+           :style="{ backgroundImage: backgroundImage }">
+        <div v-if="!hasPhoto">点击上传照片</div>
       </div>
       <div class="fab-container" @click="chooseImage">
         <fab icon-img="/static/icons/upload.png"></fab>
@@ -71,11 +71,17 @@ export default {
   computed: {
     ...mapGetters(['getPhotoById']),
 
+    hasPhoto() {
+      return !!this.photo_url;
+    },
+    backgroundImage() {
+      return this.photo_url ? `url(${this.photo_url})` : '';
+    },
     wordCount() {
       return this.description ? this.description.length : 0;
     },
     formData() {
-      let res = {};
+      const res = {};
       if (this.description) {
         res.description = this.description;
       }
@@ -108,6 +114,7 @@ export default {
 
     async chooseImage() {
       this.photo_url = await chooseImage();
+      console.log(this.photo_url);
     },
 
     async chooseAddress() {
@@ -131,8 +138,10 @@ export default {
 
     submit() {
       if (this.id) {
+        // console.log('updatePhoto');
         this.updatePhoto();
       } else {
+        // console.log('createPhoto');
         this.createPhoto();
       }
     },
@@ -142,7 +151,7 @@ export default {
         await upload('timeline', this.photo_url, this.formData);
         wx.navigateBack();
         toast('图片上传成功', 'success');
-        await this.fetchPhotos(true);
+        await this.fetchPhotos();
       } else {
         toast('请选择需要上传的图片');
       }
@@ -171,7 +180,7 @@ export default {
         wx.showLoading({ title: '正在更新...' });
 
         await Promise.all(promise);
-        await this.fetchPhotos(true);
+        await this.fetchPhotos();
 
         wx.hideLoading();
       }

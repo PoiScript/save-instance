@@ -32,7 +32,7 @@ export default {
   computed: mapState({ photos: state => state.timeline.photos }),
 
   async onPullDownRefresh() {
-    await store.dispatch('fetchPhotos', true);
+    await store.dispatch('fetchPhotos');
     wx.stopPullDownRefresh();
   },
 };

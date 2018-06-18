@@ -1,11 +1,11 @@
-import { request, warning, upload } from '../util';
-import { max, min, isSameDay, format } from 'date-fns';
+import { request, upload, warning } from '../util';
+import { format, isSameDay, isToday, max, min } from 'date-fns';
 
 export const timeline = {
   state: {
     selected: {
       photo: null,
-      date: null,
+      date: new Date(),
     },
     photos: [],
   },
@@ -28,23 +28,21 @@ export const timeline = {
   },
   getters: {
     getPhotoById: state => id => state.photos.find(p => p.id === id),
-    selectedDate: state =>
-      format(state.selected.date || new Date(), 'YYYY/MM/DD'),
+    selectedDate: state => format(state.selected.date, 'YYYY/MM/DD'),
+    isSelectedToday: state => isToday(state.selected.date),
     firstDayInTimeline: state => min(state.photos.map(p => p.created_at)),
     lastDayInTimeline: state => max(state.photos.map(p => p.created_at)),
   },
   actions: {
-    fetchPhotos: async ({ state, commit }, force = false) => {
-      if (state.photos.length === 0 || force) {
-        try {
-          const photos = await request('timeline');
-          commit('photosFetched', photos);
-          // don't forget to update the selected photo as well
-          commit('setSelectedDate', state.selected.date || new Date());
-        } catch (e) {
-          console.log(e);
-          warning('获取时间轴失败!');
-        }
+    fetchPhotos: async ({ state, commit }) => {
+      try {
+        const photos = await request('timeline');
+        commit('photosFetched', photos);
+        // don't forget to update the selected photo as well
+        commit('setSelectedDate', state.selected.date);
+      } catch (e) {
+        console.log(e);
+        warning('获取时间轴失败!');
       }
     },
     updatePhotoMeta: async ({ dispatch }, { id, description, location }) => {
@@ -60,7 +58,7 @@ export const timeline = {
         warning('更新照片信息失败!');
       }
 
-      await dispatch('fetchPhotos', true);
+      await dispatch('fetchPhotos');
 
       wx.hideLoading();
     },
@@ -74,7 +72,7 @@ export const timeline = {
         warning('更新照片信息失败!');
       }
 
-      await dispatch('fetchPhotos', true);
+      await dispatch('fetchPhotos');
 
       wx.hideLoading();
     },

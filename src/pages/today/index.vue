@@ -12,13 +12,13 @@
       </ripple>
     </a>
     <div :class="showCalendar ? 'calendar-visible' : 'calendar-hidden'">
-      <calendar @dateClick="dateClick" :select="selectedDate"></calendar>
+      <calendar @close="showCalendar = false"></calendar>
     </div>
   </form>
 </template>
 
 <script>
-import { addDays, subDays } from 'date-fns';
+import { addDays, subDays, isAfter } from 'date-fns';
 import ripple from 'mpvue-ripple';
 import { mapGetters, mapMutations, mapState } from 'vuex';
 
@@ -45,7 +45,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['selectedDate']),
+    ...mapGetters(['selectedDate', 'isSelectedToday', 'firstDayInTimeline']),
     ...mapState({
       date: state => state.timeline.selected.date,
       photo: state => state.timeline.selected.photo,
@@ -55,15 +55,15 @@ export default {
   methods: {
     ...mapMutations(['setSelectedDate']),
 
-    dateClick(date) {
-      this.showCalendar = false;
-      this.setSelectedDate(date);
-    },
     next() {
-      this.setSelectedDate(addDays(this.date, 1));
+      if (!this.isSelectedToday) {
+        this.setSelectedDate(addDays(this.date, 1));
+      }
     },
     prior() {
-      this.setSelectedDate(subDays(this.date, 1));
+      if (isAfter(this.date, this.firstDayInTimeline)) {
+        this.setSelectedDate(subDays(this.date, 1));
+      }
     },
   },
 };

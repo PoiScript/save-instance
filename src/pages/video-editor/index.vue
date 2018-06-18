@@ -1,14 +1,14 @@
 <template>
   <div>
-    <div class="video-thumbnail" :style="{ backgroundImage: thumbnail_url ? 'url(' + thumbnail_url + ')' : '' }"></div>
+    <div class="video-thumbnail" :style="{ backgroundImage: original ? 'url(' + original.thumbnail_url + ')' : '' }"></div>
     <div class="input-cells">
       <div class="weui-cell weui-cell_access">
         <div class="weui-cell__hd">
-          <img class="icon" src="/static/icons/description.png"/>
+          <img class="icon" src="/static/icons/period.png"/>
         </div>
         <div class="weui-cell__bd weui-cell_primary">名字</div>
       </div>
-      <input class="text" v-model="name" placeholder="添加名字">
+      <input class="name" v-model="name" placeholder="添加名字">
       <div class="weui-cell weui-cell_access">
         <div class="weui-cell__hd">
           <img class="icon" src="/static/icons/description.png"/>
@@ -16,7 +16,7 @@
         <div class="weui-cell__bd weui-cell_primary">简介</div>
         <div class="weui-cell__ft">{{wordCount}}</div>
       </div>
-      <textarea class="text" v-model="description" placeholder="添加简介"
+      <textarea class="description" v-model="description" placeholder="添加简介"
                 :cursor-spacing="0" :show-confirm-bar="false"></textarea>
     </div>
     <div class="submit-button" @click="submit">
@@ -35,37 +35,33 @@ import { request, warning } from '../../util';
 export default {
   data() {
     return {
-      thumbnail_url: '',
+      original: null,
       name: '',
-      originalName: '',
       description: '',
-      originalDescription: '',
     };
   },
 
   computed: {
+    ...mapGetters(['getVideoById']),
     wordCount() {
       return this.description ? this.description.length : 0;
     },
   },
 
   onShow() {
-    const video = this.$store.getters.getVideoById(this.$root.$mp.query.id);
-    this.thumbnail_url = video.thumbnail_url;
-    this.originalName = this.name = video.name;
-    this.originalDescription = this.description = video.description;
+    this.original = this.getVideoById(this.$root.$mp.query.id);
+    this.name = this.original.name;
+    this.description = this.original.description;
   },
 
   store,
 
   methods: {
-    ...mapGetters(['getVideoById']),
-
     async submit() {
       wx.showLoading({ title: '正在更新视频信息...' });
       if (
-        this.name !== this.originalName ||
-        this.description !== this.originalDescription
+        this.name !== this.original.name ||
+        this.description !== this.original.description
       ) {
         try {
           await request('videos/' + this.$root.$mp.query.id, 'PUT', {
@@ -108,7 +104,11 @@ export default {
     margin-right: 5px;
   }
 
-  .text {
+  .name {
+    padding: 0 15px 10px 15px;
+  }
+
+  .description {
     position: initial;
     padding: 0 15px;
     height: 60px;

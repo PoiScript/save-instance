@@ -123,7 +123,9 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
+@import '../../theme';
+
 button,
 button::after {
   margin: 0;
@@ -137,7 +139,7 @@ button::after {
 }
 
 .user-background {
-  background-color: #f5f5f5;
+  background-color: $background-color;
   height: 100%;
 }
 

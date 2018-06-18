@@ -7,11 +7,12 @@
         <span class="arrow -right" :class="{ '-disable': reachTheEnd }" @click="next"></span>
       </div>
       <photo v-if="photo" :photo="photo"></photo>
-      <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
+      <a v-else-if="reachTheEnd" class="empty-photo" href="/pages/photo-edit/main" hover-class="none">
         <ripple type="circle">
           <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
         </ripple>
       </a>
+      <big-image v-else src="/static/picture/timeline_empty.jpg" text="这一天没有上传照片" text-color="#1c2438"></big-image>
     </div>
     <div :class="showCalendar ? 'calendar-visible' : 'calendar-hidden'">
       <calendar @close="showCalendar = false"></calendar>
@@ -95,7 +96,7 @@ export default {
 page {
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: $background-color;
 }
 
 .container {

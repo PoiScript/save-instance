@@ -13,7 +13,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../theme';
+
 .user-info {
   color: white;
   padding-bottom: 18px;
@@ -21,7 +23,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #2d8cf0;
+  background-color: $primary-color;
 }
 
 .avatar {

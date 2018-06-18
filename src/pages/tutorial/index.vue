@@ -41,7 +41,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../theme';
+
 .page {
   height: 100%;
   width: 375px;
@@ -87,8 +89,8 @@ export default {
   outline: none;
   border-radius: 2px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-  background-color: #2d8cf0;
-  color: #ecf0f1;
+  background-color: $primary-color;
+  color: $divider-color;
   transition: background-color 0.3s;
 }
 
@@ -115,8 +117,6 @@ export default {
   border-radius: 100%;
 
   background-color: rgba(236, 240, 241, 0.3);
-
-  -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
 

@@ -4,7 +4,7 @@
       <div class="preview" :style="imageStyleStr" :class="{ '-stripes': !photo_url }" @click="previewClick">
         <div v-if="!photo_url">点击上传照片</div>
       </div>
-      <div class="fab-container" @click="chooseImage">
+      <div v-if="photoEditable" class="fab-container" @click="chooseImage">
         <fab icon-img="/static/icons/upload.png"></fab>
       </div>
     </div>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { isToday } from 'date-fns';
 import { mapActions, mapGetters } from 'vuex';
 
 import fab from '../../components/fab';
@@ -70,6 +71,9 @@ export default {
   computed: {
     ...mapGetters(['getPhotoById']),
 
+    photoEditable() {
+      return !this.original || isToday(this.original.created_at);
+    },
     imageStyleStr() {
       return this.photo_url ? `background-image: url(${this.photo_url})` : '';
     },
@@ -186,6 +190,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../theme';
+
 .image-uploader {
   height: 300px;
   width: 100%;
@@ -202,7 +208,7 @@ export default {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #80848f;
+    color: $sub-color;
 
     &.-stripes {
       background-size: 30px 30px;
@@ -239,8 +245,8 @@ export default {
 
 .input-cells {
   margin: 40px 25px 15px 25px;
-  border-top: 2px solid #f5f5f5;
-  border-bottom: 2px solid #f5f5f5;
+  border-top: 2px solid $divider-color;
+  border-bottom: 2px solid $divider-color;
 
   .icon {
     float: left;
@@ -257,7 +263,7 @@ export default {
 }
 
 .empty {
-  color: #80848f;
+  color: $sub-color;
 }
 
 .submit-button {

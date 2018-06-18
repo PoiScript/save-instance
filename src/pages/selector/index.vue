@@ -8,7 +8,7 @@
         <img class="img" :src="photo.photo_url" mode="aspectFill">
       </div>
     </div>
-    <footer v-if="selectedIds.length > 0" :class="{ warn: selectedIds.length < 3 }">
+    <footer v-if="selectedIds.length > 0" :class="{ '-warn': selectedIds.length < 3 }">
       <span v-if="selectedIds.length < 3">还需要选择 {{ 3 - selectedIds.length}} 张照片</span>
       <span v-else>已选择 {{ selectedIds.length }} 张照片</span>
       <span class="spacer"></span>
@@ -86,7 +86,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../theme';
+
 .selector {
   padding: 0;
   margin: 0;
@@ -105,7 +107,7 @@ export default {
 }
 
 .thumbnail {
-  border: 1px solid #dddddd;
+  border: 1px solid $border-color;
   transition: all 0.2s ease-in-out;
 }
 
@@ -124,14 +126,14 @@ footer {
   left: 0;
   right: 0;
   bottom: 0;
-  color: #fff;
-  background: #2d8cf0;
+  color: white;
+  background: $primary-color;
   padding: 10px;
   display: flex;
-}
 
-footer.warn {
-  background: #ff9900;
+  &.-warn {
+    background: $warning-color;
+  }
 }
 
 .spacer {

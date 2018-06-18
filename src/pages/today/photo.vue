@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { isToday } from 'date-fns';
 import { mapActions } from 'vuex';
 
 import fab from '../../components/fab';
@@ -57,18 +58,21 @@ export default {
     },
 
     async showActionSheet() {
-      switch (await showActionSheet('替换照片', '重新定位')) {
+      const sheet = isToday(this.photo.created_at)
+        ? showActionSheet('重新定位', '替换照片')
+        : showActionSheet('重新定位');
+      switch (await sheet) {
         case 0:
-          this.updatePhotoImage({
-            id: this.photo.id,
-            path: await chooseImage(),
-          });
-          break;
-        case 1:
           this.updatePhotoMeta({
             id: this.photo.id,
             description: this.photo.description,
             location: await chooseLocation(),
+          });
+          break;
+        case 1:
+          this.updatePhotoImage({
+            id: this.photo.id,
+            path: await chooseImage(),
           });
           break;
         default:
@@ -81,6 +85,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../theme';
+
 .photo {
   position: relative;
   background: white;
@@ -116,17 +122,16 @@ export default {
   display: flex;
   align-items: center;
   font-size: 16px;
-  color: #495060;
+  color: $content-color;
 }
 
 .content {
-  border-bottom: 1px solid #e9eaec;
+  border-bottom: 1px solid $divider-color;
   padding: 5px;
   margin-bottom: 5px;
 
   &.-empty {
-    color: #80848f;
-    font-style: italic;
+    color: $sub-color;
   }
 }
 

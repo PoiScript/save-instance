@@ -4,7 +4,7 @@
       <div class="item-container">
         <item v-for="photo in photos" :key="photo.id" :photo="photo"></item>
       </div>
-      <a href="/pages/selector/main" class="timeline--fab-container" hover-class="none">
+      <a href="/pages/selector/main" class="fab-container" hover-class="none">
         <fab icon-img="/static/icons/movie.png"></fab>
       </a>
     </div>
@@ -68,13 +68,13 @@ page {
   display: block;
   width: 0;
   height: 100%;
-  border: 1px solid #fff;
+  border: 1px solid white;
   position: absolute;
   top: 0;
   left: 30px;
 }
 
-.timeline--fab-container {
+.fab-container {
   position: fixed;
   right: 16px;
   bottom: 16px;

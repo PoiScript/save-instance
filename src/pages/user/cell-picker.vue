@@ -26,9 +26,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../theme';
+
 .cell {
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid $background-color;
 }
 
 .cell-img {

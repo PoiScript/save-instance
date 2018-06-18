@@ -30,7 +30,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import '../../theme';
+
 .wx-switch-input {
   width: 50px !important;
   height: 30px !important;
@@ -47,7 +49,7 @@ export default {
 }
 
 .cell {
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid $background-color;
 }
 
 .cell-img {

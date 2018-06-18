@@ -56,11 +56,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../theme';
+
 .video {
   padding: 10px;
-  background-color: #fff;
-  border-bottom: 1px solid #b4b4b4;
+  background-color: white;
+  border-bottom: 1px solid $divider-color;
   display: flex;
   align-items: flex-start;
 }
@@ -78,7 +80,7 @@ export default {
   padding: 0 4px;
   font-weight: 500;
   font-size: 15px;
-  background-color: #000;
+  background-color: black;
   height: 25px;
   line-height: 25px;
   opacity: 0.75;
@@ -87,7 +89,7 @@ export default {
   vertical-align: top;
   display: inline-block;
   position: absolute;
-  color: #fff;
+  color: white;
   bottom: 0;
   right: 0;
   z-index: 1;

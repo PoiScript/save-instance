@@ -203,7 +203,7 @@ export const chooseImage = () =>
   new Promise((resolve, reject) => {
     wx.chooseImage({
       count: 1,
-      sizeType: ['compressed'],
+      sizeType: ['compressed', 'original'],
       sourceType: ['album', 'camera'],
       success: res => {
         resolve(res.tempFilePaths[0]);

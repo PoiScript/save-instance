@@ -63,7 +63,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../theme';
+
 .item {
   /* 375px - 180px */
   height: 215px;
@@ -91,8 +93,8 @@ export default {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #2d8cf0;
-  border: 2px solid #fff;
+  background: $primary-color;
+  border: 2px solid white;
   position: absolute;
   left: -6px;
   top: -10px;
@@ -101,7 +103,7 @@ export default {
 .shadow {
   background-color: rgba(0, 0, 0, 0.65);
   position: absolute;
-  color: #fff;
+  color: white;
   bottom: 0;
   right: 0;
   left: 0;
@@ -114,7 +116,7 @@ export default {
 .time {
   position: absolute;
   left: -100px;
-  color: #fff;
+  color: white;
   font-size: 80%;
   font-weight: bold;
   top: -15px;

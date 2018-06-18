@@ -211,7 +211,7 @@ export default {
   height: 30px;
   border-radius: 50%;
   font-size: 18px;
-  color: #fff;
+  color: white;
   line-height: 30px;
   text-align: center;
   margin-top: 5px;

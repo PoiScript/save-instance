@@ -1,9 +1,9 @@
 <template>
   <form report-submit="true" class="container">
     <div class="btn-row">
-      <span @click="prior">prior</span>
+      <span class="arrow -left" @click="prior"></span>
       <span class="show-title" @click="showCalendar = true">{{selectedDate}}</span>
-      <span @click="next">next</span>
+      <span class="arrow -right" :class="{ '-disable': isSelectedToday }" @click="next"></span>
     </div>
     <photo v-if="photo" :photo="photo"></photo>
     <a class="empty-photo" href="/pages/photo-edit/main" v-else hover-class="none">
@@ -24,9 +24,8 @@ import { mapGetters, mapMutations, mapState } from 'vuex';
 
 import photo from './photo';
 import store from '../../store';
-import bigImage from '../../components/big-image';
-
 import calendar from '../../components/calendar';
+import bigImage from '../../components/big-image';
 
 export default {
   components: {
@@ -69,7 +68,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import '../../theme';
+
 page {
   width: 100%;
   height: 100%;
@@ -87,7 +88,27 @@ page {
 
 .btn-row {
   display: flex;
-  margin: 0 10px;
+  margin: 10px;
+  align-items: center;
+
+  > .arrow {
+    border-right: 3px solid;
+    border-bottom: 3px solid;
+    height: 10px;
+    width: 10px;
+
+    &.-right {
+      transform: rotate(-45deg);
+    }
+
+    &.-left {
+      transform: rotate(135deg);
+    }
+
+    &.-disable {
+      color: $disabled-color;
+    }
+  }
 }
 
 .show-title {

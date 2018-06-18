@@ -4,9 +4,9 @@
       <div class="top">
         <span class="title">{{title}}</span>
         <span class="spacer"></span>
-        <span @click="today">t</span>
-        <span @click="prior">p</span>
-        <span @click="next">n</span>
+        <img class="icon" src="/static/icons/today.png" @click="today">
+        <span class="arrow -left"  @click="prior"></span>
+        <span class="arrow -right -disable" @click="next"></span>
       </div>
       <div class="row">
         <div class="week">日</div>
@@ -96,7 +96,8 @@ export default {
     ...mapGetters(['firstDayInTimeline', 'lastDayInTimeline']),
 
     today() {
-      this.show = new Date();
+      this.setSelectedDate(new Date());
+      this.$emit('close');
     },
     prior() {
       const lastDayInPriorMonth = lastDayOfMonth(subMonths(this.show, 1));
@@ -122,6 +123,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import '../theme';
+
 .calendar-mask {
   position: fixed;
   z-index: 9998;
@@ -129,7 +132,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #2d8cf0;
+  background-color: $primary-color;
   display: table;
   color: white;
 }
@@ -148,9 +151,36 @@ export default {
   margin: 0 auto;
   display: flex;
   width: 300px;
+  align-items: center;
 
   > .title {
     font-size: 20px;
+  }
+
+  > .icon {
+    width: 22.5px;
+    height: 22.5px;
+    margin: 0 10px;
+  }
+
+  > .arrow {
+    border-right: 3px solid;
+    border-bottom: 3px solid;
+    margin: 0 10px;
+    height: 10px;
+    width: 10px;
+
+    &.-right {
+      transform: rotate(-45deg);
+    }
+
+    &.-left {
+      transform: rotate(135deg);
+    }
+
+    &.-disable {
+      color: rgba(white, 0.5);
+    }
   }
 }
 
@@ -170,6 +200,7 @@ export default {
   line-height: 30px;
   text-align: center;
   margin-top: 5px;
+  border: 2px solid transparent;
 
   &.-today {
     position: relative;
@@ -187,40 +218,38 @@ export default {
     }
 
     &.-select::before {
-      background: #2d8cf0;
+      background: $primary-color;
     }
   }
 
   &.-mark {
-    border: 2px solid white;
-    border-radius: 50%;
+    border-color: white;
   }
 
   &.-select {
-    color: #2d8cf0;
+    color: $primary-color;
     background-color: white;
-    border-radius: 50%;
     width: 32px;
     height: 32px;
     line-height: 32px;
   }
 
   &.-other {
-    color: lighten(#2d8cf0, 30%);
+    color: $light-primary-color;
 
     &.-mark {
-      border: 2px solid lighten(#2d8cf0, 30%);
+      border-color: $light-primary-color;
     }
   }
 
   &.-future {
-    color: lighten(#2d8cf0, 30%);
+    color: $light-primary-color;
   }
 }
 
 .week {
   @extend .day;
   font-size: 15px;
-  color: lighten(#2d8cf0, 40%);
+  color: lighten($primary-color, 40%);
 }
 </style>

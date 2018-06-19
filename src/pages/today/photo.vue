@@ -23,7 +23,7 @@
 
 <script>
 import { isToday } from 'date-fns';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
 
 import fab from '../../components/fab';
 import store from '../../store';
@@ -45,6 +45,7 @@ export default {
 
   methods: {
     ...mapActions(['updatePhotoMeta', 'updatePhotoImage']),
+    ...mapMutations(['clearEditing']),
 
     previewImage() {
       wx.previewImage({
@@ -68,12 +69,14 @@ export default {
             description: this.photo.description,
             location: await chooseLocation(),
           });
+          this.clearEditing();
           break;
         case 1:
           await this.updatePhotoImage({
             id: this.photo.id,
             path: await chooseImage(),
           });
+          this.clearEditing();
           break;
         default:
           // do nothing

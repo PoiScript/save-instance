@@ -28,7 +28,7 @@
         </div>
         <div class="weui-cell__ft">{{wordCount}}</div>
       </div>
-      <textarea class="text" :value="description" @input="updateDescr" placeholder="添加字幕"
+      <textarea class="text" v-model="description" placeholder="添加字幕"
                 :placeholder-class="'empty'" :cursor-spacing="0" :show-confirm-bar="false"></textarea>
     </div>
     <div class="submit-button" @click="submit">
@@ -39,8 +39,7 @@
 </template>
 
 <script>
-import { isToday } from 'date-fns';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
 
 import fab from '../../components/fab';
 import store from '../../store';
@@ -62,64 +61,53 @@ export default {
   data() {
     return {
       id: null,
-      photo_url: null,
-      description: null,
-      location: null,
-      original: null,
     };
   },
 
   computed: {
-    ...mapGetters(['getPhotoById']),
+    ...mapGetters(['getPhotoById', 'photoEditable', 'wordCount', 'formData']),
+    ...mapState({
+      photo_url: state => state.editing.photo_url,
+      location: state => state.editing.location,
+      original: state => state.editing.original,
+    }),
 
-    photoEditable() {
-      return !this.original || isToday(this.original.created_at);
-    },
-    wordCount() {
-      return this.description ? this.description.length : 0;
-    },
-    formData() {
-      const res = {};
-      if (this.description) {
-        res.description = this.description;
-      }
-      if (this.location) {
-        res.location = this.location;
-      }
-      return res;
+    description: {
+      get() {
+        return this.$store.state.editing.description;
+      },
+      set(value) {
+        this.$store.commit('setDescription', value);
+      },
     },
   },
 
   onShow() {
     this.id = this.$root.$mp.query.id;
     if (this.id && (!this.original || this.id !== this.original.id)) {
-      this.original = this.getPhotoById(this.id);
-      this.photo_url = this.original.photo_url;
-      this.description = this.original.description;
-      this.location = this.original.location;
+      this.setEditing(this.getPhotoById(this.id));
     }
 
     if (!this.id && this.original) {
-      this.original = null;
-      this.photo_url = null;
-      this.description = null;
-      this.location = null;
+      this.clearEditing();
     }
   },
 
   methods: {
     ...mapActions(['fetchPhotos']),
+    ...mapMutations([
+      'setPhotoUrl',
+      'setLocation',
+      'clearEditing',
+      'setEditing',
+    ]),
 
     async chooseImage() {
-      this.photo_url = await chooseImage();
+      this.setPhotoUrl(await chooseImage());
     },
 
     async chooseAddress() {
-      this.location = await chooseLocation();
-    },
-
-    updateDescr(e) {
-      this.description = e.target.value;
+      this.setLocation(await chooseLocation());
     },
 
     preview() {
@@ -142,6 +130,7 @@ export default {
         await upload('timeline', this.photo_url, this.formData);
         wx.navigateBack();
         toast('图片上传成功', 'success');
+        this.clearEditing();
         await this.fetchPhotos();
       } else {
         toast('请选择需要上传的图片');
@@ -171,6 +160,7 @@ export default {
         wx.showLoading({ title: '正在更新...' });
 
         await Promise.all(promise);
+        this.clearEditing();
         await this.fetchPhotos();
 
         wx.hideLoading();

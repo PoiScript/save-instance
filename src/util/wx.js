@@ -189,12 +189,29 @@ export const warning = (content, title = '错误') =>
 
 export const chooseLocation = () =>
   new Promise((resolve, reject) => {
-    wx.chooseLocation({
+    wx.getSetting({
       success: res => {
-        resolve(res.address);
+        const userLocation =
+          typeof res.authSetting['scope.userLocation'] !== 'undefined'
+            ? res.authSetting['scope.userLocation']
+            : true;
+        if (userLocation) {
+          wx.chooseLocation({
+            success: res => {
+              resolve(res.address);
+            },
+            fail: err => {
+              warning('请检查是否开启了位置权限', '获取位置失败!');
+              reject('Choose Location Error' + JSON.stringify(err));
+            },
+          });
+        } else {
+          warning('请检查是否开启了位置权限', '无权限');
+        }
       },
       fail: err => {
-        reject('Choose Location Error' + JSON.stringify(err));
+        warning('获取用户权限失败!');
+        reject('Get Settings Error' + JSON.stringify(err));
       },
     });
   });
@@ -227,62 +244,52 @@ export const redirect = url =>
     });
   });
 
-export const saveVideo = url => {
-  wx.showNavigationBarLoading();
-  wx.showLoading({ title: '正在下载...' });
-  return new Promise((resolve, reject) => {
-    wx.downloadFile({
-      url,
-      success: res => {
-        if (res.statusCode === 200) {
-          resolve(res.tempFilePath);
-        } else {
-          warning('下载失败!');
-          reject('Download File Failed.');
-        }
-      },
-      fail: res => {
-        warning('下载失败!');
-        reject('Download File Failed: ' + JSON.stringify(res));
-      },
-      complete: () => {
-        wx.hideLoading();
-        wx.hideNavigationBarLoading();
-      },
-    });
-  });
-};
-
 export const saveVideoToAlbum = url => {
-  wx.showNavigationBarLoading();
-  wx.showLoading({ title: '正在下载...' });
   return new Promise((resolve, reject) => {
-    wx.downloadFile({
-      url,
+    wx.getSetting({
       success: res => {
-        if (res.statusCode === 200) {
-          wx.saveVideoToPhotosAlbum({
-            filePath: res.tempFilePath,
-            success: () => {
-              toast('下载成功', 'success');
-              resolve();
+        const writePhotosAlbum =
+          typeof res.authSetting['scope.writePhotosAlbum'] !== 'undefined'
+            ? res.authSetting['scope.writePhotosAlbum']
+            : true;
+        if (writePhotosAlbum) {
+          wx.showNavigationBarLoading();
+          wx.showLoading({ title: '正在下载...' });
+          wx.downloadFile({
+            url,
+            success: res => {
+              if (res.statusCode === 200) {
+                wx.saveVideoToPhotosAlbum({
+                  filePath: res.tempFilePath,
+                  success: () => {
+                    toast('下载成功', 'success');
+                    resolve();
+                  },
+                  fail: res => {
+                    reject('Save Video Failed: ' + JSON.stringify(res));
+                  },
+                });
+              } else {
+                warning('下载失败!');
+                reject('Download File Failed.');
+              }
             },
             fail: res => {
-              reject('Save Video Failed: ' + JSON.stringify(res));
+              warning('下载失败!');
+              reject('Download File Failed: ' + JSON.stringify(res));
+            },
+            complete: () => {
+              wx.hideLoading();
+              wx.hideNavigationBarLoading();
             },
           });
         } else {
-          warning('下载失败!');
-          reject('Download File Failed.');
+          warning('请检查是否开启了保存到相册权限', '无权限');
         }
       },
-      fail: res => {
-        warning('下载失败!');
-        reject('Download File Failed: ' + JSON.stringify(res));
-      },
-      complete: () => {
-        wx.hideLoading();
-        wx.hideNavigationBarLoading();
+      fail: err => {
+        warning('获取用户权限失败!');
+        reject('Get Settings Error' + JSON.stringify(err));
       },
     });
   });

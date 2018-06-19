@@ -10,7 +10,6 @@ export {
   chooseLocation,
   chooseImage,
   redirect,
-  saveVideo,
   saveVideoToAlbum,
   showActionSheet,
 } from './wx';
@@ -19,9 +18,9 @@ import { request as wxRequest, upload as wxUpload } from './wx';
 import isFuture from 'date-fns/is_future';
 import store from '../store';
 
-export const request = (path, method = 'GET', data = null, auth = true) => {
+export const request = (path, method = 'GET', data = null) => {
   const jwt = store.state.auth.jwt;
-  return jwt && auth
+  return jwt
     ? isFuture(jwt.expires_in)
       ? wxRequest(path, method, data, { authorization: jwt.token })
       : wxRequest('auth/refresh', 'POST', {

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import videoSummary from './video-summary';
 import store from '../../store';
@@ -25,15 +25,19 @@ export default {
   computed: mapState({ videos: state => state.videos.videos }),
 
   async onLoad() {
-    wx.showLoading({ title: '获取视频列表...' });
-    await store.dispatch('fetchVideos', false);
-    wx.hideLoading();
+    if (this.videos.length === 0) {
+      wx.showLoading({ title: '获取视频列表...' });
+      await this.fetchVideos();
+      wx.hideLoading();
+    }
   },
 
   async onPullDownRefresh() {
-    await store.dispatch('fetchVideos', true);
+    await this.fetchVideos();
     wx.stopPullDownRefresh();
   },
+
+  methods: mapActions(['fetchVideos']),
 };
 </script>
 

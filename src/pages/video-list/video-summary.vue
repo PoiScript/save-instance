@@ -40,11 +40,11 @@ export default {
           navigate(`/pages/video-editor/main?id=${this.video.id}`);
           break;
         case 1:
-          this.downloadVideo(this.video.video_url);
+          await this.downloadVideo(this.video.video_url);
           break;
         case 2:
           if (await confirm('是否该视频?')) {
-            this.deleteVideo(this.video.id);
+            await this.deleteVideo(this.video.id);
           }
           break;
         default:

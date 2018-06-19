@@ -72,7 +72,7 @@ export default {
           ids: this.selectedIds,
         });
 
-        await this.fetchVideos(true);
+        this.fetchVideos();
         this.selectedIds = [];
         wx.hideLoading();
 

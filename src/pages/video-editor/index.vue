@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import store from '../../store';
 import { request, warning } from '../../util';
@@ -57,6 +57,8 @@ export default {
   store,
 
   methods: {
+    ...mapActions(['fetchVideos']),
+
     async submit() {
       wx.showLoading({ title: '正在更新视频信息...' });
       if (
@@ -68,7 +70,7 @@ export default {
             name: this.name,
             description: this.description,
           });
-          await store.dispatch('fetchVideos', true);
+          await this.fetchVideos();
         } catch (e) {
           console.log(e);
           warning('视频信息更新失败!');

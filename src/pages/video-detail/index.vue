@@ -83,13 +83,13 @@ export default {
       navigate(`/pages/video-editor/main?id=${this.video.id}`);
     },
 
-    downloadClick() {
-      this.downloadVideo(this.video.video_url);
+    async downloadClick() {
+      await this.downloadVideo(this.video.video_url);
     },
 
     async deleteClick() {
       if (await confirm('是否该视频?')) {
-        this.deleteVideo(this.video.id).then(() => wx.navigateBack());
+        await this.deleteVideo(this.video.id).then(() => wx.navigateBack());
       }
     },
   },

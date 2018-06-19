@@ -88,7 +88,7 @@ export default {
     },
 
     async deleteClick() {
-      if (await confirm('是否该视频?')) {
+      if (await confirm('是否删除该视频?')) {
         await this.deleteVideo(this.video.id).then(() => wx.navigateBack());
       }
     },

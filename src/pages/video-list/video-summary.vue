@@ -43,7 +43,7 @@ export default {
           await this.downloadVideo(this.video.video_url);
           break;
         case 2:
-          if (await confirm('是否该视频?')) {
+          if (await confirm('是否删除该视频?')) {
             await this.deleteVideo(this.video.id);
           }
           break;

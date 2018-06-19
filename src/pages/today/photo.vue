@@ -3,7 +3,7 @@
     <div class="photo">
       <img class="photo-content" :src="photo.photo_url" mode="aspectFill" @click="previewImage"/>
       <div class="fab-container" hover-class="none" @click="navigate" @longpress="showActionSheet">
-        <fab icon-img="/static/icons/edit_white.png"></fab>
+        <fab icon="/static/icons/edit_white.png"></fab>
       </div>
     </div>
     <div class="cells">
@@ -35,7 +35,12 @@ import {
 } from '../../util';
 
 export default {
-  props: ['photo'],
+  props: {
+    photo: {
+      type: Object,
+      required: true,
+    },
+  },
 
   components: {
     fab,

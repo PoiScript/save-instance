@@ -6,7 +6,7 @@
         <div>点击上传照片</div>
       </div>
       <div v-if="photoEditable" class="fab-container" @click="chooseImage">
-        <fab icon-img="/static/icons/upload.png"></fab>
+        <fab icon="/static/icons/upload.png"></fab>
       </div>
     </div>
     <div class="input-cells">

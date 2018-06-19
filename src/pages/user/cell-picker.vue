@@ -17,7 +17,28 @@
 <script>
 export default {
   name: 'cellPicker',
-  props: ['img', 'title', 'onPickerChange', 'value', 'range'],
+  props: {
+    img: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    onPickerChange: {
+      type: Function,
+      required: true,
+    },
+    value: {
+      type: Number,
+      required: true,
+    },
+    range: {
+      type: Array,
+      required: true,
+    },
+  },
   methods: {
     change(e) {
       this.onPickerChange(e.mp.detail.value);

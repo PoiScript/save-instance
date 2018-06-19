@@ -14,7 +14,12 @@
 <script>
 export default {
   name: 'panel',
-  props: ['title'],
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 

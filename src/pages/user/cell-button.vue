@@ -15,7 +15,16 @@
 <script>
 export default {
   name: 'cellButton',
-  props: ['img', 'text'],
+  props: {
+    img: {
+      type: String,
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 

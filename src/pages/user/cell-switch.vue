@@ -21,7 +21,24 @@
 <script>
 export default {
   name: 'cellSwitch',
-  props: ['img', 'title', 'onSwitchChange', 'checked'],
+  props: {
+    img: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    onSwitchChange: {
+      type: Function,
+      required: true,
+    },
+    checked: {
+      type: Boolean,
+      required: true,
+    },
+  },
   methods: {
     change(e) {
       this.onSwitchChange(e.mp.detail.value);

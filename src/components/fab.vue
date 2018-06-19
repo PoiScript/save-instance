@@ -1,13 +1,18 @@
 <template>
-  <div class="fab" @click="onClick">
-    <img class="fab-img" :src="iconImg" >
+  <div class="fab">
+    <img class="fab-img" :src="icon" >
   </div>
 </template>
 
 <script>
 export default {
   name: 'fab',
-  props: ['onClick', 'iconImg'],
+  props: {
+    icon: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 

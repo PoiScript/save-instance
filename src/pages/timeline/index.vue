@@ -5,7 +5,7 @@
         <item v-for="photo in photos" :key="photo.id" :photo="photo"></item>
       </div>
       <a href="/pages/selector/main" class="fab-container" hover-class="none">
-        <fab icon-img="/static/icons/movie.png"></fab>
+        <fab icon="/static/icons/movie.png"></fab>
       </a>
     </div>
     <big-image v-else src="/static/picture/timeline_empty.jpg" text="时光轴空空如也" text-color="#fff"></big-image>

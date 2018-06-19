@@ -1,21 +1,18 @@
-# save-instance
+# 咔记小程序
 
-> A Mpvue project
+> 每天上传一张照片, 记录你的此刻.
 
-## Build Setup
+基于 mpvue 和 Vuex 构建.
+
+## 使用
 
 ``` bash
-# install dependencies
+# 安装依赖
 npm install
 
-# serve with hot reload at localhost:8080
+# 运行
 npm run dev
 
-# build for production with minification
+# 打包编译
 npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

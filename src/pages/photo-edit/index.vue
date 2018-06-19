@@ -1,8 +1,9 @@
 <template>
   <div>
     <div class="image-uploader">
-      <div class="preview" :style="imageStyleStr" :class="{ '-stripes': !photo_url }" @click="previewClick">
-        <div v-if="!photo_url">点击上传照片</div>
+      <img v-if="photo_url" class="preview" :src="photo_url" @click="preview" :mode="'aspectFill'"/>
+      <div v-else class="stripes" @click="chooseImage">
+        <div>点击上传照片</div>
       </div>
       <div v-if="photoEditable" class="fab-container" @click="chooseImage">
         <fab icon-img="/static/icons/upload.png"></fab>
@@ -74,9 +75,6 @@ export default {
     photoEditable() {
       return !this.original || isToday(this.original.created_at);
     },
-    imageStyleStr() {
-      return this.photo_url ? `background-image: url(${this.photo_url})` : '';
-    },
     wordCount() {
       return this.description ? this.description.length : 0;
     },
@@ -94,15 +92,14 @@ export default {
 
   onShow() {
     this.id = this.$root.$mp.query.id;
-    if (this.id) {
-      if (this.id !== (this.original ? this.original.id : null)) {
-        this.original = this.getPhotoById(this.id);
-        this.photo_url = this.original.photo_url;
-        this.description = this.original.description;
-        this.location = this.original.location;
-      }
-      // check if the form is dirty before resting
-    } else if (!this.photo_url && !this.description && !this.location) {
+    if (this.id && (!this.original || this.id !== this.original.id)) {
+      this.original = this.getPhotoById(this.id);
+      this.photo_url = this.original.photo_url;
+      this.description = this.original.description;
+      this.location = this.original.location;
+    }
+
+    if (!this.id && this.original) {
       this.original = null;
       this.photo_url = null;
       this.description = null;
@@ -125,15 +122,11 @@ export default {
       this.description = e.target.value;
     },
 
-    previewClick() {
-      if (this.photo_url) {
-        wx.previewImage({
-          current: this.photo_url,
-          urls: [this.photo_url],
-        });
-      } else {
-        this.chooseImage();
-      }
+    preview() {
+      wx.previewImage({
+        current: this.photo_url,
+        urls: [this.photo_url],
+      });
     },
 
     submit() {
@@ -197,40 +190,44 @@ export default {
   width: 100%;
   position: relative;
 
-  .preview {
-    height: 100%;
-    background-size: cover;
-    background-position: center center;
+  &::before {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     box-shadow: inset 0 24px 38px 3px rgba(0, 0, 0, 0.14),
       inset 0 9px 46px 8px rgba(0, 0, 0, 0.12),
       inset 0 11px 15px -7px rgba(0, 0, 0, 0.2);
+  }
+
+  > .preview {
+    height: 100%;
+    width: 100%;
+  }
+
+  > .stripes {
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: $sub-color;
-
-    &.-stripes {
-      background-size: 30px 30px;
-      background-image: linear-gradient(
-        -45deg,
-        #f6f6f6 25%,
-        transparent 25%,
-        transparent 50%,
-        #f6f6f6 50%,
-        #f6f6f6 75%,
-        transparent 75%,
-        transparent
-      );
-      animation: stripes 2s linear infinite;
-    }
+    background-size: 30px 30px;
+    background-image: linear-gradient(
+      -45deg,
+      #f6f6f6 25%,
+      transparent 25%,
+      transparent 50%,
+      #f6f6f6 50%,
+      #f6f6f6 75%,
+      transparent 75%,
+      transparent
+    );
+    animation: stripes 2s linear infinite;
   }
-}
-
-.fab-container {
-  position: absolute;
-  right: 16px;
-  bottom: -25px;
 }
 
 @keyframes stripes {
@@ -241,6 +238,12 @@ export default {
   to {
     background-position: 60px 30px;
   }
+}
+
+.fab-container {
+  position: absolute;
+  right: 16px;
+  bottom: -25px;
 }
 
 .input-cells {

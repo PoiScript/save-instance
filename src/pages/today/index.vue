@@ -2,9 +2,15 @@
   <form :report-submit="true">
     <div class="container" @touchstart="touchStart" @touchend="touchEnd">
       <div class="btn-row">
-        <span class="arrow -left" :class="{ '-disable': reachTheStart }" @click="prior"></span>
-        <span class="show-title" @click="showCalendar = true">{{selectedDate}}</span>
-        <span class="arrow -right" :class="{ '-disable': reachTheEnd }" @click="next"></span>
+        <div class="arrow-container" @click="prior">
+          <span class="arrow -left" :class="{ '-disable': reachTheStart }"></span>
+        </div>
+        <span class="show-title">
+          <span @click="showCalendar = true">{{selectedDate}}</span>
+        </span>
+        <div class="arrow-container" @click="next">
+          <span class="arrow -right" :class="{ '-disable': reachTheEnd }"></span>
+        </div>
       </div>
       <photo v-if="photo" :photo="photo"></photo>
       <a v-else-if="reachTheEnd" class="empty-photo" href="/pages/photo-edit/main" hover-class="none">
@@ -12,7 +18,9 @@
           <big-image text="点击发表今日记忆～" src="/static/picture/camera.png" :img-shake="true"></big-image>
         </ripple>
       </a>
-      <big-image v-else src="/static/picture/timeline_empty.jpg" text="这一天没有上传照片" text-color="#1c2438"></big-image>
+      <div v-else class="empty-photo">
+        <big-image src="/static/picture/not_photo.jpg" text="这一天没有上传照片" text-color="#1c2438"></big-image>
+      </div>
     </div>
     <div :class="showCalendar ? 'calendar-visible' : 'calendar-hidden'">
       <calendar @close="showCalendar = false"></calendar>
@@ -80,10 +88,10 @@ export default {
     },
     touchEnd(event) {
       const offsetX = this.startPageX - event.mp.changedTouches[0].pageX;
-      if (offsetX > 150) {
-        this.prior();
-      } else if (offsetX < -150) {
+      if (offsetX > 50) {
         this.next();
+      } else if (offsetX < -50) {
+        this.prior();
       }
     },
   },
@@ -114,11 +122,19 @@ page {
   margin: 10px;
   align-items: center;
 
-  > .arrow {
+  .arrow-container {
+    flex: 0 0 20%;
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+
+  .arrow {
     border-right: 3px solid;
     border-bottom: 3px solid;
     height: 10px;
     width: 10px;
+    margin: 0 auto;
 
     &.-right {
       transform: rotate(-45deg);

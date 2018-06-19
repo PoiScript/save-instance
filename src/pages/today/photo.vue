@@ -63,14 +63,14 @@ export default {
         : showActionSheet('重新定位');
       switch (await sheet) {
         case 0:
-          this.updatePhotoMeta({
+          await this.updatePhotoMeta({
             id: this.photo.id,
             description: this.photo.description,
             location: await chooseLocation(),
           });
           break;
         case 1:
-          this.updatePhotoImage({
+          await this.updatePhotoImage({
             id: this.photo.id,
             path: await chooseImage(),
           });

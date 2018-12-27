@@ -1,14 +1,5 @@
 <template>
-  <li
-    @click="preview"
-    @longpress="actionSheet"
-    class="item"
-    :style="{
-      backgroundImage: photo.photo_url
-        ? 'url(' + photo.photo_url + '/thumbnail)'
-        : ''
-    }"
-  >
+  <li class="item" v-bind:style="{ backgroundImage: 'url(' + photo.photo_url + ')' }">
     <span class="dot"></span>
     <div class="time">
       <p>{{ date }}</p>
@@ -21,10 +12,8 @@
 
 <script>
 import format from 'date-fns/format'
-import { mapMutations } from 'vuex'
 
-import store from '../../store'
-import { showActionSheet, switchTab, navigate } from '../../util'
+import config from '../../config'
 
 export default {
   props: {
@@ -36,37 +25,9 @@ export default {
 
   data() {
     return {
-      date: format(this.photo.created_at, 'M 月 D 日'),
-
-      time: format(this.photo.created_at, 'HH : mm')
-    }
-  },
-
-  store,
-
-  methods: {
-    ...mapMutations(['setSelectedPhoto']),
-
-    preview() {
-      wx.previewImage({
-        current: this.photo.photo_url,
-        urls: [this.photo.photo_url]
-      })
-    },
-
-    async actionSheet() {
-      switch (await showActionSheet('在 "今日" 中查看', '跳转至编辑页面')) {
-        case 0:
-          this.setSelectedPhoto(this.photo)
-          switchTab('/pages/today/main')
-          break
-        case 1:
-          navigate('/pages/photo-edit/main?id=' + this.photo.id)
-          break
-        default:
-          // do nothing
-          break
-      }
+      date: format(this.photo.date, 'M 月 D 日'),
+      time: format(this.photo.date, 'HH : mm'),
+      image: config.api_url + this.photo.id + '.jpg'
     }
   }
 }
@@ -93,7 +54,7 @@ export default {
   height: 100%;
   position: absolute;
   top: 0;
-  left: -28.5px;
+  left: -30px;
 }
 
 .dot:before {
@@ -128,7 +89,11 @@ export default {
   color: white;
   font-size: 80%;
   font-weight: bold;
-  top: -15px;
   text-align: center;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
 }
 </style>

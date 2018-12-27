@@ -1,19 +1,22 @@
 <template>
   <div>
     <div class="image-uploader">
-      <div v-if="uploaded">
-        <img alt="" class="preview" :src="file"/>
-      </div>
+      <div v-if="url"><img alt="" class="preview" :src="url"/></div>
       <div v-else class="stripes"></div>
       <label for="file-input" class="fab-container">
         <fab icon="/static/icons/upload.png"></fab>
       </label>
-      <input type="file" id="file-input" style="display: none" @change="handleFiles">
+      <input
+        type="file"
+        id="file-input"
+        style="display: none"
+        @change="handleFiles"
+      />
     </div>
     <div class="input-cells">
       <div class="weui-cell weui-cell_access">
         <div class="weui-cell__hd">
-          <img alt="" class="icon" src="/static/icons/description.png"/>
+          <img alt="" class="icon" src="/static/icons/description.png" />
         </div>
         <div class="weui-cell__bd weui-cell_primary" style="color: #999999">
           <div>简介</div>
@@ -22,8 +25,9 @@
       </div>
       <textarea aria-label="" class="text" v-model="description"></textarea>
     </div>
-    <div class="submit-button" @click="createPhoto">
-      <img alt="" src="/static/icons/submit.png" class="icon"/> <span>发表</span>
+    <div class="submit-button" @click="uploadImage">
+      <img alt="" src="/static/icons/submit.png" class="icon" />
+      <span>发表</span>
     </div>
   </div>
 </template>
@@ -31,7 +35,9 @@
 <script>
 import fab from '../../components/fab'
 import store from '../../store'
-import { toast, upload } from '../../util'
+import config from '../../config'
+
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   components: {
@@ -42,15 +48,13 @@ export default {
 
   data() {
     return {
-      file: '',
-      description: ''
+      description: '',
+      file: null
     }
   },
 
   computed: {
-    uploaded() {
-      return !!this.file
-    },
+    ...mapState({ url: state => state.editing.url }),
 
     wordCount() {
       return this.description.length
@@ -58,28 +62,31 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['setUrl']),
+
     handleFiles(event) {
       let reader = new FileReader()
 
-      reader.onload = function(e) {
-        this.file = e.target.result
+      reader.onload = e => {
+        this.setUrl(e.target.result)
       }
 
-      console.log(event.target.files[0])
-
+      this.file = event.target.files[0]
       reader.readAsDataURL(event.target.files[0])
     },
 
-    async createPhoto() {
-      if (this.photo_url) {
-        await upload('timeline', this.photo_url, this.formData)
-        wx.navigateBack()
-        toast('图片上传成功', 'success')
-        this.clearEditing()
-        await this.fetchPhotos()
-      } else {
-        toast('请选择需要上传的图片')
-      }
+    uploadImage() {
+      let data = new FormData()
+      data.append('photo', this.file)
+      data.append('description', this.description)
+      window
+        .fetch(config.api_url + 'timeline', {
+          method: 'POST',
+          body: data
+        })
+        .then(() => {
+          window.location = '/'
+        })
     }
   }
 }
@@ -106,9 +113,9 @@ export default {
       inset 0 11px 15px -7px rgba(0, 0, 0, 0.2);
   }
 
-  > .preview {
-    height: 100%;
-    width: 100%;
+  .preview {
+    height: 300px;
+    width: 100vw;
   }
 
   > .stripes {

@@ -2,17 +2,11 @@
   <div class="page-content">
     <div class="btn-row">
       <div class="arrow-container" @click="prior">
-          <span
-            class="arrow -left"
-            :class="{ '-disable': reachTheStart }"
-          ></span>
+        <span class="arrow -left" :class="{ '-disable': reachTheStart }"></span>
       </div>
       <span class="show-title">{{ selectedDate }}</span>
       <div class="arrow-container" @click="next">
-          <span
-            class="arrow -right"
-            :class="{ '-disable': reachTheEnd }"
-          ></span>
+        <span class="arrow -right" :class="{ '-disable': reachTheEnd }"></span>
       </div>
     </div>
     <div class="container">
@@ -102,7 +96,7 @@ export default {
 @import '../../theme';
 
 .page-content {
-  height: calc(100vh - 55px);
+  min-height: calc(100vh - 55px);
   background-color: $background-color;
 }
 

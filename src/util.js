@@ -1,15 +1,14 @@
+import 'whatwg-fetch'
+
 import config from './config'
 
-const wx = {}
-
 /** promisify wx.request api */
-export const request = (path, method, data) =>
-  new Promise((resolve, reject) => {
-    wx.request({
+export const request = (path, method, data, headers = {}) => {
+  return new Promise((resolve, reject) => {
+    window.fetch(config.api_url + path, data, {
       method,
-      data,
-      url: config.api_url + path,
-      header: {
+      headers: {
+        ...headers,
         'content-type': 'application/json'
       },
       success: res => {
@@ -24,78 +23,68 @@ export const request = (path, method, data) =>
       }
     })
   })
+}
 
 /** promisify wx.uploadFile api */
-export const upload = (path, filePath, formData) =>
-  new Promise((resolve, reject) => {
+export const upload = (path, filePath, formData, headers = {}) => {
+  wx.showNavigationBarLoading()
+  wx.showLoading({ title: '正在上传...' })
+  return new Promise((resolve, reject) => {
     wx.uploadFile({
       formData,
       filePath,
       url: config.api_url + path,
       name: 'photo',
-      header: { 'content-type': 'multipart/form-data' },
+      header: {
+        ...headers,
+        'content-type': 'multipart/form-data'
+      },
       success: res => {
         if (res.statusCode !== 200) {
+          console.warn('上传失败!')
           reject('Request Failed with status code' + res.statusCode)
         } else {
           resolve(res.data)
         }
       },
       fail: err => {
+        console.warn('上传失败!')
         reject('Network Failed: ' + err)
       }
     })
   })
+}
 
-/** promisify wx.login api */
-export const login = () =>
-  new Promise((resolve, reject) => {
-    wx.login({
-      success: res => {
-        if (res.code) {
-          resolve(res.code)
-        } else {
-          reject('Login Failed')
-        }
-      },
-      fail: () => {
-        reject('Login Failed')
-      }
-    })
+export const toast = (content, icon = 'none') =>
+  wx.showToast({
+    duration: 1500,
+    title: content,
+    icon
   })
 
-/** promisify wx.getStorage api */
-export const getStorage = key =>
+export const redirect = url =>
   new Promise((resolve, reject) => {
-    wx.getStorage({
-      key,
-      success: res => {
-        resolve(res.data)
-      },
-      fail: () => {
-        reject('Get Storage Error')
-      }
-    })
-  })
-
-/** promisify wx.setStorage api */
-export const setStorage = (key, data) =>
-  new Promise((resolve, reject) => {
-    wx.setStorage({
-      key,
-      data,
+    wx.redirectTo({
+      url,
       success: () => {
-        resolve(data)
+        resolve()
       },
-      fail: () => {
-        reject('Set Storage Error')
+      fail: err => {
+        reject('Redirect Error' + JSON.stringify(err))
       }
     })
   })
 
-export const showWarning = content =>
-  wx.showModal({
-    content,
-    title: '提示',
-    showCancel: false
+export const showActionSheet = (...itemList) => {
+  return new Promise((resolve, reject) => {
+    wx.showActionSheet({
+      itemList,
+      success: res => {
+        resolve(res.tapIndex)
+      },
+      fail: res => {
+        reject('Show ActionSheet Failed' + res.errMsg)
+      }
+    })
   })
+}

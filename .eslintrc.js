@@ -1,3 +1,9 @@
 // https://eslint.org/docs/user-guide/configuring
 
-module.exports = {}
+module.exports = {
+  parserOptions: {
+    ecmaFeatures: {
+      modules: true
+    }
+  }
+}

@@ -6,7 +6,7 @@
         :class="{ selected: selected[photo.id] }"
         @click="onSelect(photo.id)"
       >
-        <img class="img" :src="photo.photo_url" mode="aspectFill" />
+        <img alt="" class="img" :src="photo.photo_url"/>
       </div>
     </div>
     <footer
@@ -20,7 +20,7 @@
       <span class="spacer"></span>
       <span
         v-if="selectedIds.length >= 3"
-        @click="onSubmit"
+        @click="generate"
         class="generate-btn"
         >生成视频</span
       >
@@ -32,7 +32,7 @@
 import { mapActions, mapState } from 'vuex'
 
 import store from '../../store'
-import { confirm, redirect, toast, request } from '../../util'
+import config from '../../config'
 
 export default {
   store,
@@ -66,31 +66,24 @@ export default {
       }
     },
 
-    async onSubmit() {
-      if (this.selectedIds.length >= 3) {
-        if (await confirm('是否生成视频?')) {
-          this.generate()
-        }
-      } else {
-        toast(`还需要选择${3 - this.selectedIds.length}张照片!`)
-      }
-    },
-
     async generate() {
-      try {
-        wx.showLoading({ title: '正在生成...' })
-        await request('videos', 'POST', {
-          ids: this.selectedIds
-        })
-
-        this.fetchVideos()
-        this.selectedIds = []
-        wx.hideLoading()
-
-        if (await confirm('是否跳转到视频列表查看', '视频生成完毕'))
-          redirect('/pages/video-list/main')
-      } catch (e) {
-        console.log(e)
+      if (this.selectedIds.length >= 3) {
+        if (window.confirm('是否生成视频?')) {
+          try {
+            await fetch(config.api_url + 'videos', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ ids: this.selectedIds })
+            })
+            this.fetchVideos()
+            this.selectedIds = []
+            window.location = '/pages/video-list/index'
+          } catch (e) {
+            console.log(e)
+          }
+        }
       }
     }
   }

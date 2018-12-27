@@ -5,8 +5,6 @@
         <router-view ref="current"></router-view>
       </keep-alive>
     </div>
-    <!--<pull-to ref="scroller" :top-load-method="refresh" :bottom-load-method="loadmore" :is-top-bounce="!!onPullDownRefresh" :is-bottom-bounce="!!onReachBottom" @scroll="saveScrollPosition">-->
-    <!--</pull-to>-->
     <div class="nav" v-if="$route.meta.nav">
       <router-link class="nav-item" to="/pages/today/index" replace="replace">
         <img
@@ -54,39 +52,14 @@
 
 <script>
 import 'mp-weui/lib/style.css'
+import 'whatwg-fetch'
 
-// import request from wx.js to bypass jwt validation
-// import { request } from './util/wx'
+import store from './store'
 
 export default {
-  async onLaunch(option) {
-    try {
-      // wx.showLoading({ title: '获取时光轴...' })
-      // let jwt = await getStorage('jwt')
-      // if (!jwt) {
-      //   jwt = await request('auth/login', 'POST', { code: await login() })
-      // }
-      // store.commit('setJWT', jwt)
-      // await store.dispatch('fetchPhotos')
-      // wx.hideLoading()
-      // if (!option.query.share && !wx.getStorageSync('finishedTutorial')) {
-      //   if (await confirm('是否查看教程?')) {
-      //     navigate('/pages/tutorial/main')
-      //   }
-      // }
-    } catch (e) {
-      console.log(e)
-    }
-  },
-  watch: {
-    $route() {
-      this.$nextTick(() => {
-        const { current } = this.$refs
-        if (!current) return
-        this.onPullDownRefresh = current.$options.onPullDownRefresh
-        this.onReachBottom = current.$options.onReachBottom
-      })
-    }
+  created: function() {
+    store.dispatch('fetchPhotos')
+    store.dispatch('fetchVideos')
   }
 }
 </script>

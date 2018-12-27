@@ -1,3 +1,3 @@
 export default {
-  api_url: 'https://api.kaji-studio.xyz/'
+  api_url: 'http://localhost:4001/'
 }

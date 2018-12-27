@@ -1,21 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { auth } from './auth'
-import { editing } from './editing'
-import { settings } from './settings'
 import { timeline } from './timeline'
 import { videos } from './videos'
+import { editing } from './editing'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    auth,
-    editing,
-    settings,
     timeline,
-    videos
+    videos,
+    editing
   }
 })
 

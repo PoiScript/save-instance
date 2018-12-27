@@ -1,20 +1,17 @@
 <template>
-  <div class="video" @click="navigate" @longpress="showActionSheet">
-    <image class="thumbnail" :src="video.thumbnail_url" mode="aspectFill">
+  <div class="video" @click="navigate">
+    <div class="thumbnail" v-bind:style="{ backgroundImage: 'url(' + video.photo_url + ')' }">
       <div class="duration">{{ video.length }} s</div>
-    </image>
+    </div>
     <div class="body">
       <p class="title">{{ video.name || '未命名视频' }}</p>
-      <p class="date">{{ video.created_at }}</p>
+      <p class="date">{{ video.date }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-
 import store from '../../store'
-import { confirm, navigate, showActionSheet } from '../../util'
 
 export default {
   name: 'videoSummary',
@@ -28,29 +25,8 @@ export default {
   store,
 
   methods: {
-    ...mapActions(['deleteVideo', 'downloadVideo']),
-
     navigate() {
-      navigate('/pages/video-detail/main?id=' + this.video.id)
-    },
-
-    async showActionSheet() {
-      switch (await showActionSheet('编辑', '下载', '删除')) {
-        case 0:
-          navigate(`/pages/video-editor/main?id=${this.video.id}`)
-          break
-        case 1:
-          await this.downloadVideo(this.video.video_url)
-          break
-        case 2:
-          if (await confirm('是否删除该视频?')) {
-            await this.deleteVideo(this.video.id)
-          }
-          break
-        default:
-          // do nothing
-          break
-      }
+      window.location = this.video.video_url
     }
   }
 }
@@ -65,6 +41,7 @@ export default {
   border-bottom: 1px solid $divider-color;
   display: flex;
   align-items: flex-start;
+  cursor: pointer;
 }
 
 .thumbnail {

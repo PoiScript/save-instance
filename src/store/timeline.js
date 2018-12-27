@@ -1,5 +1,5 @@
-import { request, upload, warning } from '../util'
 import { format, isSameDay, min, startOfMonth } from 'date-fns'
+import config from '../config'
 
 export const timeline = {
   state: {
@@ -16,18 +16,17 @@ export const timeline = {
     setSelectedPhoto(state, photo) {
       state.selected = {
         photo,
-        date: photo.created_at
+        date: photo.date
       }
     },
     setSelectedDate(state, date) {
       state.selected = {
         date,
-        photo: state.photos.find(p => isSameDay(date, p.created_at))
+        photo: state.photos.find(p => isSameDay(date, p.date))
       }
     }
   },
   getters: {
-    getPhotoById: state => id => state.photos.find(p => p.id === id),
     selectedDate: state => format(state.selected.date, 'YYYY/MM/DD'),
     firstMonthInTimeline: state =>
       startOfMonth(min(...state.photos.map(p => p.created_at), new Date()))
@@ -35,45 +34,18 @@ export const timeline = {
   actions: {
     fetchPhotos: async ({ state, commit }) => {
       try {
-        const photos = await request('timeline')
+        const photos = await fetch(config.api_url + 'timeline')
+          .then(res => res.json())
+          .then(json =>
+            json.map(p => ({ photo_url: config.api_url + p.id + '.jpg', ...p }))
+          )
         commit('photosFetched', photos)
         // don't forget to update the selected photo as well
         commit('setSelectedDate', state.selected.date)
       } catch (e) {
-        console.log(e)
-        warning('获取时间轴失败!')
+        console.error(e)
+        console.error('获取时间轴失败!')
       }
-    },
-    updatePhotoMeta: async ({ dispatch }, { id, description, location }) => {
-      wx.showLoading({ title: '正在更新...' })
-
-      try {
-        await request(`timeline/${id}/meta`, 'PUT', {
-          description,
-          location
-        })
-      } catch (e) {
-        console.log(e)
-        warning('更新照片信息失败!')
-      }
-
-      await dispatch('fetchPhotos')
-
-      wx.hideLoading()
-    },
-    updatePhotoImage: async ({ dispatch }, { id, path }) => {
-      wx.showLoading({ title: '正在更新...' })
-
-      try {
-        await upload(`timeline/${id}/photo`, path)
-      } catch (e) {
-        console.log(e)
-        warning('更新照片信息失败!')
-      }
-
-      await dispatch('fetchPhotos')
-
-      wx.hideLoading()
     }
   }
 }

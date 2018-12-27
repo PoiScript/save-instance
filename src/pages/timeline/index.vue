@@ -8,12 +8,13 @@
         <fab icon="/static/icons/movie.png"></fab>
       </a>
     </div>
-    <big-image
-      v-else
-      src="/static/picture/timeline_empty.jpg"
-      text="时光轴空空如也"
-      text-color="#fff"
-    ></big-image>
+    <div v-else class="empty-image-container">
+      <big-image
+        src="/static/picture/timeline_empty.jpg"
+        text="时光轴空空如也"
+        text-color="#fff"
+      ></big-image>
+    </div>
   </div>
 </template>
 
@@ -34,19 +35,15 @@ export default {
 
   store,
 
-  computed: mapState({ photos: state => state.timeline.photos }),
-
-  async onPullDownRefresh() {
-    await store.dispatch('fetchPhotos')
-    wx.stopPullDownRefresh()
-  }
+  computed: mapState({ photos: state => state.timeline.photos })
 }
 </script>
 
 <style scoped>
 .page-content {
-  height: calc(100vh - 55px);
+  min-height: calc(100vh - 55px);
   background: linear-gradient(to right, #2d8cf0, #5ac4f8);
+  margin-bottom: 55px;
 }
 
 .timeline {
@@ -76,6 +73,10 @@ export default {
 .fab-container {
   position: fixed;
   right: 16px;
-  bottom: 16px;
+  bottom: 71px; /* 16px + 55px */
+}
+
+.empty-image-container {
+  height: calc(100vh - 55px);
 }
 </style>

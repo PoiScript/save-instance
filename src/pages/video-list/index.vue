@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapState } from 'vuex'
 
 import videoSummary from './video-summary'
 import store from '../../store'
@@ -33,20 +33,6 @@ export default {
 
   computed: mapState({ videos: state => state.videos.videos }),
 
-  async onLoad() {
-    if (this.videos.length === 0) {
-      wx.showLoading({ title: '获取视频列表...' })
-      await this.fetchVideos()
-      wx.hideLoading()
-    }
-  },
-
-  async onPullDownRefresh() {
-    await this.fetchVideos()
-    wx.stopPullDownRefresh()
-  },
-
-  methods: mapActions(['fetchVideos'])
 }
 </script>
 

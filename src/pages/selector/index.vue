@@ -4,44 +4,55 @@
       <div
         class="thumbnail"
         :class="{ selected: selected[photo.id] }"
-        @click="onSelect(photo.id)">
-        <img class="img" :src="photo.photo_url" mode="aspectFill">
+        @click="onSelect(photo.id)"
+      >
+        <img class="img" :src="photo.photo_url" mode="aspectFill" />
       </div>
     </div>
-    <footer v-if="selectedIds.length > 0" :class="{ '-warn': selectedIds.length < 3 }">
-      <span v-if="selectedIds.length < 3">还需要选择 {{ 3 - selectedIds.length}} 张照片</span>
+    <footer
+      v-if="selectedIds.length > 0"
+      :class="{ '-warn': selectedIds.length < 3 }"
+    >
+      <span v-if="selectedIds.length < 3"
+        >还需要选择 {{ 3 - selectedIds.length }} 张照片</span
+      >
       <span v-else>已选择 {{ selectedIds.length }} 张照片</span>
       <span class="spacer"></span>
-      <span v-if="selectedIds.length >= 3" @click="onSubmit" class="generate-btn">生成视频</span>
+      <span
+        v-if="selectedIds.length >= 3"
+        @click="onSubmit"
+        class="generate-btn"
+        >生成视频</span
+      >
     </footer>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex'
 
-import store from '../../store';
-import { confirm, redirect, toast, request } from '../../util';
+import store from '../../store'
+import { confirm, redirect, toast, request } from '../../util'
 
 export default {
   store,
 
   data() {
     return {
-      selectedIds: [],
-    };
+      selectedIds: []
+    }
   },
 
   computed: {
     ...mapState({ photos: state => state.timeline.photos }),
 
     selected() {
-      const result = {};
+      const result = {}
       for (const id of this.selectedIds) {
-        result[id] = true;
+        result[id] = true
       }
-      return result;
-    },
+      return result
+    }
   },
 
   methods: {
@@ -49,41 +60,41 @@ export default {
 
     onSelect(id) {
       if (this.selectedIds.includes(id)) {
-        this.selectedIds = this.selectedIds.filter(i => i !== id);
+        this.selectedIds = this.selectedIds.filter(i => i !== id)
       } else {
-        this.selectedIds.push(id);
+        this.selectedIds.push(id)
       }
     },
 
     async onSubmit() {
       if (this.selectedIds.length >= 3) {
         if (await confirm('是否生成视频?')) {
-          this.generate();
+          this.generate()
         }
       } else {
-        toast(`还需要选择${3 - this.selectedIds.length}张照片!`);
+        toast(`还需要选择${3 - this.selectedIds.length}张照片!`)
       }
     },
 
     async generate() {
       try {
-        wx.showLoading({ title: '正在生成...' });
+        wx.showLoading({ title: '正在生成...' })
         await request('videos', 'POST', {
-          ids: this.selectedIds,
-        });
+          ids: this.selectedIds
+        })
 
-        this.fetchVideos();
-        this.selectedIds = [];
-        wx.hideLoading();
+        this.fetchVideos()
+        this.selectedIds = []
+        wx.hideLoading()
 
         if (await confirm('是否跳转到视频列表查看', '视频生成完毕'))
-          redirect('/pages/video-list/main');
+          redirect('/pages/video-list/main')
       } catch (e) {
-        console.log(e);
+        console.log(e)
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

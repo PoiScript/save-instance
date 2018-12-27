@@ -1,11 +1,5 @@
-import Vue from 'vue';
-import App from './index';
+import Vue from 'vue'
+import App from './index'
 
-const app = new Vue(App);
-app.$mount();
-
-export default {
-  config: {
-    navigationBarTitleText: '查看视频',
-  },
-};
+const app = new Vue(App)
+app.$mount()

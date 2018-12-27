@@ -1,7 +1,7 @@
 <template>
   <div class="img-container">
-    <img :src="src" class="img" :class="{ 'shake-chunk': imgShake }"/>
-    <button v-if="text" :style="{ color: textColor }">{{text}}</button>
+    <img alt="" :src="src" class="img" :class="{ 'shake-chunk': imgShake }" />
+    <h4 v-if="text" :style="{ color: textColor }">{{ text }}</h4>
     <slot></slot>
   </div>
 </template>
@@ -12,21 +12,21 @@ export default {
   props: {
     src: {
       type: String,
-      required: true,
+      required: true
     },
     imgShake: {
       type: Boolean,
-      default: false,
+      default: false
     },
     text: {
-      type: String,
+      type: String
     },
     textColor: {
       type: String,
-      default: '#000',
-    },
-  },
-};
+      default: '#000'
+    }
+  }
+}
 </script>
 
 <style scoped>

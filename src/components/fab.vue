@@ -1,7 +1,5 @@
 <template>
-  <div class="fab">
-    <img class="fab-img" :src="icon" >
-  </div>
+  <div class="fab"><img class="fab-img" :src="icon" /></div>
 </template>
 
 <script>
@@ -10,10 +8,10 @@ export default {
   props: {
     icon: {
       type: String,
-      required: true,
-    },
-  },
-};
+      required: true
+    }
+  }
+}
 </script>
 
 <style scoped>

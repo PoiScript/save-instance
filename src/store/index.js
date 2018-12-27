@@ -1,13 +1,13 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-import { auth } from './auth';
-import { editing } from './editing';
-import { settings } from './settings';
-import { timeline } from './timeline';
-import { videos } from './videos';
+import { auth } from './auth'
+import { editing } from './editing'
+import { settings } from './settings'
+import { timeline } from './timeline'
+import { videos } from './videos'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
@@ -15,8 +15,8 @@ const store = new Vuex.Store({
     editing,
     settings,
     timeline,
-    videos,
-  },
-});
+    videos
+  }
+})
 
-export default store;
+export default store

@@ -2,11 +2,18 @@
   <div class="calendar-mask" @touchstart="touchStart" @touchend="touchEnd">
     <div class="calendar-wrapper">
       <div class="top">
-        <span class="title">{{title}}</span>
-        <span class="spacer"></span>
-        <img class="icon" src="/static/icons/today.png" @click="today">
-        <span class="arrow -left" :class="{ '-disable': reachTheStart }" @click="prior"></span>
-        <span class="arrow -right" :class="{ '-disable': reachTheEnd }" @click="next"></span>
+        <span class="title">{{ title }}</span> <span class="spacer"></span>
+        <img class="icon" src="/static/icons/today.png" @click="today" />
+        <span
+          class="arrow -left"
+          :class="{ '-disable': reachTheStart }"
+          @click="prior"
+        ></span>
+        <span
+          class="arrow -right"
+          :class="{ '-disable': reachTheEnd }"
+          @click="next"
+        ></span>
       </div>
       <div class="row">
         <div class="week">日</div>
@@ -17,10 +24,25 @@
         <div class="week">五</div>
         <div class="week">六</div>
       </div>
-      <div class="row" v-for="(chunk, chunkIndex) in dayChunks" :key="chunkIndex">
-        <div class="day" v-for="(day, dayIndex) in chunk" :key="dayIndex" @click="day.isFuture ? null : click(day)"
-             :class="{ '-other': !day.isSameMonth, '-select': day.isSelect, '-today': day.isToday, '-mark': !!day.photo, '-future': day.isFuture }">
-          {{day.date}}
+      <div
+        class="row"
+        v-for="(chunk, chunkIndex) in dayChunks"
+        :key="chunkIndex"
+      >
+        <div
+          class="day"
+          v-for="(day, dayIndex) in chunk"
+          :key="dayIndex"
+          @click="day.isFuture ? null : click(day)"
+          :class="{
+            '-other': !day.isSameMonth,
+            '-select': day.isSelect,
+            '-today': day.isToday,
+            '-mark': !!day.photo,
+            '-future': day.isFuture
+          }"
+        >
+          {{ day.date }}
         </div>
       </div>
     </div>
@@ -40,18 +62,18 @@ import {
   lastDayOfMonth,
   startOfMonth,
   startOfWeek,
-  subMonths,
-} from 'date-fns';
-import { mapGetters, mapMutations, mapState } from 'vuex';
+  subMonths
+} from 'date-fns'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
-import store from '../store';
+import store from '../store'
 
 export default {
   data() {
     return {
       show: new Date(),
-      startPageX: 0,
-    };
+      startPageX: 0
+    }
   },
 
   store,
@@ -59,12 +81,12 @@ export default {
   computed: {
     ...mapState({
       photos: state => state.timeline.photos,
-      selected: state => state.timeline.selected.date,
+      selected: state => state.timeline.selected.date
     }),
     ...mapGetters(['firstMonthInTimeline']),
 
     title() {
-      return format(this.show, 'YYYY 年 M 月');
+      return format(this.show, 'YYYY 年 M 月')
     },
     dayChunks() {
       const days = eachDay(this.startOfCalendar, this.endOfCalendar).map(
@@ -75,67 +97,67 @@ export default {
           isSelect: isSameDay(this.selected, day),
           isToday: isToday(day),
           isSameMonth: isSameMonth(day, this.show),
-          isFuture: isFuture(day),
-        }),
-      );
-      const res = [];
+          isFuture: isFuture(day)
+        })
+      )
+      const res = []
       for (let i = 0; i < days.length; i += 7) {
-        res.push(days.slice(i, i + 7));
+        res.push(days.slice(i, i + 7))
       }
-      return res;
+      return res
     },
     startOfCalendar() {
-      return startOfWeek(startOfMonth(this.show));
+      return startOfWeek(startOfMonth(this.show))
     },
     endOfCalendar() {
-      return endOfWeek(lastDayOfMonth(this.show));
+      return endOfWeek(lastDayOfMonth(this.show))
     },
     reachTheStart() {
-      return isSameMonth(this.show, this.firstMonthInTimeline);
+      return isSameMonth(this.show, this.firstMonthInTimeline)
     },
     reachTheEnd() {
-      return isThisMonth(this.show);
-    },
+      return isThisMonth(this.show)
+    }
   },
 
   methods: {
     ...mapMutations(['setSelectedDate', 'setSelectedPhoto']),
 
     today() {
-      this.setSelectedDate(new Date());
-      this.$emit('close');
+      this.setSelectedDate(new Date())
+      this.$emit('close')
     },
     prior() {
       if (!this.reachTheStart) {
-        this.show = subMonths(this.show, 1);
+        this.show = subMonths(this.show, 1)
       }
     },
     next() {
       if (!this.reachTheEnd) {
-        this.show = addMonths(this.show, 1);
+        this.show = addMonths(this.show, 1)
       }
     },
     click(day) {
       if (day.photo) {
-        this.setSelectedPhoto(day.photo);
+        this.setSelectedPhoto(day.photo)
       } else {
-        this.setSelectedDate(day.day);
+        this.setSelectedDate(day.day)
       }
-      this.$emit('close');
+      this.$emit('close')
     },
     touchStart(event) {
-      this.startPageX = event.mp.changedTouches[0].pageX;
+      this.startPageX = event.mp.changedTouches[0].pageX
     },
     touchEnd(event) {
-      const offsetX = this.startPageX - event.mp.changedTouches[0].pageX;
+      const offsetX = this.startPageX - event.mp.changedTouches[0].pageX
       if (offsetX > 150) {
-        this.prior();
+        this.prior()
       } else if (offsetX < -150) {
-        this.next();
+        this.next()
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 @import '../theme';

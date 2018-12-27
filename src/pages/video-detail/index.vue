@@ -4,28 +4,28 @@
     <panel title="操作">
       <div class="weui-cell weui-cell_access" @click="navigateToEditor">
         <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/file.png"/>
+          <img class="weui-cell_icon" src="/static/icons/file.png" />
         </div>
         <div class="weui-cell__bd">编辑信息</div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </div>
       <button class="weui-cell weui-cell_access" open-type="share">
-          <span class="weui-cell_hd">
-            <img class="weui-cell_icon" src="/static/icons/share.png"/>
-          </span>
+        <span class="weui-cell_hd">
+          <img class="weui-cell_icon" src="/static/icons/share.png" />
+        </span>
         <span class="weui-cell__bd">分享视频</span>
         <span class="weui-cell__ft weui-cell__ft_in-access"></span>
       </button>
       <div class="weui-cell weui-cell_access" @click="downloadClick">
         <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/download.png"/>
+          <img class="weui-cell_icon" src="/static/icons/download.png" />
         </div>
         <div class="weui-cell__bd">下载视频</div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
       </div>
       <div class="weui-cell weui-cell_access" @click="deleteClick">
         <div class="weui-cell_hd">
-          <img class="weui-cell_icon" src="/static/icons/delete.png"/>
+          <img class="weui-cell_icon" src="/static/icons/delete.png" />
         </div>
         <div class="weui-cell__bd">删除视频</div>
         <div class="weui-cell__ft weui-cell__ft_in-access"></div>
@@ -35,33 +35,33 @@
 </template>
 
 <script>
-import MpCell from 'mp-weui/packages/cell';
-import MpCellGroup from 'mp-weui/packages/cell-group';
-import { mapActions } from 'vuex';
+import MpCell from 'mp-weui/packages/cell'
+import MpCellGroup from 'mp-weui/packages/cell-group'
+import { mapActions } from 'vuex'
 
-import videoPlayer from '../../components/video-player';
-import panel from '../../components/panel';
-import store from '../../store';
-import { confirm, navigate, toast } from '../../util';
+import videoPlayer from '../../components/video-player'
+import panel from '../../components/panel'
+import store from '../../store'
+import { confirm, navigate, toast } from '../../util'
 
 export default {
   components: {
     panel,
     MpCell,
     MpCellGroup,
-    videoPlayer,
+    videoPlayer
   },
 
   data() {
     return {
-      video: null,
-    };
+      video: null
+    }
   },
 
   store,
 
   onShow() {
-    this.video = this.$store.getters.getVideoById(this.$root.$mp.query.id);
+    this.video = this.$store.getters.getVideoById(this.$root.$mp.query.id)
   },
 
   onShareAppMessage() {
@@ -70,9 +70,9 @@ export default {
       path: `/pages/share/main?share=${this.video.id}`,
       imageUrl: this.video.thumbnail_url,
       success: () => {
-        toast('分享发送成功!', 'success');
-      },
-    };
+        toast('分享发送成功!', 'success')
+      }
+    }
   },
 
   methods: {
@@ -80,20 +80,20 @@ export default {
 
     // TODO: use navigator
     navigateToEditor() {
-      navigate(`/pages/video-editor/main?id=${this.video.id}`);
+      navigate(`/pages/video-editor/main?id=${this.video.id}`)
     },
 
     async downloadClick() {
-      await this.downloadVideo(this.video.video_url);
+      await this.downloadVideo(this.video.video_url)
     },
 
     async deleteClick() {
       if (await confirm('是否删除该视频?')) {
-        await this.deleteVideo(this.video.id).then(() => wx.navigateBack());
+        await this.deleteVideo(this.video.id).then(() => wx.navigateBack())
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss">

@@ -1,28 +1,28 @@
 <template>
   <div class="video" @click="navigate" @longpress="showActionSheet">
     <image class="thumbnail" :src="video.thumbnail_url" mode="aspectFill">
-      <div class="duration">{{video.length}} s</div>
+      <div class="duration">{{ video.length }} s</div>
     </image>
     <div class="body">
-      <p class="title">{{video.name || '未命名视频'}}</p>
-      <p class="date">{{video.created_at}}</p>
+      <p class="title">{{ video.name || '未命名视频' }}</p>
+      <p class="date">{{ video.created_at }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'vuex'
 
-import store from '../../store';
-import { confirm, navigate, showActionSheet } from '../../util';
+import store from '../../store'
+import { confirm, navigate, showActionSheet } from '../../util'
 
 export default {
   name: 'videoSummary',
   props: {
     video: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
 
   store,
@@ -31,29 +31,29 @@ export default {
     ...mapActions(['deleteVideo', 'downloadVideo']),
 
     navigate() {
-      navigate('/pages/video-detail/main?id=' + this.video.id);
+      navigate('/pages/video-detail/main?id=' + this.video.id)
     },
 
     async showActionSheet() {
       switch (await showActionSheet('编辑', '下载', '删除')) {
         case 0:
-          navigate(`/pages/video-editor/main?id=${this.video.id}`);
-          break;
+          navigate(`/pages/video-editor/main?id=${this.video.id}`)
+          break
         case 1:
-          await this.downloadVideo(this.video.video_url);
-          break;
+          await this.downloadVideo(this.video.video_url)
+          break
         case 2:
           if (await confirm('是否删除该视频?')) {
-            await this.deleteVideo(this.video.id);
+            await this.deleteVideo(this.video.id)
           }
-          break;
+          break
         default:
           // do nothing
-          break;
+          break
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>

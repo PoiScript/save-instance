@@ -1,11 +1,9 @@
 <template>
   <div class="weui-panel panel">
     <div class="weui-panel__bd">
-      <div class="weui-panel__hd">{{title}}</div>
+      <div class="weui-panel__hd">{{ title }}</div>
       <div class="weui-media-box weui-media-box_small-appmsg">
-        <div class="weui-cells weui-cells_in-small-appmsg">
-          <slot></slot>
-        </div>
+        <div class="weui-cells weui-cells_in-small-appmsg"><slot></slot></div>
       </div>
     </div>
   </div>
@@ -17,10 +15,10 @@ export default {
   props: {
     title: {
       type: String,
-      required: true,
-    },
-  },
-};
+      required: true
+    }
+  }
+}
 </script>
 
 <style scoped>

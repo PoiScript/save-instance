@@ -1,175 +1,88 @@
 <template>
   <div>
     <div class="image-uploader">
-      <img v-if="photo_url" class="preview" :src="photo_url" @click="preview" :mode="'aspectFill'"/>
-      <div v-else class="stripes" @click="chooseImage">
-        <div>点击上传照片</div>
+      <div v-if="uploaded">
+        <img alt="" class="preview" :src="file"/>
       </div>
-      <div v-if="photoEditable" class="fab-container" @click="chooseImage">
+      <div v-else class="stripes"></div>
+      <label for="file-input" class="fab-container">
         <fab icon="/static/icons/upload.png"></fab>
-      </div>
+      </label>
+      <input type="file" id="file-input" style="display: none" @change="handleFiles">
     </div>
     <div class="input-cells">
-      <div class="weui-cell weui-cell_access" @click="chooseAddress">
-        <div class="weui-cell__hd">
-          <img class="icon" src="/static/icons/locate.png"/>
-        </div>
-        <div class="weui-cell__bd weui-cell_primary">
-          <div :class="{ empty: !location }">{{ location || '添加位置' }}</div>
-        </div>
-        <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-      </div>
       <div class="weui-cell weui-cell_access">
         <div class="weui-cell__hd">
-          <img class="icon" src="/static/icons/description.png"/>
+          <img alt="" class="icon" src="/static/icons/description.png"/>
         </div>
-        <div class="weui-cell__bd weui-cell_primary">
+        <div class="weui-cell__bd weui-cell_primary" style="color: #999999">
           <div>简介</div>
         </div>
-        <div class="weui-cell__ft">{{wordCount}}</div>
+        <div class="weui-cell__ft">{{ wordCount }}</div>
       </div>
-      <textarea class="text" v-model="description" placeholder="添加字幕"
-                :placeholder-class="'empty'" :cursor-spacing="0" :show-confirm-bar="false"></textarea>
+      <textarea aria-label="" class="text" v-model="description"></textarea>
     </div>
-    <div class="submit-button" @click="submit">
-      <img src="/static/icons/submit.png" class="icon"/>
-      <span>发表</span>
+    <div class="submit-button" @click="createPhoto">
+      <img alt="" src="/static/icons/submit.png" class="icon"/> <span>发表</span>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
-
-import fab from '../../components/fab';
-import store from '../../store';
-import {
-  chooseImage,
-  chooseLocation,
-  request,
-  toast,
-  upload,
-} from '../../util';
+import fab from '../../components/fab'
+import store from '../../store'
+import { toast, upload } from '../../util'
 
 export default {
   components: {
-    fab,
+    fab
   },
 
   store,
 
   data() {
     return {
-      id: null,
-    };
+      file: '',
+      description: ''
+    }
   },
 
   computed: {
-    ...mapGetters(['getPhotoById', 'photoEditable', 'wordCount', 'formData']),
-    ...mapState({
-      photo_url: state => state.editing.photo_url,
-      location: state => state.editing.location,
-      original: state => state.editing.original,
-    }),
-
-    description: {
-      get() {
-        return this.$store.state.editing.description;
-      },
-      set(value) {
-        this.$store.commit('setDescription', value);
-      },
+    uploaded() {
+      return !!this.file
     },
-  },
 
-  onShow() {
-    this.id = this.$root.$mp.query.id;
-    if (this.id && (!this.original || this.id !== this.original.id)) {
-      this.setEditing(this.getPhotoById(this.id));
-    }
-
-    if (!this.id && this.original) {
-      this.clearEditing();
+    wordCount() {
+      return this.description.length
     }
   },
 
   methods: {
-    ...mapActions(['fetchPhotos']),
-    ...mapMutations([
-      'setPhotoUrl',
-      'setLocation',
-      'clearEditing',
-      'setEditing',
-    ]),
+    handleFiles(event) {
+      let reader = new FileReader()
 
-    async chooseImage() {
-      this.setPhotoUrl(await chooseImage());
-    },
-
-    async chooseAddress() {
-      this.setLocation(await chooseLocation());
-    },
-
-    preview() {
-      wx.previewImage({
-        current: this.photo_url,
-        urls: [this.photo_url],
-      });
-    },
-
-    submit() {
-      if (this.id) {
-        this.updatePhoto();
-      } else {
-        this.createPhoto();
+      reader.onload = function(e) {
+        this.file = e.target.result
       }
+
+      console.log(event.target.files[0])
+
+      reader.readAsDataURL(event.target.files[0])
     },
 
     async createPhoto() {
       if (this.photo_url) {
-        await upload('timeline', this.photo_url, this.formData);
-        wx.navigateBack();
-        toast('图片上传成功', 'success');
-        this.clearEditing();
-        await this.fetchPhotos();
+        await upload('timeline', this.photo_url, this.formData)
+        wx.navigateBack()
+        toast('图片上传成功', 'success')
+        this.clearEditing()
+        await this.fetchPhotos()
       } else {
-        toast('请选择需要上传的图片');
+        toast('请选择需要上传的图片')
       }
-    },
-
-    async updatePhoto() {
-      const promise = [];
-
-      if (this.original.photo_url !== this.photo_url) {
-        promise.push(upload(`timeline/${this.id}/photo`, this.photo_url));
-      }
-
-      if (
-        this.original.location !== this.location ||
-        this.original.description !== this.description
-      ) {
-        promise.push(
-          request(`timeline/${this.id}/meta`, 'PUT', {
-            description: this.description,
-            location: this.location,
-          }),
-        );
-      }
-
-      if (promise.length > 0) {
-        wx.showLoading({ title: '正在更新...' });
-
-        await Promise.all(promise);
-        this.clearEditing();
-        await this.fetchPhotos();
-
-        wx.hideLoading();
-      }
-
-      wx.navigateBack();
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -250,13 +163,11 @@ export default {
 
   .text {
     position: initial;
-    padding: 0 15px;
-    height: 60px;
+    width: 100%;
+    height: 150px;
+    border: none;
+    outline: none;
   }
-}
-
-.empty {
-  color: $sub-color;
 }
 
 .submit-button {
@@ -264,6 +175,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
   > .icon {
     float: left;

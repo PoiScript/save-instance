@@ -1,49 +1,62 @@
 <template>
   <div class="photo-container">
     <div class="photo">
-      <img class="photo-content" :src="photo.photo_url" mode="aspectFill" @click="previewImage"/>
-      <div class="fab-container" hover-class="none" @click="navigate" @longpress="showActionSheet">
+      <img
+        class="photo-content"
+        :src="photo.photo_url"
+        mode="aspectFill"
+        @click="previewImage"
+      />
+      <div
+        class="fab-container"
+        hover-class="none"
+        @click="navigate"
+        @longpress="showActionSheet"
+      >
         <fab icon="/static/icons/edit_white.png"></fab>
       </div>
     </div>
     <div class="cells">
       <div class="title">
-        <img class="icon" src="/static/icons/locate.png"/>
-        <span>地址</span>
+        <img class="icon" src="/static/icons/locate.png" /> <span>地址</span>
       </div>
-      <div class="content" :class="{ '-empty': !photo.location }">{{photo.location || '未设置'}}</div>
+      <div class="content" :class="{ '-empty': !photo.location }">
+        {{ photo.location || '未设置' }}
+      </div>
       <div class="title">
-        <img class="icon" src="/static/icons/description.png"/>
+        <img class="icon" src="/static/icons/description.png" />
         <span>简介</span>
       </div>
-      <div class="content" :class="{ '-empty': !photo.description }">{{photo.description || '未设置'}}</div>
+      <div class="content" :class="{ '-empty': !photo.description }">
+        {{ photo.description || '未设置' }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { isToday } from 'date-fns';
-import { mapActions, mapMutations } from 'vuex';
+import { isToday } from 'date-fns'
+import { mapActions, mapMutations } from 'vuex'
 
-import fab from '../../components/fab';
-import store from '../../store';
+import fab from '../../components/fab'
+import store from '../../store'
 import {
   chooseImage,
   chooseLocation,
   navigate,
-  showActionSheet,
-} from '../../util';
+  showActionSheet
+} from '../../util'
 
 export default {
   props: {
     photo: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
 
   components: {
-    fab,
+    fab
   },
 
   store,
@@ -55,41 +68,41 @@ export default {
     previewImage() {
       wx.previewImage({
         current: this.photo.photo_url,
-        urls: [this.photo.photo_url],
-      });
+        urls: [this.photo.photo_url]
+      })
     },
 
     navigate() {
-      navigate('/pages/photo-edit/main?id=' + this.photo.id);
+      navigate('/pages/photo-edit/main?id=' + this.photo.id)
     },
 
     async showActionSheet() {
       const sheet = isToday(this.photo.created_at)
         ? showActionSheet('重新定位', '替换照片')
-        : showActionSheet('重新定位');
+        : showActionSheet('重新定位')
       switch (await sheet) {
         case 0:
           await this.updatePhotoMeta({
             id: this.photo.id,
             description: this.photo.description,
-            location: await chooseLocation(),
-          });
-          this.clearEditing();
-          break;
+            location: await chooseLocation()
+          })
+          this.clearEditing()
+          break
         case 1:
           await this.updatePhotoImage({
             id: this.photo.id,
-            path: await chooseImage(),
-          });
-          this.clearEditing();
-          break;
+            path: await chooseImage()
+          })
+          this.clearEditing()
+          break
         default:
           // do nothing
-          break;
+          break
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
